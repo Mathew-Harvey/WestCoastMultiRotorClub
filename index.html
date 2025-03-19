@@ -10,6 +10,8 @@
 :root {
     /* WCMRC Official Theme Variables */
     --primary-color: #29a7df; /* Bright blue from the logo/shirt */
+    --primary-light: rgba(41, 167, 223, 0.1);
+    --primary-dark: #1a7fb0;
     --secondary-color: #5d6b77; /* Gray/slate color from the logo */
     --accent-color: #000000; /* Black accents */
     --background-color: #f5f7fa; /* Light gray/white background */
@@ -19,18 +21,21 @@
     --font-primary: 'Montserrat', sans-serif;
     --font-secondary: 'Poppins', sans-serif;
     --animation-speed: 0.3s;
-    --border-radius: 6px;
-    --section-padding: 80px 0;
+    --border-radius: 10px;
+    --section-padding: 100px 0;
     --header-height: 80px;
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: all var(--animation-speed) ease;
+    transition: all var(--animation-speed) cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 body {
@@ -38,7 +43,10 @@ body {
     color: var(--text-color);
     background-color: var(--background-color);
     overflow-x: hidden;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
 }
 
 a {
@@ -53,6 +61,7 @@ ul {
 img {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
 button, .btn {
@@ -61,46 +70,71 @@ button, .btn {
     outline: none;
     background: var(--primary-color);
     color: white;
-    padding: 12px 24px;
+    padding: 14px 28px;
     border-radius: var(--border-radius);
     font-weight: 600;
     font-family: var(--font-primary);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+button::before, .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: var(--primary-dark);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: -1;
+}
+
+button:hover::before, .btn:hover::before {
+    width: 100%;
 }
 
 button:hover, .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    background: var(--secondary-color);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
 }
 
 section {
     padding: var(--section-padding);
+    position: relative;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 30px;
+    position: relative;
+    z-index: 2;
 }
 
 h1, h2, h3, h4, h5 {
     font-family: var(--font-secondary);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     line-height: 1.2;
+    font-weight: 600;
+    color: var(--secondary-color);
 }
 
 h1 {
-    font-size: 3.5rem;
+    font-size: 4rem;
+    font-weight: 700;
 }
 
 h2 {
     font-size: 2.5rem;
     position: relative;
     padding-bottom: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     text-align: center;
 }
 
@@ -110,14 +144,14 @@ h2::after {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: 60px;
     height: 4px;
     background: var(--primary-color);
     border-radius: 2px;
 }
 
 p {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .text-center {
@@ -128,28 +162,66 @@ p {
     margin-bottom: 50px;
 }
 
+/* New glass effect for cards */
+.glass-effect {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
 /* Theme Switcher */
 #theme-switcher {
     position: fixed;
-    top: 100px;
+    top: 120px;
     right: 20px;
     z-index: 1000;
     background: white;
     border-radius: var(--border-radius);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    box-shadow: var(--shadow-md);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#theme-switcher.active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.4s ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(30deg);
 }
 
 .theme-btn {
     padding: 10px 15px;
     border-radius: var(--border-radius);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
     background: #eee;
     color: #333;
+    transition: all 0.3s ease;
 }
 
 .theme-btn.active {
@@ -159,7 +231,7 @@ p {
 
 /* Header & Navigation */
 header {
-    background-color: var(--header-color);
+    background-color: rgba(93, 107, 119, 0.98);
     color: white;
     position: fixed;
     width: 100%;
@@ -167,7 +239,9 @@ header {
     left: 0;
     z-index: 100;
     height: var(--header-height);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .navbar {
@@ -186,17 +260,19 @@ header {
 .logo img {
     height: 100%;
     width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .nav-links {
     display: flex;
-    gap: 30px;
+    gap: 40px;
 }
 
 .nav-links a {
     position: relative;
     font-weight: 500;
     font-size: 1rem;
+    padding: 5px 0;
 }
 
 .nav-links a::after {
@@ -204,10 +280,10 @@ header {
     position: absolute;
     width: 0;
     height: 2px;
-    bottom: -5px;
+    bottom: 0;
     left: 0;
     background-color: var(--primary-color);
-    transition: width 0.3s;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .nav-links a:hover::after {
@@ -226,39 +302,59 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-    background: linear-gradient(135deg, rgba(93, 107, 119, 0.8), rgba(41, 167, 223, 0.6)), 
-                url('/api/placeholder/1200/800') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(93, 107, 119, 0.85), rgba(41, 167, 223, 0.7)), 
+                url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
     color: white;
-    padding-top: var(--header-height);
+    padding-top: 0;
+    overflow: hidden;
 }
 
 .hero-content {
     max-width: 800px;
     position: relative;
     z-index: 2;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.2s ease 0.2s forwards;
 }
 
 .hero-content h1 {
-    margin-bottom: 20px;
-    font-size: 4rem;
-    animation: fadeInUp 1s ease;
+    margin-bottom: 24px;
+    font-size: 4.5rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    line-height: 1.1;
 }
 
 .hero-content p {
     font-size: 1.2rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+    margin-bottom: 40px;
+    opacity: 0.95;
     max-width: 600px;
-    animation: fadeInUp 1s ease 0.2s forwards;
+    line-height: 1.8;
 }
 
 .hero-btns {
     display: flex;
-    gap: 15px;
-    animation: fadeInUp 1s ease 0.4s forwards;
+    gap: 20px;
 }
 
-/* Hexagonal pattern overlay for hero */
+.hero-btns .btn {
+    padding: 16px 32px;
+    font-size: 1rem;
+}
+
+.hero-btns .btn:nth-child(2) {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.hero-btns .btn:nth-child(2):hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+/* Hexagonal pattern overlay for hero with motion */
 #hero::after {
     content: '';
     position: absolute;
@@ -266,9 +362,19 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
     z-index: 1;
-    opacity: 0.4;
+    opacity: 0.5;
+    animation: slowMove 60s linear infinite alternate;
+}
+
+@keyframes slowMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100px 100px;
+    }
 }
 
 @keyframes fadeInUp {
@@ -279,6 +385,40 @@ header {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: white;
+    text-align: center;
+    animation: fadeInUp 1s ease 1.5s both, bounce 2s ease-in-out infinite;
+}
+
+.scroll-indicator p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.scroll-indicator .arrow {
+    font-size: 1.5rem;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
     }
 }
 
@@ -305,7 +445,7 @@ header {
 .about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
+    gap: 60px;
     align-items: center;
     position: relative;
     z-index: 1;
@@ -314,10 +454,16 @@ header {
 .about-img {
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    height: 400px;
-    background: url('/api/placeholder/600/400') center/cover no-repeat;
+    box-shadow: var(--shadow-lg);
+    height: 450px;
+    background: url('https://placehold.co/600x400/29a7df/white?text=Club+Photo') center/cover no-repeat;
     position: relative;
+    transform: perspective(1000px) rotateY(-5deg);
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.about-img:hover {
+    transform: perspective(1000px) rotateY(0deg);
 }
 
 /* Diagonal accent on about image - inspired by the t-shirt design */
@@ -328,13 +474,54 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(41, 167, 223, 0.4) 0%, rgba(41, 167, 223, 0) 50%);
+    background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
 }
 
 .about-text h3 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
+    font-size: 2rem;
+    margin-bottom: 24px;
     color: var(--primary-color);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+/* Featured stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 30px;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.4s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--secondary-color);
 }
 
 /* Events Section */
@@ -358,7 +545,7 @@ header {
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
     position: relative;
     z-index: 1;
@@ -368,14 +555,17 @@ header {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .event-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 /* Diagonal accent on event cards - inspired by the t-shirt */
@@ -387,30 +577,51 @@ header {
     width: 50%;
     height: 5px;
     background: var(--primary-color);
+    z-index: 2;
 }
 
 .event-img {
-    height: 200px;
-    background: url('/api/placeholder/400/200') center/cover no-repeat;
+    height: 220px;
+    background: url('https://placehold.co/400x200/5d6b77/white?text=Event+Image') center/cover no-repeat;
+    position: relative;
+}
+
+.event-img::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
 }
 
 .event-details {
-    padding: 20px;
+    padding: 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .event-date {
     display: inline-block;
     background-color: var(--primary-color);
     color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    margin-bottom: 15px;
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .event-card h3 {
-    margin-bottom: 10px;
-    font-size: 1.4rem;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.event-card p {
+    margin-bottom: 24px;
+    flex-grow: 1;
 }
 
 /* Membership Section */
@@ -445,17 +656,21 @@ header {
     background-color: var(--background-color);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     text-align: center;
-    padding: 40px 30px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 50px 30px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     position: relative;
     z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .plan-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    z-index: 2;
 }
 
 .plan-card::before {
@@ -476,19 +691,22 @@ header {
 }
 
 .plan-price {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
     margin-bottom: 30px;
+    color: var(--secondary-color);
 }
 
 .plan-features {
     margin-bottom: 30px;
+    flex-grow: 1;
 }
 
 .plan-features li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     position: relative;
     padding-left: 20px;
+    text-align: left;
 }
 
 .plan-features li::before {
@@ -496,14 +714,19 @@ header {
     position: absolute;
     left: 0;
     color: var(--primary-color);
+    font-weight: bold;
 }
 
 /* Gallery Section */
+#gallery {
+    background-color: var(--background-color);
+}
+
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-auto-rows: 250px;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-auto-rows: 280px;
+    gap: 25px;
     position: relative;
     z-index: 1;
 }
@@ -512,13 +735,16 @@ header {
     border-radius: var(--border-radius);
     overflow: hidden;
     position: relative;
-    background: url('/api/placeholder/400/400') center/cover no-repeat;
+    background: url('https://placehold.co/400x400/5d6b77/white?text=Gallery+Image') center/cover no-repeat;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: var(--shadow-sm);
 }
 
 .gallery-item:hover {
     transform: scale(1.05);
+    z-index: 2;
+    box-shadow: var(--shadow-md);
 }
 
 .gallery-item::before {
@@ -530,7 +756,7 @@ header {
     height: 100%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .gallery-item:hover::before {
@@ -547,7 +773,7 @@ header {
     height: 100%;
     background: rgba(41, 167, 223, 0.3);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .gallery-item:hover::after {
@@ -559,17 +785,421 @@ header {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 20px;
+    padding: 25px;
     color: white;
     transform: translateY(50px);
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     z-index: 2;
 }
 
 .gallery-item:hover .gallery-item-caption {
     transform: translateY(0);
     opacity: 1;
+}
+
+/* Social Feed Section - NEW */
+#social-feed {
+    background-color: var(--background-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hexagonal pattern for social feed section */
+#social-feed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.social-feed-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Social Feed Section - Updated with Feed */
+#social-feed {
+    background-color: var(--background-color);
+    position: relative;
+    overflow: visible;
+    padding: var(--section-padding);
+    padding-top: 150px; /* Increase top padding to prevent cut-off */
+    margin-top: 30px;
+}
+
+/* Hexagonal pattern for social feed section */
+#social-feed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.social-feed-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.social-cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.social-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.social-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.social-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    z-index: 1;
+}
+
+.facebook-card::before {
+    background-color: #1877f2;
+}
+
+.instagram-card::before {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.discord-card::before {
+    background-color: #5865F2;
+}
+
+.social-card-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 20px auto 20px; /* Change from negative margin to positive */
+    position: relative;
+    z-index: 2;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.facebook-card .social-card-icon {
+    background-color: #1877f2;
+}
+
+.instagram-card .social-card-icon {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.discord-card .social-card-icon {
+    background-color: #5865F2;
+}
+
+.social-card-content {
+    padding: 20px 30px 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.social-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.social-card p {
+    margin-bottom: 20px;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.social-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.social-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.social-stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1877f2;
+}
+
+.social-stat-label {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.social-gallery {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.social-gallery-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+}
+
+.discord-channels {
+    background-color: #F6F6F6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.discord-channel {
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9rem;
+    color: #4f545c;
+    font-weight: 500;
+}
+
+.discord-channel:last-child {
+    margin-bottom: 0;
+}
+
+.social-btn {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.facebook-btn {
+    background-color: #1877f2;
+}
+
+.facebook-btn:hover {
+    background-color: #0e5fcc;
+}
+
+.instagram-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.discord-btn {
+    background-color: #5865F2;
+}
+
+.discord-btn:hover {
+    background-color: #4752c4;
+}
+
+/* Recent Updates Section - New */
+#recent-updates {
+    background-color: var(--background-color);
+    position: relative;
+    overflow: hidden;
+    padding: var(--section-padding);
+}
+
+#recent-updates::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    z-index: 0;
+    opacity: 0.4;
+}
+
+.updates-container {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.feed-section {
+    width: 100%;
+}
+
+.feed-post {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 30px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feed-post:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.feed-post-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 20px 10px;
+}
+
+.feed-post-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.feed-post-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feed-post-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-post-author {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--secondary-color);
+}
+
+.feed-post-date {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.feed-post-content {
+    padding: 0 20px 20px;
+}
+
+.feed-post-content p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.feed-post-image {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.feed-post-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.feed-post-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.feed-post-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+.feed-post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.feed-post-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.feed-post-stats span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.feed-post-stats i {
+    color: var(--primary-color);
+}
+
+.view-more-container {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.view-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--secondary-color);
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.view-more-btn:hover {
+    background-color: var(--primary-color);
 }
 
 /* Contact Section */
@@ -595,7 +1225,7 @@ header {
 .contact-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
+    gap: 60px;
     align-items: start;
     position: relative;
     z-index: 1;
@@ -604,33 +1234,41 @@ header {
 .contact-info {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
 }
 
 .contact-item {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 25px;
     background-color: var(--background-color);
     border-radius: var(--border-radius);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-sm);
 }
 
 .contact-item:hover {
     transform: translateX(10px);
+    box-shadow: var(--shadow-md);
 }
 
 .contact-item i {
     font-size: 1.5rem;
     color: var(--primary-color);
+    margin-top: 5px;
+}
+
+.contact-item h3 {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
 }
 
 .contact-form {
     background-color: var(--background-color);
-    padding: 30px;
+    padding: 40px;
     border-radius: var(--border-radius);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
 }
@@ -647,33 +1285,36 @@ header {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 12px 15px;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
     font-family: var(--font-primary);
     font-size: 1rem;
-    transition: border 0.3s ease;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
 }
 
 .form-control:focus {
     border-color: var(--primary-color);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.1);
 }
 
 textarea.form-control {
     resize: vertical;
-    min-height: 120px;
+    min-height: 150px;
 }
 
 /* Resources Section */
@@ -697,7 +1338,7 @@ textarea.form-control {
 
 .resources-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
     position: relative;
     z-index: 1;
@@ -707,40 +1348,51 @@ textarea.form-control {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .resource-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .resource-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100px;
+    height: 120px;
     background-color: var(--primary-color);
     color: white;
-    font-size: 2.5rem;
+    font-size: 3rem;
 }
 
 .resource-details {
-    padding: 20px;
+    padding: 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .resource-card h3 {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 1.4rem;
+}
+
+.resource-card p {
+    margin-bottom: 24px;
+    flex-grow: 1;
 }
 
 /* Footer */
 footer {
     background-color: var(--header-color);
     color: white;
-    padding: 60px 0 30px;
+    padding: 80px 0 40px;
     position: relative;
 }
 
@@ -757,16 +1409,17 @@ footer::after {
 
 .footer-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 50px;
+    margin-bottom: 60px;
 }
 
 .footer-col h3 {
     position: relative;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
     font-size: 1.4rem;
+    color: white;
 }
 
 .footer-col h3::after {
@@ -780,35 +1433,38 @@ footer::after {
 }
 
 .footer-links li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .footer-links li a {
     transition: transform 0.3s ease, color 0.3s ease;
     display: inline-block;
+    opacity: 0.8;
 }
 
 .footer-links li a:hover {
     transform: translateX(5px);
     color: var(--primary-color);
+    opacity: 1;
 }
 
 .social-links {
     display: flex;
     gap: 15px;
+    margin-top: 20px;
 }
 
 .social-links a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     font-size: 1.2rem;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .social-links a:hover {
@@ -818,43 +1474,140 @@ footer::after {
 
 .footer-bottom {
     text-align: center;
-    padding-top: 30px;
+    padding-top: 40px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-logo {
     display: block;
-    margin: 0 auto 20px;
-    height: 60px;
+    margin: 0 auto 30px;
+    height: 70px;
     width: auto;
+    filter: brightness(1.1);
 }
 
 /* Hero Logo Styling */
 .hero-logo {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     max-width: 400px;
     height: auto;
     filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
     animation: fadeInUp 1s ease;
 }
 
+/* Animation for elements on scroll */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    font-size: 1.2rem;
+}
+
+.back-to-top.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-5px);
+}
+
+/* Newsletter form in footer */
+.footer-newsletter .form-control {
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.footer-newsletter .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-newsletter .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.2);
+}
+
+.footer-newsletter .btn {
+    width: 100%;
+}
+
 /* Responsive Styles */
+@media (max-width: 1200px) {
+    h1 {
+        font-size: 3.5rem;
+    }
+    
+    h2 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-logo {
+        max-width: 350px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 @media (max-width: 992px) {
     h1 {
-        font-size: 2.8rem;
+        font-size: 3rem;
     }
 
     h2 {
-        font-size: 2.2rem;
+        font-size: 2rem;
+    }
+    
+    .hero-logo {
+        max-width: 300px;
     }
 
     .about-content,
     .contact-container {
         grid-template-columns: 1fr;
+        gap: 40px;
     }
 
     .about-img {
         order: -1;
+        height: 400px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .nav-links {
@@ -863,12 +1616,14 @@ footer::after {
         left: -100%;
         width: 100%;
         height: calc(100vh - var(--header-height));
-        background-color: var(--header-color);
+        background-color: rgba(93, 107, 119, 0.98);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 40px;
-        transition: left 0.3s ease;
+        transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .nav-links.active {
@@ -882,56 +1637,111 @@ footer::after {
     .logo img {
         height: 50px;
     }
-    
-    .hero-logo {
-        max-width: 300px;
-    }
 }
 
 @media (max-width: 768px) {
-    .hero-content h1 {
+    :root {
+        --section-padding: 80px 0;
+    }
+    
+    h1 {
         font-size: 2.5rem;
     }
-
-    .hero-btns {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    section {
-        padding: 60px 0;
+    
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
     }
     
     .hero-logo {
         max-width: 250px;
     }
+
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+
+    .hero-btns {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-form {
+        padding: 30px;
+    }
+    
+    .event-img, 
+    .about-img {
+        height: 300px;
+    }
 }
 
 @media (max-width: 576px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
+    :root {
+        --section-padding: 60px 0;
     }
-
+    
+    .container {
+        padding: 0 20px;
+    }
+    
     h1 {
         font-size: 2.2rem;
     }
-
+    
     h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .hero-logo {
+        max-width: 200px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 250px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
     
     .logo img {
         height: 40px;
     }
     
-    .hero-logo {
-        max-width: 200px;
+    .contact-item {
+        padding: 20px;
+    }
+    
+    .social-feed-card {
+        max-width: 100%;
     }
 }
 
+/* Theme styles */
 /* Keep the theme switcher functionality but make WCMRC theme the default */
 .theme-cyberpunk {
     --primary-color: #ff00ff;
+    --primary-light: rgba(255, 0, 255, 0.1);
+    --primary-dark: #cc00cc;
     --secondary-color: #00ffff;
     --accent-color: #ffff00;
     --background-color: #121212;
@@ -983,9 +1793,10 @@ footer::after {
 .theme-cyberpunk .event-card,
 .theme-cyberpunk .resource-card,
 .theme-cyberpunk .plan-card,
-.theme-cyberpunk .contact-form {
+.theme-cyberpunk .contact-form,
+.theme-cyberpunk .social-feed-card {
     border: 1px solid var(--secondary-color);
-    box-shadow: 0 0 10px var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-color);
 }
 
 .theme-cyberpunk .nav-links a::after {
@@ -996,7 +1807,7 @@ footer::after {
 
 .theme-cyberpunk #hero {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7)), 
-                url('/api/placeholder/1200/800') center/cover no-repeat;
+                url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
     position: relative;
     overflow: hidden;
 }
@@ -1035,6 +1846,8 @@ footer::after {
 /* Theme 3: Minimalist */
 .theme-minimalist {
     --primary-color: #000000;
+    --primary-light: rgba(0, 0, 0, 0.05);
+    --primary-dark: #333333;
     --secondary-color: #333333;
     --accent-color: #ff4500;
     --background-color: #ffffff;
@@ -1045,6 +1858,9 @@ footer::after {
     --font-secondary: 'Quicksand', sans-serif;
     --animation-speed: 0.2s;
     --border-radius: 0;
+    --shadow-sm: none;
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .theme-minimalist header {
@@ -1098,14 +1914,16 @@ footer::after {
 .theme-minimalist .event-card,
 .theme-minimalist .resource-card,
 .theme-minimalist .plan-card,
-.theme-minimalist .contact-form {
+.theme-minimalist .contact-form,
+.theme-minimalist .social-feed-card {
     box-shadow: none;
     border: 1px solid #eee;
 }
 
 .theme-minimalist .event-card:hover,
 .theme-minimalist .resource-card:hover,
-.theme-minimalist .plan-card:hover {
+.theme-minimalist .plan-card:hover,
+.theme-minimalist .social-feed-card:hover {
     transform: none;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
@@ -1161,7 +1979,6 @@ footer::after {
 }
 
 /* Custom cursor styles */
-/* Custom cursor styles */
 .cursor {
     position: fixed;
     width: 30px;
@@ -1203,11 +2020,6 @@ footer::after {
     opacity: 0.9;
 }
 
-/* Override transitions for cursor elements - no smoothing */
-.cursor, .circle {
-    transition: none !important; /* Disable ALL transitions */
-}
-
 /* Hide cursor on touch devices */
 @media (hover: none) {
     .cursor {
@@ -1220,7 +2032,17 @@ footer::after {
     <!-- Custom cursor element -->
     <div class="cursor"></div>
     
+    <!-- No longer using Facebook SDK as we're using custom styled social cards instead -->
+    
+    <!-- Back to top button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
     <!-- Theme Switcher -->
+    <div class="theme-toggle">
+        <i class="fas fa-palette"></i>
+    </div>
     <div id="theme-switcher">
         <button class="theme-btn active" data-theme="default">Modern Tech</button>
         <button class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
@@ -1232,7 +2054,7 @@ footer::after {
         <div class="container">
             <nav class="navbar">
                 <a href="#" class="logo">
-                    <img src="assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club Logo">
+                    <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo">
                 </a>
                 <ul class="nav-links">
                     <li><a href="#hero">Home</a></li>
@@ -1240,6 +2062,7 @@ footer::after {
                     <li><a href="#events">Events</a></li>
                     <li><a href="#membership">Membership</a></li>
                     <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#social-feed">Updates</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="#resources">Resources</a></li>
                 </ul>
@@ -1254,13 +2077,19 @@ footer::after {
     <section id="hero">
         <div class="container">
             <div class="hero-content">
-                <img src="assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="hero-logo">
+                <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="hero-logo">
                 <h1>Experience the Thrill of Drone Racing</h1>
                 <p>Join our passionate community of pilots and enthusiasts. Learn, compete, and push the boundaries of what's possible with FPV drone racing.</p>
                 <div class="hero-btns">
                     <a href="#membership" class="btn">Join Now</a>
                     <a href="#events" class="btn">Upcoming Races</a>
                 </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <p>Scroll Down</p>
+            <div class="arrow">
+                <i class="fas fa-chevron-down"></i>
             </div>
         </div>
     </section>
@@ -1270,14 +2099,30 @@ footer::after {
         <div class="container">
             <h2>About Our Club</h2>
             <div class="about-content">
-                <div class="about-text">
+                <div class="about-text fade-in">
                     <h3>Founded by passionate FPV pilots</h3>
                     <p>West Coast Multi Rotor Club was established in 2016 by a small group of drone enthusiasts who sought to create a community where pilots of all skill levels could meet, learn, and race together. What started as casual meetups has evolved into one of the region's premier drone racing clubs.</p>
                     <p>Our club is affiliated with the National Drone Racing Association and hosts regular races that comply with official competition standards. We pride ourselves on maintaining a welcoming atmosphere for beginners while providing challenging courses for experienced pilots.</p>
                     <p>Our mission is to promote the exciting sport of FPV drone racing, foster innovation in drone technology, and build a supportive community of pilots who share a passion for pushing the boundaries of what's possible in the air.</p>
                 </div>
-                <div class="about-img">
+                <div class="about-img fade-in">
                     <!-- Placeholder for club group photo -->
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="stats-grid fade-in">
+                <div class="stat-item">
+                    <div class="stat-number">120+</div>
+                    <div class="stat-label">Active Members</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">45</div>
+                    <div class="stat-label">Annual Events</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Years of Experience</div>
                 </div>
             </div>
         </div>
@@ -1288,7 +2133,7 @@ footer::after {
         <div class="container">
             <h2>Upcoming Events</h2>
             <div class="events-grid">
-                <div class="event-card">
+                <div class="event-card fade-in">
                     <div class="event-img">
                         <!-- Placeholder for race image -->
                     </div>
@@ -1300,7 +2145,7 @@ footer::after {
                     </div>
                 </div>
 
-                <div class="event-card">
+                <div class="event-card fade-in">
                     <div class="event-img">
                         <!-- Placeholder for training image -->
                     </div>
@@ -1312,7 +2157,7 @@ footer::after {
                     </div>
                 </div>
 
-                <div class="event-card">
+                <div class="event-card fade-in">
                     <div class="event-img">
                         <!-- Placeholder for practice image -->
                     </div>
@@ -1333,7 +2178,7 @@ footer::after {
             <h2>Join Our Community</h2>
             <p class="text-center mb-5">Choose the membership option that fits your needs and start racing with our community.</p>
             <div class="plans-container">
-                <div class="plan-card">
+                <div class="plan-card fade-in">
                     <h3 class="plan-title">Rookie</h3>
                     <div class="plan-price">$25/month</div>
                     <ul class="plan-features">
@@ -1345,7 +2190,7 @@ footer::after {
                     <a href="#" class="btn">Select Plan</a>
                 </div>
 
-                <div class="plan-card">
+                <div class="plan-card fade-in">
                     <h3 class="plan-title">Pilot</h3>
                     <div class="plan-price">$45/month</div>
                     <ul class="plan-features">
@@ -1358,7 +2203,7 @@ footer::after {
                     <a href="#" class="btn">Select Plan</a>
                 </div>
 
-                <div class="plan-card">
+                <div class="plan-card fade-in">
                     <h3 class="plan-title">Pro</h3>
                     <div class="plan-price">$75/month</div>
                     <ul class="plan-features">
@@ -1380,34 +2225,200 @@ footer::after {
         <div class="container">
             <h2>Moments from the Track</h2>
             <div class="gallery-grid">
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>High-speed chase through the forest course</h3>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>Pilots preparing for the national qualifier</h3>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>Night race with LED-equipped drones</h3>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>Close finish at the summer championship</h3>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>Aerial view of our custom-built race track</h3>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item fade-in">
                     <div class="gallery-item-caption">
                         <h3>Technical pit stop during endurance race</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Feed Section - NEW -->
+    <!-- Social Feed Section - Redesigned to prevent cut-off -->
+    <section id="social-feed">
+        <div class="container">
+            <h2>Connect With Us</h2>
+            <p class="text-center mb-5">Stay connected with our community and never miss an update.</p>
+            
+            <div class="social-feed-container">
+                <!-- Social Cards Row -->
+                <div class="social-cards">
+                    <!-- Facebook Card -->
+                    <div class="social-card facebook-card fade-in">
+                        <div class="social-card-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-card-content">
+                            <h3>Facebook Group</h3>
+                            <p>Join our active community of over 500 drone enthusiasts. Share your builds, ask questions, and connect with local pilots.</p>
+                            <div class="social-stats">
+                                <div class="social-stat">
+                                    <span class="social-stat-number">502</span>
+                                    <span class="social-stat-label">Members</span>
+                                </div>
+                                <div class="social-stat">
+                                    <span class="social-stat-number">24</span>
+                                    <span class="social-stat-label">Posts/Week</span>
+                                </div>
+                            </div>
+                            <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn social-btn facebook-btn">
+                                <i class="fab fa-facebook-f"></i> JOIN OUR GROUP
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Instagram Card -->
+                    <div class="social-card instagram-card fade-in">
+                        <div class="social-card-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="social-card-content">
+                            <h3>Instagram</h3>
+                            <p>Follow us for stunning drone photography, race highlights, and behind-the-scenes footage from our events.</p>
+                            <div class="social-gallery">
+                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Race+Photo')"></div>
+                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/29a7df/white?text=Drone+Photo')"></div>
+                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Event+Photo')"></div>
+                            </div>
+                            <a href="https://www.instagram.com/" target="_blank" class="btn social-btn instagram-btn">
+                                <i class="fab fa-instagram"></i> FOLLOW US
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Discord Card -->
+                    <div class="social-card discord-card fade-in">
+                        <div class="social-card-icon">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <div class="social-card-content">
+                            <h3>Discord Server</h3>
+                            <p>Join our Discord for real-time discussions, tech support, and to organize impromptu flying sessions.</p>
+                            <div class="discord-channels">
+                                <div class="discord-channel"># race-announcements</div>
+                                <div class="discord-channel"># build-help</div>
+                                <div class="discord-channel"># flight-spots</div>
+                            </div>
+                            <a href="https://discord.gg/" target="_blank" class="btn social-btn discord-btn">
+                                <i class="fab fa-discord"></i> JOIN SERVER
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Recent Updates Section - Separate section for feeds -->
+    <section id="recent-updates">
+        <div class="container">
+            <h2>Recent Updates</h2>
+            <div class="updates-container">
+                <div class="feed-section fade-in">
+                    <!-- Custom Facebook Feed Simulation -->
+                    <div class="feed-post">
+                        <div class="feed-post-header">
+                            <div class="feed-post-avatar">
+                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
+                            </div>
+                            <div class="feed-post-meta">
+                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                                <div class="feed-post-date">March 15, 2025</div>
+                            </div>
+                        </div>
+                        <div class="feed-post-content">
+                            <p>Exciting news! Our Spring Championship has been officially sanctioned by the National Drone Racing Association. This means all race results will count toward national rankings. Registration closes next week!</p>
+                            <div class="feed-post-image">
+                                <img src="https://placehold.co/800x400/5d6b77/white?text=Race+Announcement" alt="Race Announcement">
+                            </div>
+                        </div>
+                        <div class="feed-post-footer">
+                            <div class="feed-post-stats">
+                                <span><i class="fas fa-thumbs-up"></i> 45</span>
+                                <span><i class="fas fa-comment"></i> 12</span>
+                                <span><i class="fas fa-share"></i> 8</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feed-post">
+                        <div class="feed-post-header">
+                            <div class="feed-post-avatar">
+                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
+                            </div>
+                            <div class="feed-post-meta">
+                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                                <div class="feed-post-date">March 10, 2025</div>
+                            </div>
+                        </div>
+                        <div class="feed-post-content">
+                            <p>Last weekend's beginner workshop was a huge success! We had 15 new pilots take to the sky for the first time. Big thanks to our volunteer instructors and everyone who helped set up the training course.</p>
+                            <div class="feed-post-gallery">
+                                <img src="https://placehold.co/400x300/5d6b77/white?text=Workshop" alt="Workshop">
+                                <img src="https://placehold.co/400x300/29a7df/white?text=Training" alt="Training">
+                            </div>
+                        </div>
+                        <div class="feed-post-footer">
+                            <div class="feed-post-stats">
+                                <span><i class="fas fa-thumbs-up"></i> 37</span>
+                                <span><i class="fas fa-comment"></i> 8</span>
+                                <span><i class="fas fa-share"></i> 3</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feed-post">
+                        <div class="feed-post-header">
+                            <div class="feed-post-avatar">
+                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
+                            </div>
+                            <div class="feed-post-meta">
+                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                                <div class="feed-post-date">March 5, 2025</div>
+                            </div>
+                        </div>
+                        <div class="feed-post-content">
+                            <p>New track features have been installed at the main field! We've added three elevated gates, a tunnel section, and redesigned the hairpin turn for more technical racing. Come check it out at this weekend's practice session!</p>
+                        </div>
+                        <div class="feed-post-footer">
+                            <div class="feed-post-stats">
+                                <span><i class="fas fa-thumbs-up"></i> 29</span>
+                                <span><i class="fas fa-comment"></i> 15</span>
+                                <span><i class="fas fa-share"></i> 2</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="view-more-container">
+                        <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn view-more-btn">
+                            <i class="fas fa-external-link-alt"></i> VIEW ALL UPDATES
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1420,28 +2431,28 @@ footer::after {
             <h2>Get in Touch</h2>
             <div class="contact-container">
                 <div class="contact-info">
-                    <div class="contact-item">
+                    <div class="contact-item fade-in">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h3>Location</h3>
                             <p>123 Skyline Drive<br>Drone Valley, CA 90210</p>
                         </div>
                     </div>
-                    <div class="contact-item">
+                    <div class="contact-item fade-in">
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
                             <p>info@wcmrc.com</p>
                         </div>
                     </div>
-                    <div class="contact-item">
+                    <div class="contact-item fade-in">
                         <i class="fas fa-phone-alt"></i>
                         <div>
                             <h3>Phone</h3>
                             <p>(555) 123-4567</p>
                         </div>
                     </div>
-                    <div class="contact-item">
+                    <div class="contact-item fade-in">
                         <i class="fas fa-clock"></i>
                         <div>
                             <h3>Practice Hours</h3>
@@ -1449,7 +2460,7 @@ footer::after {
                         </div>
                     </div>
                 </div>
-                <div class="contact-form">
+                <div class="contact-form fade-in">
                     <h3>Send us a message</h3>
                     <form>
                         <div class="form-group">
@@ -1480,7 +2491,7 @@ footer::after {
         <div class="container">
             <h2>Pilot Resources</h2>
             <div class="resources-grid">
-                <div class="resource-card">
+                <div class="resource-card fade-in">
                     <div class="resource-icon">
                         <i class="fas fa-book"></i>
                     </div>
@@ -1491,7 +2502,7 @@ footer::after {
                     </div>
                 </div>
 
-                <div class="resource-card">
+                <div class="resource-card fade-in">
                     <div class="resource-icon">
                         <i class="fas fa-tools"></i>
                     </div>
@@ -1502,7 +2513,7 @@ footer::after {
                     </div>
                 </div>
 
-                <div class="resource-card">
+                <div class="resource-card fade-in">
                     <div class="resource-icon">
                         <i class="fas fa-map"></i>
                     </div>
@@ -1513,7 +2524,7 @@ footer::after {
                     </div>
                 </div>
 
-                <div class="resource-card">
+                <div class="resource-card fade-in">
                     <div class="resource-icon">
                         <i class="fas fa-video"></i>
                     </div>
@@ -1530,7 +2541,7 @@ footer::after {
     <!-- Footer -->
     <footer>
         <div class="container">
-            <img src="assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="footer-logo">
+            <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="footer-logo">
             <div class="footer-container">
                 <div class="footer-col">
                     <h3>West Coast Multi Rotor Club</h3>
@@ -1551,6 +2562,7 @@ footer::after {
                         <li><a href="#events">Events</a></li>
                         <li><a href="#membership">Membership</a></li>
                         <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#social-feed">Updates</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="#resources">Resources</a></li>
                     </ul>
@@ -1564,7 +2576,7 @@ footer::after {
                         <li><a href="#">Liability Waiver</a></li>
                     </ul>
                 </div>
-                <div class="footer-col">
+                <div class="footer-col footer-newsletter">
                     <h3>Newsletter</h3>
                     <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
                     <form>
@@ -1592,108 +2604,125 @@ footer::after {
             hamburger.querySelector('i').classList.toggle('fa-times');
         });
         
-        // Custom cursor with floating circles - direct tracking
-// Custom cursor with floating circles - direct tracking with NO lag
-const cursor = document.querySelector('.cursor');
-const circles = [];
-
-// Create circles inside cursor
-for (let i = 0; i < 5; i++) {
-    const circle = document.createElement('div');
-    circle.className = 'circle';
-    if (i === 4) circle.classList.add('center-circle');
-    cursor.appendChild(circle);
-    circles.push(circle);
-}
-
-// Only activate on devices that support hover (desktop)
-if (window.matchMedia('(hover: hover)').matches) {
-    // Hide default cursor
-    document.body.style.cursor = 'none';
-    
-    let isHovering = false;
-    
-    // Pattern positions for hover state - pre-calculated
-    const hoverPositions = [
-        { x: -8, y: -8 },
-        { x: 8, y: -8 },
-        { x: -8, y: 8 },
-        { x: 8, y: 8 },
-        { x: 0, y: 0 }
-    ];
-    
-    // Simplified offsets with less computation
-    const offsets = [
-        { x: -5, y: -5, speed: 0.03 },
-        { x: 5, y: -5, speed: 0.04 },
-        { x: -5, y: 5, speed: 0.05 },
-        { x: 5, y: 5, speed: 0.06 },
-        { x: 0, y: 0, speed: 0.02 }
-    ];
-    
-    // DIRECT mouse tracking with no delay - most important change
-    document.addEventListener('mousemove', e => {
-        // Update cursor position DIRECTLY without any intermediate variables
-        // This provides immediate tracking with no smoothing
-        cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
-    });
-    
-    // Main animation loop for the floating circles only
-    let animationFrameId;
-    let time = 0;
-    
-    function updateCircles() {
-        // Update time for circular motion
-        time += 0.01;
+        // Theme Switcher Toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        const themeSwitcher = document.getElementById('theme-switcher');
         
-        // Update circles
-        circles.forEach((circle, i) => {
-            if (isHovering) {
-                // Form pattern when hovering interactive elements
-                const pos = hoverPositions[i];
-                circle.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-                if (!circle.classList.contains('glow')) {
-                    circle.classList.add('glow');
-                }
-            } else {
-                // Simplified floating animation - circular motion
-                const offset = offsets[i];
-                const x = Math.sin(time * offset.speed * 10) * offset.x;
-                const y = Math.cos(time * offset.speed * 10) * offset.y;
+        themeToggle.addEventListener('click', () => {
+            themeSwitcher.classList.toggle('active');
+        });
+        
+        // Theme Switcher
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.dataset.theme;
                 
-                circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                if (circle.classList.contains('glow')) {
-                    circle.classList.remove('glow');
+                // Remove all theme classes
+                document.body.classList.remove('theme-cyberpunk', 'theme-minimalist');
+                
+                // Add selected theme class if not default
+                if (theme !== 'default') {
+                    document.body.classList.add(`theme-${theme}`);
                 }
-            }
+                
+                // Update active button
+                themeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Close theme switcher
+                themeSwitcher.classList.remove('active');
+            });
         });
         
-        // Continue animation loop
-        animationFrameId = requestAnimationFrame(updateCircles);
-    }
-    
-    // Handle hover states for interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            isHovering = true;
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            isHovering = false;
-        });
-    });
-    
-    // Start animation for the circles only
-    updateCircles();
-    
-    // Clean up on page hide/unload
-    window.addEventListener('pagehide', () => {
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
+        // Custom cursor with floating circles
+        const cursor = document.querySelector('.cursor');
+        const circles = [];
+
+        // Create circles inside cursor
+        for (let i = 0; i < 5; i++) {
+            const circle = document.createElement('div');
+            circle.className = 'circle';
+            if (i === 4) circle.classList.add('center-circle');
+            cursor.appendChild(circle);
+            circles.push(circle);
         }
-    });
-}
+
+        // Only activate on devices that support hover (desktop)
+        if (window.matchMedia('(hover: hover)').matches) {
+            // Hide default cursor
+            document.body.style.cursor = 'none';
+            
+            let isHovering = false;
+            
+            // Pattern positions for hover state
+            const hoverPositions = [
+                { x: -8, y: -8 },
+                { x: 8, y: -8 },
+                { x: -8, y: 8 },
+                { x: 8, y: 8 },
+                { x: 0, y: 0 }
+            ];
+            
+            // Offsets for normal state
+            const offsets = [
+                { x: -5, y: -5, speed: 0.03 },
+                { x: 5, y: -5, speed: 0.04 },
+                { x: -5, y: 5, speed: 0.05 },
+                { x: 5, y: 5, speed: 0.06 },
+                { x: 0, y: 0, speed: 0.02 }
+            ];
+            
+            // Direct mouse tracking with no delay
+            document.addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
+            });
+            
+            // Animation loop for floating circles
+            let time = 0;
+            
+            function updateCircles() {
+                time += 0.01;
+                
+                circles.forEach((circle, i) => {
+                    if (isHovering) {
+                        const pos = hoverPositions[i];
+                        circle.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+                        if (!circle.classList.contains('glow')) {
+                            circle.classList.add('glow');
+                        }
+                    } else {
+                        const offset = offsets[i];
+                        const x = Math.sin(time * offset.speed * 10) * offset.x;
+                        const y = Math.cos(time * offset.speed * 10) * offset.y;
+                        
+                        circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                        if (circle.classList.contains('glow')) {
+                            circle.classList.remove('glow');
+                        }
+                    }
+                });
+                
+                requestAnimationFrame(updateCircles);
+            }
+            
+            // Handle hover states for interactive elements
+            const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                });
+            });
+            
+            // Start animation
+            updateCircles();
+        }
+        
         // Smooth Scroll for Navigation Links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1716,54 +2745,46 @@ if (window.matchMedia('(hover: hover)').matches) {
             });
         });
 
-        // Theme Switcher
-        const themeSwitcher = document.getElementById('theme-switcher');
-        const themeButtons = document.querySelectorAll('.theme-btn');
+        // Scroll Animation for fade-in elements
+        const fadeElements = document.querySelectorAll('.fade-in');
         
-        themeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const theme = button.dataset.theme;
-                
-                // Remove all theme classes
-                document.body.classList.remove('theme-cyberpunk', 'theme-minimalist');
-                
-                // Add selected theme class if not default
-                if (theme !== 'default') {
-                    document.body.classList.add(`theme-${theme}`);
-                }
-                
-                // Update active button
-                themeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-
-        // Interactive Elements
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
-                // Here you would normally open a lightbox
-                // For this demo we'll just toggle a class
-                item.classList.toggle('expanded');
-            });
-        });
-
-        // Scroll Animation
-        const animateOnScroll = () => {
-            const sections = document.querySelectorAll('section');
+        const fadeInOnScroll = () => {
+            const triggerBottom = window.innerHeight * 0.85;
             
-            sections.forEach(section => {
-                const sectionTop = section.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
                 
-                if (sectionTop < windowHeight * 0.75) {
-                    section.classList.add('animated');
+                if (elementTop < triggerBottom) {
+                    element.classList.add('active');
                 }
             });
         };
+        
+        // Back to top button
+        const backToTopButton = document.querySelector('.back-to-top');
+        
+        const toggleBackToTopButton = () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+        };
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        window.addEventListener('scroll', animateOnScroll);
-        animateOnScroll(); // Run once on load
+        // Event listeners for scroll animations
+        window.addEventListener('scroll', fadeInOnScroll);
+        window.addEventListener('scroll', toggleBackToTopButton);
+        
+        // Run once on load
+        fadeInOnScroll();
+        toggleBackToTopButton();
     </script>
 </body>
 </html>
