@@ -1,1616 +1,1600 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>West Coast Multi Rotor Club | Drone Racing Club</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-/* Base Styles */
-:root {
-    /* WCMRC Official Theme Variables */
-    --primary-color: #29a7df; /* Bright blue from the logo/shirt */
-    --primary-light: rgba(41, 167, 223, 0.1);
-    --primary-dark: #1a7fb0;
-    --secondary-color: #5d6b77; /* Gray/slate color from the logo */
-    --accent-color: #000000; /* Black accents */
-    --background-color: #f5f7fa; /* Light gray/white background */
-    --text-color: #5d6b77; /* Gray text color */
-    --header-color: #5d6b77; /* Header in the secondary color */
-    --card-bg: #ffffff; /* White card backgrounds */
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'Poppins', sans-serif;
-    --animation-speed: 0.3s;
-    --border-radius: 10px;
-    --section-padding: 100px 0;
-    --header-height: 80px;
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    transition: all var(--animation-speed) cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-body {
-    font-family: var(--font-primary);
-    color: var(--text-color);
-    background-color: var(--background-color);
-    overflow-x: hidden;
-    line-height: 1.7;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-ul {
-    list-style: none;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-button, .btn {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background: var(--primary-color);
-    color: white;
-    padding: 14px 28px;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-family: var(--font-primary);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-button::before, .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 100%;
-    background: var(--primary-dark);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: -1;
-}
-
-button:hover::before, .btn:hover::before {
-    width: 100%;
-}
-
-button:hover, .btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-section {
-    padding: var(--section-padding);
-    position: relative;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 30px;
-    position: relative;
-    z-index: 2;
-}
-
-h1, h2, h3, h4, h5 {
-    font-family: var(--font-secondary);
-    margin-bottom: 24px;
-    line-height: 1.2;
-    font-weight: 600;
-    color: var(--secondary-color);
-}
-
-h1 {
-    font-size: 4rem;
-    font-weight: 700;
-}
-
-h2 {
-    font-size: 2.5rem;
-    position: relative;
-    padding-bottom: 15px;
-    margin-bottom: 60px;
-    text-align: center;
-}
-
-h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: var(--primary-color);
-    border-radius: 2px;
-}
-
-p {
-    margin-bottom: 18px;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.mb-5 {
-    margin-bottom: 50px;
-}
-
-/* New glass effect for cards */
-.glass-effect {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-/* Theme Switcher */
-#theme-switcher {
-    position: fixed;
-    top: 120px;
-    right: 20px;
-    z-index: 1000;
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#theme-switcher.active {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.theme-toggle {
-    position: fixed;
-    top: 120px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-md);
-    cursor: pointer;
-    z-index: 1001;
-    transition: all 0.4s ease;
-}
-
-.theme-toggle:hover {
-    transform: rotate(30deg);
-}
-
-.theme-btn {
-    padding: 10px 15px;
-    border-radius: var(--border-radius);
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: #eee;
-    color: #333;
-    transition: all 0.3s ease;
-}
-
-.theme-btn.active {
-    background: var(--primary-color);
-    color: white;
-}
-
-/* Header & Navigation */
-header {
-    background-color: rgba(93, 107, 119, 0.98);
-    color: white;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    height: var(--header-height);
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    height: 60px;
-}
-
-.logo img {
-    height: 100%;
-    width: auto;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.nav-links {
-    display: flex;
-    gap: 40px;
-}
-
-.nav-links a {
-    position: relative;
-    font-weight: 500;
-    font-size: 1rem;
-    padding: 5px 0;
-}
-
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--primary-color);
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-}
-
-.hamburger {
-    display: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-}
-
-/* Hero Section */
-#hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    background: linear-gradient(135deg, rgba(93, 107, 119, 0.85), rgba(41, 167, 223, 0.7)), 
-                url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
-    color: white;
-    padding-top: 0;
-    overflow: hidden;
-}
-
-.hero-content {
-    max-width: 800px;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.2s forwards;
-}
-
-.hero-content h1 {
-    margin-bottom: 24px;
-    font-size: 4.5rem;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    line-height: 1.1;
-}
-
-.hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    opacity: 0.95;
-    max-width: 600px;
-    line-height: 1.8;
-}
-
-.hero-btns {
-    display: flex;
-    gap: 20px;
-}
-
-.hero-btns .btn {
-    padding: 16px 32px;
-    font-size: 1rem;
-}
-
-.hero-btns .btn:nth-child(2) {
-    background: transparent;
-    border: 2px solid white;
-}
-
-.hero-btns .btn:nth-child(2):hover {
-    background: white;
-    color: var(--primary-color);
-}
-
-/* Hexagonal pattern overlay for hero with motion */
-#hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 1;
-    opacity: 0.5;
-    animation: slowMove 60s linear infinite alternate;
-}
-
-@keyframes slowMove {
-    0% {
-        background-position: 0 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>West Coast Multi Rotor Club | Drone Racing Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Base Styles */
+    :root {
+      /* WCMRC Official Theme Variables */
+      --primary-color: #29a7df;
+      --primary-light: rgba(41, 167, 223, 0.1);
+      --primary-dark: #1a7fb0;
+      --secondary-color: #5d6b77;
+      --accent-color: #000000;
+      --background-color: #f5f7fa;
+      --text-color: #5d6b77;
+      --header-color: #5d6b77;
+      --card-bg: #ffffff;
+      --font-primary: 'Montserrat', sans-serif;
+      --font-secondary: 'Poppins', sans-serif;
+      --animation-speed: 0.3s;
+      --border-radius: 10px;
+      --section-padding: 100px 0;
+      --header-height: 80px;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
     }
-    100% {
-        background-position: 100px 100px;
+
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all var(--animation-speed) cubic-bezier(0.25, 1, 0.5, 1);
     }
-}
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+    body {
+      font-family: var(--font-primary);
+      color: var(--text-color);
+      background-color: var(--background-color);
+      overflow-x: hidden;
+      line-height: 1.7;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    a {
+      text-decoration: none;
+      color: inherit;
     }
-}
 
-/* Scroll Indicator */
-.scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    color: white;
-    text-align: center;
-    animation: fadeInUp 1s ease 1.5s both, bounce 2s ease-in-out infinite;
-}
-
-.scroll-indicator p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 10px;
-}
-
-.scroll-indicator .arrow {
-    font-size: 1.5rem;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+    ul {
+      list-style: none;
     }
-    40% {
-        transform: translateY(-10px);
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
     }
-    60% {
-        transform: translateY(-5px);
+
+    button,
+    .btn {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background: var(--primary-color);
+      color: white;
+      padding: 14px 28px;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-family: var(--font-primary);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
     }
-}
 
-/* About Section */
-#about {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-}
+    button::before,
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: var(--primary-dark);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: -1;
+    }
+
+    button:hover::before,
+    .btn:hover::before {
+      width: 100%;
+    }
+
+    button:hover,
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    section {
+      padding: var(--section-padding);
+      position: relative;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: var(--font-secondary);
+      margin-bottom: 24px;
+      line-height: 1.2;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
 
-/* Hexagonal pattern for about section */
-#about::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-}
-
-.about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.about-img {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    height: 450px;
-    background: url('https://placehold.co/600x400/29a7df/white?text=Club+Photo') center/cover no-repeat;
-    position: relative;
-    transform: perspective(1000px) rotateY(-5deg);
-    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.about-img:hover {
-    transform: perspective(1000px) rotateY(0deg);
-}
-
-/* Diagonal accent on about image - inspired by the t-shirt design */
-.about-img::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
-}
-
-.about-text h3 {
-    font-size: 2rem;
-    margin-bottom: 24px;
-    color: var(--primary-color);
-}
-
-.about-text p {
-    margin-bottom: 20px;
-    opacity: 0.9;
-}
-
-/* Featured stats */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 60px;
-    text-align: center;
-}
-
-.stat-item {
-    padding: 30px;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.4s ease;
-}
-
-.stat-item:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-}
-
-.stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-    line-height: 1;
-}
-
-.stat-label {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--secondary-color);
-}
-
-/* Events Section */
-#events {
-    position: relative;
-    overflow: hidden;
-}
-
-/* Racing checkers pattern for events section - inspired by the t-shirt */
-#events::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-}
-
-.events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-}
-
-.event-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.event-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Diagonal accent on event cards - inspired by the t-shirt */
-.event-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 5px;
-    background: var(--primary-color);
-    z-index: 2;
-}
-
-.event-img {
-    height: 220px;
-    background: url('https://placehold.co/400x200/5d6b77/white?text=Event+Image') center/cover no-repeat;
-    position: relative;
-}
-
-.event-img::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
-}
-
-.event-details {
-    padding: 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.event-date {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 8px 15px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.event-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-.event-card p {
-    margin-bottom: 24px;
-    flex-grow: 1;
-}
-
-/* Membership Section */
-#membership {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Hexagonal pattern for membership section */
-#membership::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-}
-
-.plans-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-}
-
-.plan-card {
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    text-align: center;
-    padding: 50px 30px;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.plan-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: var(--shadow-lg);
-    z-index: 2;
-}
-
-.plan-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: var(--primary-color);
-    z-index: -1;
-}
-
-.plan-title {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-}
-
-.plan-price {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: var(--secondary-color);
-}
-
-.plan-features {
-    margin-bottom: 30px;
-    flex-grow: 1;
-}
-
-.plan-features li {
-    margin-bottom: 15px;
-    position: relative;
-    padding-left: 20px;
-    text-align: left;
-}
-
-.plan-features li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--primary-color);
-    font-weight: bold;
-}
-
-/* Gallery Section */
-#gallery {
-    background-color: var(--background-color);
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    grid-auto-rows: 280px;
-    gap: 25px;
-    position: relative;
-    z-index: 1;
-}
-
-.gallery-item {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    position: relative;
-    background: url('https://placehold.co/400x400/5d6b77/white?text=Gallery+Image') center/cover no-repeat;
-    cursor: pointer;
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: var(--shadow-sm);
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-    z-index: 2;
-    box-shadow: var(--shadow-md);
-}
-
-.gallery-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.gallery-item:hover::before {
-    opacity: 1;
-}
-
-/* Blue overlay on gallery items - on hover */
-.gallery-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(41, 167, 223, 0.3);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.gallery-item:hover::after {
-    opacity: 1;
-}
-
-.gallery-item-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 25px;
-    color: white;
-    transform: translateY(50px);
-    opacity: 0;
-    transition: all 0.4s ease;
-    z-index: 2;
-}
-
-.gallery-item:hover .gallery-item-caption {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-/* Social Feed Section - NEW */
-#social-feed {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Hexagonal pattern for social feed section */
-#social-feed::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-}
-
-.social-feed-container {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-}
-
-/* Social Feed Section - Updated with Feed */
-#social-feed {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: visible;
-    padding: var(--section-padding);
-    padding-top: 150px; /* Increase top padding to prevent cut-off */
-    margin-top: 30px;
-}
-
-/* Hexagonal pattern for social feed section */
-#social-feed::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-}
-
-.social-feed-container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-}
-
-.social-cards {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
-}
-
-.social-card {
-    background-color: white;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.social-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
-}
-
-.social-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    z-index: 1;
-}
-
-.facebook-card::before {
-    background-color: #1877f2;
-}
-
-.instagram-card::before {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.discord-card::before {
-    background-color: #5865F2;
-}
-
-.social-card-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin: 20px auto 20px; /* Change from negative margin to positive */
-    position: relative;
-    z-index: 2;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.facebook-card .social-card-icon {
-    background-color: #1877f2;
-}
-
-.instagram-card .social-card-icon {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.discord-card .social-card-icon {
-    background-color: #5865F2;
-}
-
-.social-card-content {
-    padding: 20px 30px 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.social-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.social-card p {
-    margin-bottom: 20px;
-    text-align: center;
-    opacity: 0.9;
-}
-
-.social-stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-    text-align: center;
-}
-
-.social-stat {
-    display: flex;
-    flex-direction: column;
-}
-
-.social-stat-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1877f2;
-}
-
-.social-stat-label {
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-.social-gallery {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-.social-gallery-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    background-size: cover;
-    background-position: center;
-}
-
-.discord-channels {
-    background-color: #F6F6F6;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.discord-channel {
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    font-family: 'Consolas', monospace;
-    font-size: 0.9rem;
-    color: #4f545c;
-    font-weight: 500;
-}
-
-.discord-channel:last-child {
-    margin-bottom: 0;
-}
-
-.social-btn {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.facebook-btn {
-    background-color: #1877f2;
-}
-
-.facebook-btn:hover {
-    background-color: #0e5fcc;
-}
-
-.instagram-btn {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.discord-btn {
-    background-color: #5865F2;
-}
-
-.discord-btn:hover {
-    background-color: #4752c4;
-}
-
-/* Recent Updates Section - New */
-#recent-updates {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: hidden;
-    padding: var(--section-padding);
-}
-
-#recent-updates::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-}
-
-.updates-container {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.feed-section {
-    width: 100%;
-}
-
-.feed-post {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 30px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feed-post:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.feed-post-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 20px 20px 10px;
-}
-
-.feed-post-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.feed-post-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.feed-post-meta {
-    display: flex;
-    flex-direction: column;
-}
-
-.feed-post-author {
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--secondary-color);
-}
-
-.feed-post-date {
-    font-size: 0.85rem;
-    opacity: 0.7;
-}
-
-.feed-post-content {
-    padding: 0 20px 20px;
-}
-
-.feed-post-content p {
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-.feed-post-image {
-    margin-bottom: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.feed-post-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.feed-post-gallery {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.feed-post-gallery img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-}
-
-.feed-post-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px 20px;
-    border-top: 1px solid #f5f5f5;
-}
-
-.feed-post-stats {
-    display: flex;
-    gap: 20px;
-}
-
-.feed-post-stats span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-}
-
-.feed-post-stats i {
-    color: var(--primary-color);
-}
-
-.view-more-container {
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-.view-more-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--secondary-color);
-    padding: 12px 24px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-}
-
-.view-more-btn:hover {
-    background-color: var(--primary-color);
-}
-
-/* Contact Section */
-#contact {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Hexagonal pattern for contact section */
-#contact::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-}
-
-.contact-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: start;
-    position: relative;
-    z-index: 1;
-}
-
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 25px;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    transition: transform 0.4s ease, box-shadow 0.3s ease;
-    box-shadow: var(--shadow-sm);
-}
-
-.contact-item:hover {
-    transform: translateX(10px);
-    box-shadow: var(--shadow-md);
-}
-
-.contact-item i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-top: 5px;
-}
-
-.contact-item h3 {
-    margin-bottom: 5px;
-    font-size: 1.2rem;
-}
-
-.contact-form {
-    background-color: var(--background-color);
-    padding: 40px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Diagonal accent on contact form - inspired by the t-shirt */
-.contact-form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40%;
-    height: 5px;
-    background: var(--primary-color);
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.form-control {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    font-family: var(--font-primary);
-    font-size: 1rem;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    background-color: white;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.1);
-}
-
-textarea.form-control {
-    resize: vertical;
-    min-height: 150px;
-}
-
-/* Resources Section */
-#resources {
-    position: relative;
-    overflow: hidden;
-}
-
-/* Racing checkers pattern for resources section */
-#resources::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-}
-
-.resources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-}
-
-.resource-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.resource-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-}
-
-.resource-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 120px;
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 3rem;
-}
-
-.resource-details {
-    padding: 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.resource-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-}
-
-.resource-card p {
-    margin-bottom: 24px;
-    flex-grow: 1;
-}
-
-/* Footer */
-footer {
-    background-color: var(--header-color);
-    color: white;
-    padding: 80px 0 40px;
-    position: relative;
-}
-
-/* Diagonal accent on footer - inspired by the t-shirt */
-footer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, rgba(41, 167, 223, 0) 100%);
-}
-
-.footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 50px;
-    margin-bottom: 60px;
-}
-
-.footer-col h3 {
-    position: relative;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 1.4rem;
-    color: white;
-}
-
-.footer-col h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: var(--primary-color);
-}
-
-.footer-links li {
-    margin-bottom: 15px;
-}
-
-.footer-links li a {
-    transition: transform 0.3s ease, color 0.3s ease;
-    display: inline-block;
-    opacity: 0.8;
-}
-
-.footer-links li a:hover {
-    transform: translateX(5px);
-    color: var(--primary-color);
-    opacity: 1;
-}
-
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.social-links a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.2rem;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.social-links a:hover {
-    background-color: var(--primary-color);
-    transform: translateY(-5px);
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.footer-logo {
-    display: block;
-    margin: 0 auto 30px;
-    height: 70px;
-    width: auto;
-    filter: brightness(1.1);
-}
-
-/* Hero Logo Styling */
-.hero-logo {
-    margin-bottom: 40px;
-    max-width: 400px;
-    height: auto;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
-    animation: fadeInUp 1s ease;
-}
-
-/* Animation for elements on scroll */
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.fade-in.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Back to top button */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 99;
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    font-size: 1.2rem;
-}
-
-.back-to-top.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.back-to-top:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-5px);
-}
-
-/* Newsletter form in footer */
-.footer-newsletter .form-control {
-    border-radius: var(--border-radius);
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-.footer-newsletter .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.footer-newsletter .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.2);
-}
-
-.footer-newsletter .btn {
-    width: 100%;
-}
-
-/* Responsive Styles */
-@media (max-width: 1200px) {
     h1 {
-        font-size: 3.5rem;
-    }
-    
-    h2 {
-        font-size: 2.2rem;
-    }
-    
-    .hero-logo {
-        max-width: 350px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 992px) {
-    h1 {
-        font-size: 3rem;
+      font-size: 4rem;
+      font-weight: 700;
     }
 
     h2 {
-        font-size: 2rem;
-    }
-    
-    .hero-logo {
-        max-width: 300px;
-    }
-
-    .about-content,
-    .contact-container {
-        grid-template-columns: 1fr;
-        gap: 40px;
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 60px;
+      text-align: center;
     }
 
-    .about-img {
-        order: -1;
-        height: 400px;
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--primary-color);
+      border-radius: 2px;
     }
-    
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
+
+    p {
+      margin-bottom: 18px;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mb-5 {
+      margin-bottom: 50px;
+    }
+
+    /* New glass effect for cards */
+    .glass-effect {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* Theme Switcher */
+    #theme-switcher {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      z-index: 1000;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #theme-switcher.active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.4s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
+
+    .theme-btn {
+      padding: 10px 15px;
+      border-radius: var(--border-radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #eee;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .theme-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    /* Header & Navigation */
+    header {
+      background-color: rgba(93, 107, 119, 0.98);
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      height: var(--header-height);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 60px;
+    }
+
+    .logo img {
+      height: 100%;
+      width: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
 
     .nav-links {
+      display: flex;
+      gap: 40px;
+    }
+
+    .nav-links a {
+      position: relative;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    /* Hero Section */
+    #hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: linear-gradient(135deg, rgba(93, 107, 119, 0.85), rgba(41, 167, 223, 0.7)),
+                  url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
+      color: white;
+      padding-top: 0;
+      overflow: hidden;
+    }
+
+    /* Hero Logo Animation Styles */
+    .hero-logo-container {
+      position: relative;
+      width: 400px;
+      height: 120px;
+      margin-bottom: 40px;
+    }
+
+    .hero-logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      max-width: 400px;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+      transition: opacity 0.5s ease;
+    }
+
+    .hero-logo-no-drone {
+      opacity: 0;
+    }
+
+    .hero-drone {
+      position: absolute;
+      width: 90px;
+      top: 15px;
+      right: 75px;
+      transition: opacity 0.8s ease;
+      z-index: 3;
+      opacity: 0;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+      will-change: transform;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.2s ease 0.2s forwards;
+    }
+
+    .hero-content h1 {
+      margin-bottom: 24px;
+      font-size: 4.5rem;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      line-height: 1.1;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      max-width: 600px;
+      line-height: 1.8;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 20px;
+    }
+
+    .hero-btns .btn {
+      padding: 16px 32px;
+      font-size: 1rem;
+    }
+
+    .hero-btns .btn:nth-child(2) {
+      background: transparent;
+      border: 2px solid white;
+    }
+
+    .hero-btns .btn:nth-child(2):hover {
+      background: white;
+      color: var(--primary-color);
+    }
+
+    /* Hexagonal overlay on hero */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 1;
+      opacity: 0.5;
+      animation: slowMove 60s linear infinite alternate;
+    }
+
+    @keyframes slowMove {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 100px 100px;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      color: white;
+      text-align: center;
+      animation: fadeInUp 1s ease 1.5s both, bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    .scroll-indicator .arrow {
+      font-size: 1.5rem;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* About Section */
+    #about {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-img {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      height: 450px;
+      background: url('https://placehold.co/600x400/29a7df/white?text=Club+Photo') center/cover no-repeat;
+      position: relative;
+      transform: perspective(1000px) rotateY(-5deg);
+      transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .about-img:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+
+    .about-img::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
+    }
+
+    .about-text h3 {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      color: var(--primary-color);
+    }
+
+    .about-text p {
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    /* Featured stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 30px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.4s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--secondary-color);
+    }
+
+    /* Events Section */
+    #events {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #events::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .event-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 5px;
+      background: var(--primary-color);
+      z-index: 2;
+    }
+
+    .event-img {
+      height: 220px;
+      background: url('https://placehold.co/400x200/5d6b77/white?text=Event+Image') center/cover no-repeat;
+      position: relative;
+    }
+
+    .event-img::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    }
+
+    .event-details {
+      padding: 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-date {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .event-card h3 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .event-card p {
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    /* Membership Section */
+    #membership {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #membership::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .plans-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-card {
+      background-color: var(--background-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      padding: 50px 30px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-lg);
+      z-index: 2;
+    }
+
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-color);
+      z-index: -1;
+    }
+
+    .plan-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: var(--secondary-color);
+    }
+
+    .plan-features {
+      margin-bottom: 30px;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      margin-bottom: 15px;
+      position: relative;
+      padding-left: 20px;
+      text-align: left;
+    }
+
+    .plan-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    /* Gallery Section */
+    #gallery {
+      background-color: var(--background-color);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-auto-rows: 280px;
+      gap: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gallery-item {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      position: relative;
+      background: url('https://placehold.co/400x400/5d6b77/white?text=Gallery+Image') center/cover no-repeat;
+      cursor: pointer;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      z-index: 2;
+      box-shadow: var(--shadow-md);
+    }
+
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .gallery-item:hover::before {
+      opacity: 1;
+    }
+
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(41, 167, 223, 0.3);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+
+    .gallery-item-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 25px;
+      color: white;
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      z-index: 2;
+    }
+
+    .gallery-item:hover .gallery-item-caption {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Social Feed Section */
+    #social-feed {
+      background-color: var(--background-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #social-feed::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .social-feed-container {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    .social-cards {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .social-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .social-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .social-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      z-index: 1;
+    }
+
+    .facebook-card::before {
+      background-color: #1877f2;
+    }
+
+    .instagram-card::before {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-card::before {
+      background-color: #5865F2;
+    }
+
+    .social-card-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 20px auto 20px;
+      position: relative;
+      z-index: 2;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .facebook-card .social-card-icon {
+      background-color: #1877f2;
+    }
+
+    .instagram-card .social-card-icon {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-card .social-card-icon {
+      background-color: #5865F2;
+    }
+
+    .social-card-content {
+      padding: 20px 30px 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .social-card p {
+      margin-bottom: 20px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .social-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .social-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1877f2;
+    }
+
+    .social-stat-label {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .social-gallery {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .social-gallery-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .discord-channels {
+      background-color: #F6F6F6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .discord-channel {
+      padding: 5px 10px;
+      margin-bottom: 5px;
+      font-family: 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: #4f545c;
+      font-weight: 500;
+    }
+
+    .discord-channel:last-child {
+      margin-bottom: 0;
+    }
+
+    .social-btn {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .facebook-btn {
+      background-color: #1877f2;
+    }
+
+    .facebook-btn:hover {
+      background-color: #0e5fcc;
+    }
+
+    .instagram-btn {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-btn {
+      background-color: #5865F2;
+    }
+
+    .discord-btn:hover {
+      background-color: #4752c4;
+    }
+
+    /* Recent Updates Section */
+    #recent-updates {
+      background-color: var(--background-color);
+      position: relative;
+      overflow: hidden;
+      padding: var(--section-padding);
+    }
+
+    #recent-updates::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .updates-container {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .feed-section {
+      width: 100%;
+    }
+
+    .feed-post {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 30px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feed-post:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feed-post-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 20px 10px;
+    }
+
+    .feed-post-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .feed-post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feed-post-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feed-post-author {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--secondary-color);
+    }
+
+    .feed-post-date {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .feed-post-content {
+      padding: 0 20px 20px;
+    }
+
+    .feed-post-content p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .feed-post-image {
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .feed-post-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .feed-post-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .feed-post-gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .feed-post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px 20px;
+      border-top: 1px solid #f5f5f5;
+    }
+
+    .feed-post-stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .feed-post-stats span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+    }
+
+    .feed-post-stats i {
+      color: var(--primary-color);
+    }
+
+    .view-more-container {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .view-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--secondary-color);
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .view-more-btn:hover {
+      background-color: var(--primary-color);
+    }
+
+    /* Contact Section */
+    #contact {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 25px;
+      background-color: var(--background-color);
+      border-radius: var(--border-radius);
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-item:hover {
+      transform: translateX(10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .contact-item i {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-top: 5px;
+    }
+
+    .contact-item h3 {
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
+
+    .contact-form {
+      background-color: var(--background-color);
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-form::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: 5px;
+      background: var(--primary-color);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+      background-color: white;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.1);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    /* Resources Section */
+    #resources {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #resources::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .resource-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .resource-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 3rem;
+    }
+
+    .resource-details {
+      padding: 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resource-card h3 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .resource-card p {
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--header-color);
+      color: white;
+      padding: 80px 0 40px;
+      position: relative;
+    }
+
+    footer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary-color) 0%, rgba(41, 167, 223, 0) 100%);
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 50px;
+      margin-bottom: 60px;
+    }
+
+    .footer-col h3 {
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      font-size: 1.4rem;
+      color: white;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: var(--primary-color);
+    }
+
+    .footer-links li {
+      margin-bottom: 15px;
+    }
+
+    .footer-links li a {
+      transition: transform 0.3s ease, color 0.3s ease;
+      display: inline-block;
+      opacity: 0.8;
+    }
+
+    .footer-links li a:hover {
+      transform: translateX(5px);
+      color: var(--primary-color);
+      opacity: 1;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .social-links a:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-5px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-logo {
+      display: block;
+      margin: 0 auto 30px;
+      height: 70px;
+      width: auto;
+      filter: brightness(1.1);
+    }
+
+    /* Animation for elements on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      font-size: 1.2rem;
+    }
+
+    .back-to-top.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-5px);
+    }
+
+    /* Newsletter form in footer */
+    .footer-newsletter .form-control {
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .footer-newsletter .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-newsletter .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.2);
+    }
+
+    .footer-newsletter .btn {
+      width: 100%;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: 3.5rem;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      .hero-logo-container {
+        max-width: 350px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 992px) {
+      h1 {
+        font-size: 3rem;
+      }
+      h2 {
+        font-size: 2rem;
+      }
+      .hero-logo-container {
+        max-width: 300px;
+      }
+      .about-content,
+      .contact-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .about-img {
+        order: -1;
+        height: 400px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .nav-links {
         position: fixed;
         top: var(--header-height);
         left: -100%;
@@ -1624,1167 +1608,1189 @@ footer::after {
         justify-content: center;
         gap: 40px;
         transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .nav-links.active {
+      }
+      .nav-links.active {
         left: 0;
-    }
-
-    .hamburger {
+      }
+      .hamburger {
         display: block;
-    }
-    
-    .logo img {
+      }
+      .logo img {
         height: 50px;
+      }
     }
-}
 
-@media (max-width: 768px) {
-    :root {
+    @media (max-width: 768px) {
+      :root {
         --section-padding: 80px 0;
-    }
-    
-    h1 {
+      }
+      h1 {
         font-size: 2.5rem;
-    }
-    
-    h2 {
+      }
+      h2 {
         font-size: 1.8rem;
         margin-bottom: 40px;
-    }
-    
-    .hero-logo {
+      }
+      .hero-logo-container {
         max-width: 250px;
-    }
-
-    .hero-content h1 {
+      }
+      .hero-content h1 {
         font-size: 2.8rem;
-    }
-
-    .hero-btns {
+      }
+      .hero-btns {
         flex-direction: column;
         gap: 15px;
-    }
-    
-    .stats-grid {
+      }
+      .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
-    }
-    
-    .events-grid {
+      }
+      .events-grid {
         grid-template-columns: 1fr;
-    }
-    
-    .contact-form {
+      }
+      .contact-form {
         padding: 30px;
-    }
-    
-    .event-img, 
-    .about-img {
+      }
+      .event-img,
+      .about-img {
         height: 300px;
+      }
     }
-}
 
-@media (max-width: 576px) {
-    :root {
+    @media (max-width: 576px) {
+      :root {
         --section-padding: 60px 0;
-    }
-    
-    .container {
+      }
+      .container {
         padding: 0 20px;
-    }
-    
-    h1 {
+      }
+      h1 {
         font-size: 2.2rem;
-    }
-    
-    h2 {
+      }
+      h2 {
         font-size: 1.6rem;
-    }
-    
-    .hero-content h1 {
+      }
+      .hero-content h1 {
         font-size: 2.2rem;
-    }
-    
-    .hero-content p {
+      }
+      .hero-content p {
         font-size: 1rem;
-    }
-    
-    .hero-logo {
+      }
+      .hero-logo-container {
         max-width: 200px;
-    }
-
-    .gallery-grid {
+      }
+      .gallery-grid {
         grid-template-columns: 1fr;
         grid-auto-rows: 250px;
-    }
-    
-    .stats-grid {
+      }
+      .stats-grid {
         grid-template-columns: 1fr;
-    }
-    
-    .logo img {
+      }
+      .logo img {
         height: 40px;
-    }
-    
-    .contact-item {
+      }
+      .contact-item {
         padding: 20px;
+      }
     }
-    
-    .social-feed-card {
-        max-width: 100%;
+
+    /* Theme styles */
+    .theme-cyberpunk {
+      --primary-color: #ff00ff;
+      --primary-light: rgba(255, 0, 255, 0.1);
+      --primary-dark: #cc00cc;
+      --secondary-color: #00ffff;
+      --accent-color: #ffff00;
+      --background-color: #121212;
+      --text-color: #ffffff;
+      --header-color: #000000;
+      --card-bg: #1e1e1e;
+      --font-primary: 'Orbitron', sans-serif;
+      --font-secondary: 'Rajdhani', sans-serif;
+      --animation-speed: 0.5s;
+      --border-radius: 0;
     }
-}
 
-/* Theme styles */
-/* Keep the theme switcher functionality but make WCMRC theme the default */
-.theme-cyberpunk {
-    --primary-color: #ff00ff;
-    --primary-light: rgba(255, 0, 255, 0.1);
-    --primary-dark: #cc00cc;
-    --secondary-color: #00ffff;
-    --accent-color: #ffff00;
-    --background-color: #121212;
-    --text-color: #ffffff;
-    --header-color: #000000;
-    --card-bg: #1e1e1e;
-    --font-primary: 'Orbitron', sans-serif;
-    --font-secondary: 'Rajdhani', sans-serif;
-    --animation-speed: 0.5s;
-    --border-radius: 0;
-}
+    .theme-cyberpunk h2::after {
+      height: 2px;
+      width: 100px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
 
-.theme-cyberpunk h2::after {
-    height: 2px;
-    width: 100px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
+    .theme-cyberpunk .btn,
+    .theme-cyberpunk button {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border: 1px solid var(--secondary-color);
+      color: black;
+      font-weight: 700;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
 
-.theme-cyberpunk .btn, 
-.theme-cyberpunk button {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    border: 1px solid var(--secondary-color);
-    color: black;
-    font-weight: 700;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
+    .theme-cyberpunk .btn::before,
+    .theme-cyberpunk button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+      z-index: -1;
+    }
 
-.theme-cyberpunk .btn::before,
-.theme-cyberpunk button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-    z-index: -1;
-}
+    .theme-cyberpunk .btn:hover::before,
+    .theme-cyberpunk button:hover::before {
+      left: 100%;
+    }
 
-.theme-cyberpunk .btn:hover::before,
-.theme-cyberpunk button:hover::before {
-    left: 100%;
-}
+    .theme-cyberpunk .event-card,
+    .theme-cyberpunk .resource-card,
+    .theme-cyberpunk .plan-card,
+    .theme-cyberpunk .contact-form,
+    .theme-cyberpunk .social-feed-card {
+      border: 1px solid var(--secondary-color);
+      box-shadow: 0 0 15px var(--primary-color);
+    }
 
-.theme-cyberpunk .event-card,
-.theme-cyberpunk .resource-card,
-.theme-cyberpunk .plan-card,
-.theme-cyberpunk .contact-form,
-.theme-cyberpunk .social-feed-card {
-    border: 1px solid var(--secondary-color);
-    box-shadow: 0 0 15px var(--primary-color);
-}
+    .theme-cyberpunk .nav-links a::after {
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 10px var(--secondary-color);
+      height: 1px;
+    }
 
-.theme-cyberpunk .nav-links a::after {
-    background-color: var(--secondary-color);
-    box-shadow: 0 0 10px var(--secondary-color);
-    height: 1px;
-}
+    .theme-cyberpunk #hero {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7)),
+                  url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
 
-.theme-cyberpunk #hero {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7)), 
-                url('https://placehold.co/1200x800/5d6b77/white?text=Drone+Racing') center/cover no-repeat;
-    position: relative;
-    overflow: hidden;
-}
+    .theme-cyberpunk #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+                    rgba(255, 0, 255, 0.1) 0%, 
+                    rgba(0, 0, 0, 0) 20%, 
+                    rgba(0, 255, 255, 0.1) 50%, 
+                    rgba(0, 0, 0, 0) 80%, 
+                    rgba(255, 255, 0, 0.1) 100%);
+      animation: scanline 10s linear infinite;
+    }
 
-.theme-cyberpunk #hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-                  rgba(255, 0, 255, 0.1) 0%, 
-                  rgba(0, 0, 0, 0) 20%, 
-                  rgba(0, 255, 255, 0.1) 50%, 
-                  rgba(0, 0, 0, 0) 80%, 
-                  rgba(255, 255, 0, 0.1) 100%);
-    animation: scanline 10s linear infinite;
-}
-
-@keyframes scanline {
-    0% {
+    @keyframes scanline {
+      0% {
         transform: translateY(-100%);
-    }
-    100% {
+      }
+      100% {
         transform: translateY(100%);
+      }
     }
-}
 
-.theme-cyberpunk .form-control {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--secondary-color);
-    color: white;
-}
+    .theme-cyberpunk .form-control {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--secondary-color);
+      color: white;
+    }
 
-/* Theme 3: Minimalist */
-.theme-minimalist {
-    --primary-color: #000000;
-    --primary-light: rgba(0, 0, 0, 0.05);
-    --primary-dark: #333333;
-    --secondary-color: #333333;
-    --accent-color: #ff4500;
-    --background-color: #ffffff;
-    --text-color: #333333;
-    --header-color: #ffffff;
-    --card-bg: #f9f9f9;
-    --font-primary: 'Quicksand', sans-serif;
-    --font-secondary: 'Quicksand', sans-serif;
-    --animation-speed: 0.2s;
-    --border-radius: 0;
-    --shadow-sm: none;
-    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
+    .theme-minimalist {
+      --primary-color: #000000;
+      --primary-light: rgba(0, 0, 0, 0.05);
+      --primary-dark: #333333;
+      --secondary-color: #333333;
+      --accent-color: #ff4500;
+      --background-color: #ffffff;
+      --text-color: #333333;
+      --header-color: #ffffff;
+      --card-bg: #f9f9f9;
+      --font-primary: 'Quicksand', sans-serif;
+      --font-secondary: 'Quicksand', sans-serif;
+      --animation-speed: 0.2s;
+      --border-radius: 0;
+      --shadow-sm: none;
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
 
-.theme-minimalist header {
-    box-shadow: none;
-    border-bottom: 1px solid #eee;
-}
+    .theme-minimalist header {
+      box-shadow: none;
+      border-bottom: 1px solid #eee;
+    }
 
-.theme-minimalist .logo,
-.theme-minimalist .nav-links a {
-    color: var(--text-color);
-}
+    .theme-minimalist .logo,
+    .theme-minimalist .nav-links a {
+      color: var(--text-color);
+    }
 
-.theme-minimalist h2::after {
-    display: none;
-}
+    .theme-minimalist h2::after {
+      display: none;
+    }
 
-.theme-minimalist h2 {
-    font-weight: 300;
-    letter-spacing: 2px;
-}
+    .theme-minimalist h2 {
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
 
-.theme-minimalist h1 {
-    font-weight: 300;
-    letter-spacing: 1px;
-}
+    .theme-minimalist h1 {
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
 
-.theme-minimalist .btn, 
-.theme-minimalist button {
-    background: transparent;
-    color: var(--text-color);
-    border: 1px solid var(--text-color);
-    border-radius: 0;
-    font-weight: 400;
-    letter-spacing: 2px;
-    padding: 12px 30px;
-}
+    .theme-minimalist .btn,
+    .theme-minimalist button {
+      background: transparent;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      border-radius: 0;
+      font-weight: 400;
+      letter-spacing: 2px;
+      padding: 12px 30px;
+    }
 
-.theme-minimalist .btn:hover, 
-.theme-minimalist button:hover {
-    background: var(--text-color);
-    color: white;
-    transform: none;
-    box-shadow: none;
-}
+    .theme-minimalist .btn:hover,
+    .theme-minimalist button:hover {
+      background: var(--text-color);
+      color: white;
+      transform: none;
+      box-shadow: none;
+    }
 
-.theme-minimalist #hero {
-    background: #f9f9f9;
-    color: var(--text-color);
-}
+    .theme-minimalist #hero {
+      background: #f9f9f9;
+      color: var(--text-color);
+    }
 
-.theme-minimalist .event-card,
-.theme-minimalist .resource-card,
-.theme-minimalist .plan-card,
-.theme-minimalist .contact-form,
-.theme-minimalist .social-feed-card {
-    box-shadow: none;
-    border: 1px solid #eee;
-}
+    .theme-minimalist .event-card,
+    .theme-minimalist .resource-card,
+    .theme-minimalist .plan-card,
+    .theme-minimalist .contact-form,
+    .theme-minimalist .social-feed-card {
+      box-shadow: none;
+      border: 1px solid #eee;
+    }
 
-.theme-minimalist .event-card:hover,
-.theme-minimalist .resource-card:hover,
-.theme-minimalist .plan-card:hover,
-.theme-minimalist .social-feed-card:hover {
-    transform: none;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-}
+    .theme-minimalist .event-card:hover,
+    .theme-minimalist .resource-card:hover,
+    .theme-minimalist .plan-card:hover,
+    .theme-minimalist .social-feed-card:hover {
+      transform: none;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
 
-.theme-minimalist .nav-links a::after {
-    height: 1px;
-    background-color: var(--text-color);
-}
+    .theme-minimalist .nav-links a::after {
+      height: 1px;
+      background-color: var(--text-color);
+    }
 
-.theme-minimalist .gallery-item::before {
-    background: rgba(255, 255, 255, 0.8);
-}
+    .theme-minimalist .gallery-item::before {
+      background: rgba(255, 255, 255, 0.8);
+    }
 
-.theme-minimalist .gallery-item-caption {
-    color: var(--text-color);
-}
+    .theme-minimalist .gallery-item-caption {
+      color: var(--text-color);
+    }
 
-.theme-minimalist .contact-item {
-    background: transparent;
-    border-bottom: 1px solid #eee;
-    border-radius: 0;
-    padding-left: 0;
-}
+    .theme-minimalist .contact-item {
+      background: transparent;
+      border-bottom: 1px solid #eee;
+      border-radius: 0;
+      padding-left: 0;
+    }
 
-.theme-minimalist .contact-item:hover {
-    transform: none;
-}
+    .theme-minimalist .contact-item:hover {
+      transform: none;
+    }
 
-.theme-minimalist footer {
-    background: var(--background-color);
-    color: var(--text-color);
-    border-top: 1px solid #eee;
-}
+    .theme-minimalist footer {
+      background: var(--background-color);
+      color: var(--text-color);
+      border-top: 1px solid #eee;
+    }
 
-.theme-minimalist .footer-col h3::after {
-    background: var(--text-color);
-}
+    .theme-minimalist .footer-col h3::after {
+      background: var(--text-color);
+    }
 
-.theme-minimalist .social-links a {
-    background: transparent;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-}
+    .theme-minimalist .social-links a {
+      background: transparent;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+    }
 
-.theme-minimalist .social-links a:hover {
-    background: var(--text-color);
-    color: white;
-    transform: none;
-}
+    .theme-minimalist .social-links a:hover {
+      background: var(--text-color);
+      color: white;
+      transform: none;
+    }
 
-.theme-minimalist .footer-bottom {
-    border-top: 1px solid #eee;
-}
+    .theme-minimalist .footer-bottom {
+      border-top: 1px solid #eee;
+    }
 
-/* Custom cursor styles */
-.cursor {
-    position: fixed;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    will-change: transform;
-    transform: translate3d(-50%, -50%, 0);
-    left: 0;
-    top: 0;
-    backface-visibility: hidden;
-}
-
-.circle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    will-change: transform;
-    transform: translate3d(-50%, -50%, 0);
-    transition: transform 0.3s ease-out, background-color 0.3s ease;
-    backface-visibility: hidden;
-}
-
-.center-circle {
-    width: 8px;
-    height: 8px;
-    background: var(--primary-color);
-    opacity: 0.8;
-}
-
-.circle.glow {
-    box-shadow: 0 0 8px var(--primary-color);
-    background: #fff;
-    opacity: 0.9;
-}
-
-/* Hide cursor on touch devices */
-@media (hover: none) {
+    /* Custom cursor styles */
     .cursor {
-        display: none;
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
+      left: 0;
+      top: 0;
+      backface-visibility: hidden;
     }
-}
-    </style>
+
+    .circle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
+      transition: transform 0.3s ease-out, background-color 0.3s ease;
+      backface-visibility: hidden;
+    }
+
+    .center-circle {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-color);
+      opacity: 0.8;
+    }
+
+    .circle.glow {
+      box-shadow: 0 0 8px var(--primary-color);
+      background: #fff;
+      opacity: 0.9;
+    }
+
+    @media (hover: none) {
+      .cursor {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Custom cursor element -->
-    <div class="cursor"></div>
-    
-    <!-- No longer using Facebook SDK as we're using custom styled social cards instead -->
-    
-    <!-- Back to top button -->
-    <div class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
+  <!-- Custom cursor element -->
+  <div class="cursor"></div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Theme Switcher -->
+  <div class="theme-toggle">
+    <i class="fas fa-palette"></i>
+  </div>
+  <div id="theme-switcher">
+    <button class="theme-btn active" data-theme="default">Modern Tech</button>
+    <button class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
+    <button class="theme-btn" data-theme="minimalist">Minimalist</button>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="#" class="logo">
+          <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
+        </a>
+        <ul class="nav-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#membership">Membership</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#social-feed">Updates</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#resources">Resources</a></li>
+        </ul>
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
     </div>
-    
-    <!-- Theme Switcher -->
-    <div class="theme-toggle">
-        <i class="fas fa-palette"></i>
+  </header>
+
+  <!-- Hero Section with Drone Animation -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-logo-container">
+          <!-- Logo without drone (initially hidden) -->
+          <img src="./assets/wcmrcLogoNoDrone.png" alt="West Coast Multi Rotor Club" class="hero-logo hero-logo-no-drone" id="heroLogoNoDrone" />
+          <!-- Combined logo with drone (initially visible) -->
+          <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="hero-logo hero-logo-with-drone" id="heroLogoWithDrone" />
+          <!-- Separate drone element for animation -->
+          <img src="./assets/drone.png" alt="Drone" class="hero-drone" id="heroDrone" />
+        </div>
+        <h1>Experience the Thrill of Drone Racing</h1>
+        <p>Join our passionate community of pilots and enthusiasts. Learn, compete, and push the boundaries of what's possible with FPV drone racing.</p>
+        <div class="hero-btns">
+          <a href="#membership" class="btn">Join Now</a>
+          <a href="#events" class="btn">Upcoming Races</a>
+        </div>
+      </div>
     </div>
-    <div id="theme-switcher">
-        <button class="theme-btn active" data-theme="default">Modern Tech</button>
-        <button class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
-        <button class="theme-btn" data-theme="minimalist">Minimalist</button>
+    <div class="scroll-indicator">
+      <p>Scroll Down to Release the Drone</p>
+      <div class="arrow">
+        <i class="fas fa-chevron-down"></i>
+      </div>
     </div>
+  </section>
 
-    <!-- Header & Navigation -->
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="#" class="logo">
-                    <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo">
-                </a>
-                <ul class="nav-links">
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#events">Events</a></li>
-                    <li><a href="#membership">Membership</a></li>
-                    <li><a href="#gallery">Gallery</a></li>
-                    <li><a href="#social-feed">Updates</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#resources">Resources</a></li>
-                </ul>
-                <div class="hamburger">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
+  <!-- About Section -->
+  <section id="about">
+    <div class="container">
+      <h2>About Our Club</h2>
+      <div class="about-content">
+        <div class="about-text fade-in">
+          <h3>Founded by passionate FPV pilots</h3>
+          <p>West Coast Multi Rotor Club was established in 2016 by a small group of drone enthusiasts who sought to create a community where pilots of all skill levels could meet, learn, and race together. What started as casual meetups has evolved into one of the region's premier drone racing clubs.</p>
+          <p>Our club is affiliated with the National Drone Racing Association and hosts regular races that comply with official competition standards. We pride ourselves on maintaining a welcoming atmosphere for beginners while providing challenging courses for experienced pilots.</p>
+          <p>Our mission is to promote the exciting sport of FPV drone racing, foster innovation in drone technology, and build a supportive community of pilots who share a passion for pushing the boundaries of what's possible in the air.</p>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="hero">
-        <div class="container">
-            <div class="hero-content">
-                <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="hero-logo">
-                <h1>Experience the Thrill of Drone Racing</h1>
-                <p>Join our passionate community of pilots and enthusiasts. Learn, compete, and push the boundaries of what's possible with FPV drone racing.</p>
-                <div class="hero-btns">
-                    <a href="#membership" class="btn">Join Now</a>
-                    <a href="#events" class="btn">Upcoming Races</a>
-                </div>
-            </div>
+        <div class="about-img fade-in">
+          <!-- Placeholder for club group photo -->
         </div>
-        <div class="scroll-indicator">
-            <p>Scroll Down</p>
-            <div class="arrow">
-                <i class="fas fa-chevron-down"></i>
-            </div>
+      </div>
+      <!-- Stats Section -->
+      <div class="stats-grid fade-in">
+        <div class="stat-item">
+          <div class="stat-number">120+</div>
+          <div class="stat-label">Active Members</div>
         </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <h2>About Our Club</h2>
-            <div class="about-content">
-                <div class="about-text fade-in">
-                    <h3>Founded by passionate FPV pilots</h3>
-                    <p>West Coast Multi Rotor Club was established in 2016 by a small group of drone enthusiasts who sought to create a community where pilots of all skill levels could meet, learn, and race together. What started as casual meetups has evolved into one of the region's premier drone racing clubs.</p>
-                    <p>Our club is affiliated with the National Drone Racing Association and hosts regular races that comply with official competition standards. We pride ourselves on maintaining a welcoming atmosphere for beginners while providing challenging courses for experienced pilots.</p>
-                    <p>Our mission is to promote the exciting sport of FPV drone racing, foster innovation in drone technology, and build a supportive community of pilots who share a passion for pushing the boundaries of what's possible in the air.</p>
-                </div>
-                <div class="about-img fade-in">
-                    <!-- Placeholder for club group photo -->
-                </div>
-            </div>
-            
-            <!-- Stats Section -->
-            <div class="stats-grid fade-in">
-                <div class="stat-item">
-                    <div class="stat-number">120+</div>
-                    <div class="stat-label">Active Members</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">45</div>
-                    <div class="stat-label">Annual Events</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">8</div>
-                    <div class="stat-label">Years of Experience</div>
-                </div>
-            </div>
+        <div class="stat-item">
+          <div class="stat-number">45</div>
+          <div class="stat-label">Annual Events</div>
         </div>
-    </section>
-
-    <!-- Events Section -->
-    <section id="events">
-        <div class="container">
-            <h2>Upcoming Events</h2>
-            <div class="events-grid">
-                <div class="event-card fade-in">
-                    <div class="event-img">
-                        <!-- Placeholder for race image -->
-                    </div>
-                    <div class="event-details">
-                        <span class="event-date">March 20, 2025</span>
-                        <h3>Spring Championship Race</h3>
-                        <p>Our biggest race of the season with competitors from across the region. Cash prizes for top pilots in multiple categories.</p>
-                        <a href="#" class="btn">Register Now</a>
-                    </div>
-                </div>
-
-                <div class="event-card fade-in">
-                    <div class="event-img">
-                        <!-- Placeholder for training image -->
-                    </div>
-                    <div class="event-details">
-                        <span class="event-date">April 5, 2025</span>
-                        <h3>Beginner Workshop</h3>
-                        <p>Learn the basics of FPV drone racing in this hands-on workshop designed for newcomers to the sport.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-
-                <div class="event-card fade-in">
-                    <div class="event-img">
-                        <!-- Placeholder for practice image -->
-                    </div>
-                    <div class="event-details">
-                        <span class="event-date">Every Saturday</span>
-                        <h3>Weekly Practice Sessions</h3>
-                        <p>Join us every Saturday for open practice sessions. Course layouts change weekly to keep pilots challenged.</p>
-                        <a href="#" class="btn">View Schedule</a>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-item">
+          <div class="stat-number">8</div>
+          <div class="stat-label">Years of Experience</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Membership Section -->
-    <section id="membership">
-        <div class="container">
-            <h2>Join Our Community</h2>
-            <p class="text-center mb-5">Choose the membership option that fits your needs and start racing with our community.</p>
-            <div class="plans-container">
-                <div class="plan-card fade-in">
-                    <h3 class="plan-title">Rookie</h3>
-                    <div class="plan-price">$25/month</div>
-                    <ul class="plan-features">
-                        <li>Access to weekly practice sessions</li>
-                        <li>Basic race entry (3 races/month)</li>
-                        <li>Equipment rentals at discounted rates</li>
-                        <li>Online community access</li>
-                    </ul>
-                    <a href="#" class="btn">Select Plan</a>
-                </div>
-
-                <div class="plan-card fade-in">
-                    <h3 class="plan-title">Pilot</h3>
-                    <div class="plan-price">$45/month</div>
-                    <ul class="plan-features">
-                        <li>Unlimited practice session access</li>
-                        <li>Race entries included (unlimited)</li>
-                        <li>Free basic equipment rentals</li>
-                        <li>Workshop discounts (20% off)</li>
-                        <li>Online community access</li>
-                    </ul>
-                    <a href="#" class="btn">Select Plan</a>
-                </div>
-
-                <div class="plan-card fade-in">
-                    <h3 class="plan-title">Pro</h3>
-                    <div class="plan-price">$75/month</div>
-                    <ul class="plan-features">
-                        <li>All Pilot benefits included</li>
-                        <li>Priority registration for competitions</li>
-                        <li>Advanced equipment access</li>
-                        <li>1-on-1 coaching sessions (2 per month)</li>
-                        <li>Sponsor connection opportunities</li>
-                        <li>Team racing eligibility</li>
-                    </ul>
-                    <a href="#" class="btn">Select Plan</a>
-                </div>
-            </div>
+  <!-- Events Section -->
+  <section id="events">
+    <div class="container">
+      <h2>Upcoming Events</h2>
+      <div class="events-grid">
+        <div class="event-card fade-in">
+          <div class="event-img">
+            <!-- Placeholder for race image -->
+          </div>
+          <div class="event-details">
+            <span class="event-date">March 20, 2025</span>
+            <h3>Spring Championship Race</h3>
+            <p>Our biggest race of the season with competitors from across the region. Cash prizes for top pilots in multiple categories.</p>
+            <a href="#" class="btn">Register Now</a>
+          </div>
         </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery">
-        <div class="container">
-            <h2>Moments from the Track</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>High-speed chase through the forest course</h3>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>Pilots preparing for the national qualifier</h3>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>Night race with LED-equipped drones</h3>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>Close finish at the summer championship</h3>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>Aerial view of our custom-built race track</h3>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <div class="gallery-item-caption">
-                        <h3>Technical pit stop during endurance race</h3>
-                    </div>
-                </div>
-            </div>
+        <div class="event-card fade-in">
+          <div class="event-img">
+            <!-- Placeholder for training image -->
+          </div>
+          <div class="event-details">
+            <span class="event-date">April 5, 2025</span>
+            <h3>Beginner Workshop</h3>
+            <p>Learn the basics of FPV drone racing in this hands-on workshop designed for newcomers to the sport.</p>
+            <a href="#" class="btn">Learn More</a>
+          </div>
         </div>
-    </section>
-
-    <!-- Social Feed Section - NEW -->
-    <!-- Social Feed Section - Redesigned to prevent cut-off -->
-    <section id="social-feed">
-        <div class="container">
-            <h2>Connect With Us</h2>
-            <p class="text-center mb-5">Stay connected with our community and never miss an update.</p>
-            
-            <div class="social-feed-container">
-                <!-- Social Cards Row -->
-                <div class="social-cards">
-                    <!-- Facebook Card -->
-                    <div class="social-card facebook-card fade-in">
-                        <div class="social-card-icon">
-                            <i class="fab fa-facebook-f"></i>
-                        </div>
-                        <div class="social-card-content">
-                            <h3>Facebook Group</h3>
-                            <p>Join our active community of over 500 drone enthusiasts. Share your builds, ask questions, and connect with local pilots.</p>
-                            <div class="social-stats">
-                                <div class="social-stat">
-                                    <span class="social-stat-number">502</span>
-                                    <span class="social-stat-label">Members</span>
-                                </div>
-                                <div class="social-stat">
-                                    <span class="social-stat-number">24</span>
-                                    <span class="social-stat-label">Posts/Week</span>
-                                </div>
-                            </div>
-                            <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn social-btn facebook-btn">
-                                <i class="fab fa-facebook-f"></i> JOIN OUR GROUP
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Instagram Card -->
-                    <div class="social-card instagram-card fade-in">
-                        <div class="social-card-icon">
-                            <i class="fab fa-instagram"></i>
-                        </div>
-                        <div class="social-card-content">
-                            <h3>Instagram</h3>
-                            <p>Follow us for stunning drone photography, race highlights, and behind-the-scenes footage from our events.</p>
-                            <div class="social-gallery">
-                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Race+Photo')"></div>
-                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/29a7df/white?text=Drone+Photo')"></div>
-                                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Event+Photo')"></div>
-                            </div>
-                            <a href="https://www.instagram.com/" target="_blank" class="btn social-btn instagram-btn">
-                                <i class="fab fa-instagram"></i> FOLLOW US
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Discord Card -->
-                    <div class="social-card discord-card fade-in">
-                        <div class="social-card-icon">
-                            <i class="fab fa-discord"></i>
-                        </div>
-                        <div class="social-card-content">
-                            <h3>Discord Server</h3>
-                            <p>Join our Discord for real-time discussions, tech support, and to organize impromptu flying sessions.</p>
-                            <div class="discord-channels">
-                                <div class="discord-channel"># race-announcements</div>
-                                <div class="discord-channel"># build-help</div>
-                                <div class="discord-channel"># flight-spots</div>
-                            </div>
-                            <a href="https://discord.gg/" target="_blank" class="btn social-btn discord-btn">
-                                <i class="fab fa-discord"></i> JOIN SERVER
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="event-card fade-in">
+          <div class="event-img">
+            <!-- Placeholder for practice image -->
+          </div>
+          <div class="event-details">
+            <span class="event-date">Every Saturday</span>
+            <h3>Weekly Practice Sessions</h3>
+            <p>Join us every Saturday for open practice sessions. Course layouts change weekly to keep pilots challenged.</p>
+            <a href="#" class="btn">View Schedule</a>
+          </div>
         </div>
-    </section>
-    
-    <!-- Recent Updates Section - Separate section for feeds -->
-    <section id="recent-updates">
-        <div class="container">
-            <h2>Recent Updates</h2>
-            <div class="updates-container">
-                <div class="feed-section fade-in">
-                    <!-- Custom Facebook Feed Simulation -->
-                    <div class="feed-post">
-                        <div class="feed-post-header">
-                            <div class="feed-post-avatar">
-                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
-                            </div>
-                            <div class="feed-post-meta">
-                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
-                                <div class="feed-post-date">March 15, 2025</div>
-                            </div>
-                        </div>
-                        <div class="feed-post-content">
-                            <p>Exciting news! Our Spring Championship has been officially sanctioned by the National Drone Racing Association. This means all race results will count toward national rankings. Registration closes next week!</p>
-                            <div class="feed-post-image">
-                                <img src="https://placehold.co/800x400/5d6b77/white?text=Race+Announcement" alt="Race Announcement">
-                            </div>
-                        </div>
-                        <div class="feed-post-footer">
-                            <div class="feed-post-stats">
-                                <span><i class="fas fa-thumbs-up"></i> 45</span>
-                                <span><i class="fas fa-comment"></i> 12</span>
-                                <span><i class="fas fa-share"></i> 8</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="feed-post">
-                        <div class="feed-post-header">
-                            <div class="feed-post-avatar">
-                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
-                            </div>
-                            <div class="feed-post-meta">
-                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
-                                <div class="feed-post-date">March 10, 2025</div>
-                            </div>
-                        </div>
-                        <div class="feed-post-content">
-                            <p>Last weekend's beginner workshop was a huge success! We had 15 new pilots take to the sky for the first time. Big thanks to our volunteer instructors and everyone who helped set up the training course.</p>
-                            <div class="feed-post-gallery">
-                                <img src="https://placehold.co/400x300/5d6b77/white?text=Workshop" alt="Workshop">
-                                <img src="https://placehold.co/400x300/29a7df/white?text=Training" alt="Training">
-                            </div>
-                        </div>
-                        <div class="feed-post-footer">
-                            <div class="feed-post-stats">
-                                <span><i class="fas fa-thumbs-up"></i> 37</span>
-                                <span><i class="fas fa-comment"></i> 8</span>
-                                <span><i class="fas fa-share"></i> 3</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="feed-post">
-                        <div class="feed-post-header">
-                            <div class="feed-post-avatar">
-                                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club">
-                            </div>
-                            <div class="feed-post-meta">
-                                <div class="feed-post-author">West Coast Multi Rotor Club</div>
-                                <div class="feed-post-date">March 5, 2025</div>
-                            </div>
-                        </div>
-                        <div class="feed-post-content">
-                            <p>New track features have been installed at the main field! We've added three elevated gates, a tunnel section, and redesigned the hairpin turn for more technical racing. Come check it out at this weekend's practice session!</p>
-                        </div>
-                        <div class="feed-post-footer">
-                            <div class="feed-post-stats">
-                                <span><i class="fas fa-thumbs-up"></i> 29</span>
-                                <span><i class="fas fa-comment"></i> 15</span>
-                                <span><i class="fas fa-share"></i> 2</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="view-more-container">
-                        <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn view-more-btn">
-                            <i class="fas fa-external-link-alt"></i> VIEW ALL UPDATES
-                        </a>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Membership Section -->
+  <section id="membership">
+    <div class="container">
+      <h2>Join Our Community</h2>
+      <p class="text-center mb-5">Choose the membership option that fits your needs and start racing with our community.</p>
+      <div class="plans-container">
+        <div class="plan-card fade-in">
+          <h3 class="plan-title">Rookie</h3>
+          <div class="plan-price">$25/month</div>
+          <ul class="plan-features">
+            <li>Access to weekly practice sessions</li>
+            <li>Basic race entry (3 races/month)</li>
+            <li>Equipment rentals at discounted rates</li>
+            <li>Online community access</li>
+          </ul>
+          <a href="#" class="btn">Select Plan</a>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container">
-            <h2>Get in Touch</h2>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <div class="contact-item fade-in">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h3>Location</h3>
-                            <p>123 Skyline Drive<br>Drone Valley, CA 90210</p>
-                        </div>
-                    </div>
-                    <div class="contact-item fade-in">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h3>Email</h3>
-                            <p>info@wcmrc.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item fade-in">
-                        <i class="fas fa-phone-alt"></i>
-                        <div>
-                            <h3>Phone</h3>
-                            <p>(555) 123-4567</p>
-                        </div>
-                    </div>
-                    <div class="contact-item fade-in">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h3>Practice Hours</h3>
-                            <p>Tuesday & Thursday: 4 PM - 8 PM<br>Saturday & Sunday: 10 AM - 6 PM</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form fade-in">
-                    <h3>Send us a message</h3>
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" class="form-control" placeholder="Your Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control" placeholder="Your Email">
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" class="form-control" placeholder="Subject">
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" class="form-control" placeholder="Your Message"></textarea>
-                        </div>
-                        <button type="submit" class="btn">Send Message</button>
-                    </form>
-                </div>
-            </div>
+        <div class="plan-card fade-in">
+          <h3 class="plan-title">Pilot</h3>
+          <div class="plan-price">$45/month</div>
+          <ul class="plan-features">
+            <li>Unlimited practice session access</li>
+            <li>Race entries included (unlimited)</li>
+            <li>Free basic equipment rentals</li>
+            <li>Workshop discounts (20% off)</li>
+            <li>Online community access</li>
+          </ul>
+          <a href="#" class="btn">Select Plan</a>
         </div>
-    </section>
-
-    <!-- Resources Section -->
-    <section id="resources">
-        <div class="container">
-            <h2>Pilot Resources</h2>
-            <div class="resources-grid">
-                <div class="resource-card fade-in">
-                    <div class="resource-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="resource-details">
-                        <h3>Club Handbook</h3>
-                        <p>Our comprehensive guide to club rules, safety procedures, and racing guidelines.</p>
-                        <a href="#" class="btn">Download PDF</a>
-                    </div>
-                </div>
-
-                <div class="resource-card fade-in">
-                    <div class="resource-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <div class="resource-details">
-                        <h3>Tech Guides</h3>
-                        <p>Technical guides for building, tuning, and maintaining your racing drones.</p>
-                        <a href="#" class="btn">View Guides</a>
-                    </div>
-                </div>
-
-                <div class="resource-card fade-in">
-                    <div class="resource-icon">
-                        <i class="fas fa-map"></i>
-                    </div>
-                    <div class="resource-details">
-                        <h3>Track Layouts</h3>
-                        <p>Diagrams and specifications for our various race track configurations.</p>
-                        <a href="#" class="btn">Explore Layouts</a>
-                    </div>
-                </div>
-
-                <div class="resource-card fade-in">
-                    <div class="resource-icon">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="resource-details">
-                        <h3>Training Videos</h3>
-                        <p>Video tutorials covering everything from basic flight to advanced racing techniques.</p>
-                        <a href="#" class="btn">Watch Videos</a>
-                    </div>
-                </div>
-            </div>
+        <div class="plan-card fade-in">
+          <h3 class="plan-title">Pro</h3>
+          <div class="plan-price">$75/month</div>
+          <ul class="plan-features">
+            <li>All Pilot benefits included</li>
+            <li>Priority registration for competitions</li>
+            <li>Advanced equipment access</li>
+            <li>1-on-1 coaching sessions (2 per month)</li>
+            <li>Sponsor connection opportunities</li>
+            <li>Team racing eligibility</li>
+          </ul>
+          <a href="#" class="btn">Select Plan</a>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="footer-logo">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h3>West Coast Multi Rotor Club</h3>
-                    <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of FPV flight.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-discord"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#hero">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#events">Events</a></li>
-                        <li><a href="#membership">Membership</a></li>
-                        <li><a href="#gallery">Gallery</a></li>
-                        <li><a href="#social-feed">Updates</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#resources">Resources</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Legal</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Safety Guidelines</a></li>
-                        <li><a href="#">Liability Waiver</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col footer-newsletter">
-                    <h3>Newsletter</h3>
-                    <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
-                    <form>
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your Email">
-                        </div>
-                        <button type="submit" class="btn">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 West Coast Multi Rotor Club. All Rights Reserved.</p>
-            </div>
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <div class="container">
+      <h2>Moments from the Track</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>High-speed chase through the forest course</h3>
+          </div>
         </div>
-    </footer>
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>Pilots preparing for the national qualifier</h3>
+          </div>
+        </div>
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>Night race with LED-equipped drones</h3>
+          </div>
+        </div>
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>Close finish at the summer championship</h3>
+          </div>
+        </div>
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>Aerial view of our custom-built race track</h3>
+          </div>
+        </div>
+        <div class="gallery-item fade-in">
+          <div class="gallery-item-caption">
+            <h3>Technical pit stop during endurance race</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        // Mobile Navigation Toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
+  <!-- Social Feed Section -->
+  <section id="social-feed">
+    <div class="container">
+      <h2>Connect With Us</h2>
+      <p class="text-center mb-5">Stay connected with our community and never miss an update.</p>
+      <div class="social-feed-container">
+        <div class="social-cards">
+          <!-- Facebook Card -->
+          <div class="social-card facebook-card fade-in">
+            <div class="social-card-icon">
+              <i class="fab fa-facebook-f"></i>
+            </div>
+            <div class="social-card-content">
+              <h3>Facebook Group</h3>
+              <p>Join our active community of over 500 drone enthusiasts. Share your builds, ask questions, and connect with local pilots.</p>
+              <div class="social-stats">
+                <div class="social-stat">
+                  <span class="social-stat-number">502</span>
+                  <span class="social-stat-label">Members</span>
+                </div>
+                <div class="social-stat">
+                  <span class="social-stat-number">24</span>
+                  <span class="social-stat-label">Posts/Week</span>
+                </div>
+              </div>
+              <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn social-btn facebook-btn">
+                <i class="fab fa-facebook-f"></i> JOIN OUR GROUP
+              </a>
+            </div>
+          </div>
+          <!-- Instagram Card -->
+          <div class="social-card instagram-card fade-in">
+            <div class="social-card-icon">
+              <i class="fab fa-instagram"></i>
+            </div>
+            <div class="social-card-content">
+              <h3>Instagram</h3>
+              <p>Follow us for stunning drone photography, race highlights, and behind-the-scenes footage from our events.</p>
+              <div class="social-gallery">
+                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Race+Photo')"></div>
+                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/29a7df/white?text=Drone+Photo')"></div>
+                <div class="social-gallery-img" style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Event+Photo')"></div>
+              </div>
+              <a href="https://www.instagram.com/" target="_blank" class="btn social-btn instagram-btn">
+                <i class="fab fa-instagram"></i> FOLLOW US
+              </a>
+            </div>
+          </div>
+          <!-- Discord Card -->
+          <div class="social-card discord-card fade-in">
+            <div class="social-card-icon">
+              <i class="fab fa-discord"></i>
+            </div>
+            <div class="social-card-content">
+              <h3>Discord Server</h3>
+              <p>Join our Discord for real-time discussions, tech support, and to organize impromptu flying sessions.</p>
+              <div class="discord-channels">
+                <div class="discord-channel"># race-announcements</div>
+                <div class="discord-channel"># build-help</div>
+                <div class="discord-channel"># flight-spots</div>
+              </div>
+              <a href="https://discord.gg/" target="_blank" class="btn social-btn discord-btn">
+                <i class="fab fa-discord"></i> JOIN SERVER
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.querySelector('i').classList.toggle('fa-bars');
-            hamburger.querySelector('i').classList.toggle('fa-times');
-        });
-        
-        // Theme Switcher Toggle
-        const themeToggle = document.querySelector('.theme-toggle');
-        const themeSwitcher = document.getElementById('theme-switcher');
-        
-        themeToggle.addEventListener('click', () => {
-            themeSwitcher.classList.toggle('active');
-        });
-        
-        // Theme Switcher
-        const themeButtons = document.querySelectorAll('.theme-btn');
-        
-        themeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const theme = button.dataset.theme;
-                
-                // Remove all theme classes
-                document.body.classList.remove('theme-cyberpunk', 'theme-minimalist');
-                
-                // Add selected theme class if not default
-                if (theme !== 'default') {
-                    document.body.classList.add(`theme-${theme}`);
-                }
-                
-                // Update active button
-                themeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                // Close theme switcher
-                themeSwitcher.classList.remove('active');
-            });
-        });
-        
-        // Custom cursor with floating circles
-        const cursor = document.querySelector('.cursor');
-        const circles = [];
+  <!-- Recent Updates Section -->
+  <section id="recent-updates">
+    <div class="container">
+      <h2>Recent Updates</h2>
+      <div class="updates-container">
+        <div class="feed-section fade-in">
+          <!-- Feed Post 1 -->
+          <div class="feed-post">
+            <div class="feed-post-header">
+              <div class="feed-post-avatar">
+                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club" />
+              </div>
+              <div class="feed-post-meta">
+                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                <div class="feed-post-date">March 15, 2025</div>
+              </div>
+            </div>
+            <div class="feed-post-content">
+              <p>Exciting news! Our Spring Championship has been officially sanctioned by the National Drone Racing Association. This means all race results will count toward national rankings. Registration closes next week!</p>
+              <div class="feed-post-image">
+                <img src="https://placehold.co/800x400/5d6b77/white?text=Race+Announcement" alt="Race Announcement" />
+              </div>
+            </div>
+            <div class="feed-post-footer">
+              <div class="feed-post-stats">
+                <span><i class="fas fa-thumbs-up"></i> 45</span>
+                <span><i class="fas fa-comment"></i> 12</span>
+                <span><i class="fas fa-share"></i> 8</span>
+              </div>
+            </div>
+          </div>
+          <!-- Feed Post 2 -->
+          <div class="feed-post">
+            <div class="feed-post-header">
+              <div class="feed-post-avatar">
+                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club" />
+              </div>
+              <div class="feed-post-meta">
+                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                <div class="feed-post-date">March 10, 2025</div>
+              </div>
+            </div>
+            <div class="feed-post-content">
+              <p>Last weekend's beginner workshop was a huge success! We had 15 new pilots take to the sky for the first time. Big thanks to our volunteer instructors and everyone who helped set up the training course.</p>
+              <div class="feed-post-gallery">
+                <img src="https://placehold.co/400x300/5d6b77/white?text=Workshop" alt="Workshop" />
+                <img src="https://placehold.co/400x300/29a7df/white?text=Training" alt="Training" />
+              </div>
+            </div>
+            <div class="feed-post-footer">
+              <div class="feed-post-stats">
+                <span><i class="fas fa-thumbs-up"></i> 37</span>
+                <span><i class="fas fa-comment"></i> 8</span>
+                <span><i class="fas fa-share"></i> 3</span>
+              </div>
+            </div>
+          </div>
+          <!-- Feed Post 3 -->
+          <div class="feed-post">
+            <div class="feed-post-header">
+              <div class="feed-post-avatar">
+                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Multi Rotor Club" />
+              </div>
+              <div class="feed-post-meta">
+                <div class="feed-post-author">West Coast Multi Rotor Club</div>
+                <div class="feed-post-date">March 5, 2025</div>
+              </div>
+            </div>
+            <div class="feed-post-content">
+              <p>New track features have been installed at the main field! We've added three elevated gates, a tunnel section, and redesigned the hairpin turn for more technical racing. Come check it out at this weekend's practice session!</p>
+            </div>
+            <div class="feed-post-footer">
+              <div class="feed-post-stats">
+                <span><i class="fas fa-thumbs-up"></i> 29</span>
+                <span><i class="fas fa-comment"></i> 15</span>
+                <span><i class="fas fa-share"></i> 2</span>
+              </div>
+            </div>
+          </div>
+          <div class="view-more-container">
+            <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn view-more-btn">
+              <i class="fas fa-external-link-alt"></i> VIEW ALL UPDATES
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // Create circles inside cursor
-        for (let i = 0; i < 5; i++) {
-            const circle = document.createElement('div');
-            circle.className = 'circle';
-            if (i === 4) circle.classList.add('center-circle');
-            cursor.appendChild(circle);
-            circles.push(circle);
+  <!-- Contact Section -->
+  <section id="contact">
+    <div class="container">
+      <h2>Get in Touch</h2>
+      <div class="contact-container">
+        <div class="contact-info">
+          <div class="contact-item fade-in">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <h3>Location</h3>
+              <p>123 Skyline Drive<br />Drone Valley, CA 90210</p>
+            </div>
+          </div>
+          <div class="contact-item fade-in">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <h3>Email</h3>
+              <p>info@wcmrc.com</p>
+            </div>
+          </div>
+          <div class="contact-item fade-in">
+            <i class="fas fa-phone-alt"></i>
+            <div>
+              <h3>Phone</h3>
+              <p>(555) 123-4567</p>
+            </div>
+          </div>
+          <div class="contact-item fade-in">
+            <i class="fas fa-clock"></i>
+            <div>
+              <h3>Practice Hours</h3>
+              <p>Tuesday &amp; Thursday: 4 PM - 8 PM<br />Saturday &amp; Sunday: 10 AM - 6 PM</p>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form fade-in">
+          <h3>Send us a message</h3>
+          <form>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" class="form-control" placeholder="Your Name" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" class="form-control" placeholder="Subject" />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" class="form-control" placeholder="Your Message"></textarea>
+            </div>
+            <button type="submit" class="btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources Section -->
+  <section id="resources">
+    <div class="container">
+      <h2>Pilot Resources</h2>
+      <div class="resources-grid">
+        <div class="resource-card fade-in">
+          <div class="resource-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="resource-details">
+            <h3>Club Handbook</h3>
+            <p>Our comprehensive guide to club rules, safety procedures, and racing guidelines.</p>
+            <a href="#" class="btn">Download PDF</a>
+          </div>
+        </div>
+        <div class="resource-card fade-in">
+          <div class="resource-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div class="resource-details">
+            <h3>Tech Guides</h3>
+            <p>Technical guides for building, tuning, and maintaining your racing drones.</p>
+            <a href="#" class="btn">View Guides</a>
+          </div>
+        </div>
+        <div class="resource-card fade-in">
+          <div class="resource-icon">
+            <i class="fas fa-map"></i>
+          </div>
+          <div class="resource-details">
+            <h3>Track Layouts</h3>
+            <p>Diagrams and specifications for our various race track configurations.</p>
+            <a href="#" class="btn">Explore Layouts</a>
+          </div>
+        </div>
+        <div class="resource-card fade-in">
+          <div class="resource-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="resource-details">
+            <h3>Training Videos</h3>
+            <p>Video tutorials covering everything from basic flight to advanced racing techniques.</p>
+            <a href="#" class="btn">Watch Videos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Multi Rotor Club" class="footer-logo" />
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>West Coast Multi Rotor Club</h3>
+          <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of FPV flight.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#membership">Membership</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#social-feed">Updates</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#resources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Safety Guidelines</a></li>
+            <li><a href="#">Liability Waiver</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-newsletter">
+          <h3>Newsletter</h3>
+          <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
+          <form>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 West Coast Multi Rotor Club. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Navigation Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.querySelector('i').classList.toggle('fa-bars');
+      hamburger.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Theme Switcher Toggle
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeSwitcher = document.getElementById('theme-switcher');
+
+    themeToggle.addEventListener('click', () => {
+      themeSwitcher.classList.toggle('active');
+    });
+
+    // Theme Switcher
+    const themeButtons = document.querySelectorAll('.theme-btn');
+
+    themeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const theme = button.dataset.theme;
+        // Remove all theme classes
+        document.body.classList.remove('theme-cyberpunk', 'theme-minimalist');
+        // Add selected theme class if not default
+        if (theme !== 'default') {
+          document.body.classList.add(`theme-${theme}`);
         }
+        // Update active button
+        themeButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        // Close theme switcher
+        themeSwitcher.classList.remove('active');
+      });
+    });
 
-        // Only activate on devices that support hover (desktop)
-        if (window.matchMedia('(hover: hover)').matches) {
-            // Hide default cursor
-            document.body.style.cursor = 'none';
-            
-            let isHovering = false;
-            
-            // Pattern positions for hover state
-            const hoverPositions = [
-                { x: -8, y: -8 },
-                { x: 8, y: -8 },
-                { x: -8, y: 8 },
-                { x: 8, y: 8 },
-                { x: 0, y: 0 }
-            ];
-            
-            // Offsets for normal state
-            const offsets = [
-                { x: -5, y: -5, speed: 0.03 },
-                { x: 5, y: -5, speed: 0.04 },
-                { x: -5, y: 5, speed: 0.05 },
-                { x: 5, y: 5, speed: 0.06 },
-                { x: 0, y: 0, speed: 0.02 }
-            ];
-            
-            // Direct mouse tracking with no delay
-            document.addEventListener('mousemove', e => {
-                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
-            });
-            
-            // Animation loop for floating circles
-            let time = 0;
-            
-            function updateCircles() {
-                time += 0.01;
-                
-                circles.forEach((circle, i) => {
-                    if (isHovering) {
-                        const pos = hoverPositions[i];
-                        circle.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-                        if (!circle.classList.contains('glow')) {
-                            circle.classList.add('glow');
-                        }
-                    } else {
-                        const offset = offsets[i];
-                        const x = Math.sin(time * offset.speed * 10) * offset.x;
-                        const y = Math.cos(time * offset.speed * 10) * offset.y;
-                        
-                        circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                        if (circle.classList.contains('glow')) {
-                            circle.classList.remove('glow');
-                        }
-                    }
-                });
-                
-                requestAnimationFrame(updateCircles);
-            }
-            
-            // Handle hover states for interactive elements
-            const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    isHovering = true;
-                });
-                
-                el.addEventListener('mouseleave', () => {
-                    isHovering = false;
-                });
-            });
-            
-            // Start animation
-            updateCircles();
+    // Drone Animation Handler
+    const heroLogoNoDrone = document.getElementById('heroLogoNoDrone');
+    const heroLogoWithDrone = document.getElementById('heroLogoWithDrone');
+    const heroDrone = document.getElementById('heroDrone');
+    const heroSection = document.getElementById('hero');
+
+    // Mouse tracking variables for drone animation
+    let mouseX = 0;
+    let mouseY = 0;
+    let isDroneDetached = false;
+    let droneHomeX = 0;
+    let droneHomeY = 0;
+    let isReturningHome = false;
+    let droneCurrentX = 0;
+    let droneCurrentY = 0;
+    let droneCurrentScale = 1;
+    let heroRect;
+
+    function calculateDroneHome() {
+      const containerRect = heroSection.getBoundingClientRect();
+      heroRect = containerRect;
+      // Set home position relative to hero section (centered if desired)
+      droneHomeX = 0;
+      droneHomeY = 0;
+    }
+
+    function handleDroneAnimation() {
+      const scrollPosition = window.scrollY;
+      const heroHeight = heroSection.offsetHeight;
+      const isInHeroSection = scrollPosition < heroHeight;
+
+      if (isInHeroSection) {
+        if (scrollPosition > 50 && !isDroneDetached) {
+          isDroneDetached = true;
+          heroLogoWithDrone.style.opacity = 0;
+          heroLogoNoDrone.style.opacity = 1;
+          heroDrone.style.opacity = 1;
+          isReturningHome = false;
+        } else if (scrollPosition <= 50 && isDroneDetached) {
+          isDroneDetached = false;
+          isReturningHome = true;
         }
-        
-        // Smooth Scroll for Navigation Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                // Close mobile menu if open
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                    hamburger.querySelector('i').classList.toggle('fa-bars');
-                    hamburger.querySelector('i').classList.toggle('fa-times');
-                }
+        if (isDroneDetached && !isReturningHome) {
+          updateDronePosition();
+        }
+      } else if (isDroneDetached) {
+        isDroneDetached = false;
+        isReturningHome = true;
+      }
+      if (isReturningHome) {
+        returnDroneHome();
+      }
+    }
 
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+    function updateDronePosition() {
+      const heroMargin = 50;
+      const targetX = Math.max(heroMargin, Math.min(mouseX - heroRect.left - (heroDrone.offsetWidth / 2), heroRect.width - heroMargin));
+      const targetY = Math.max(heroMargin, Math.min(mouseY - heroRect.top - (heroDrone.offsetHeight / 2), heroRect.height - heroMargin));
+      droneCurrentX = droneCurrentX + (targetX - droneCurrentX) * 0.05;
+      droneCurrentY = droneCurrentY + (targetY - droneCurrentY) * 0.05;
+      const xDiff = targetX - droneCurrentX;
+      const rotateZ = Math.max(-15, Math.min(15, xDiff * 0.5));
+      const hoverY = Math.sin(Date.now() / 500) * 5;
+      heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY + hoverY}px) scale(${droneCurrentScale}) rotateZ(${rotateZ}deg)`;
+    }
 
-        // Scroll Animation for fade-in elements
-        const fadeElements = document.querySelectorAll('.fade-in');
-        
-        const fadeInOnScroll = () => {
-            const triggerBottom = window.innerHeight * 0.85;
-            
-            fadeElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                
-                if (elementTop < triggerBottom) {
-                    element.classList.add('active');
-                }
-            });
-        };
-        
-        // Back to top button
-        const backToTopButton = document.querySelector('.back-to-top');
-        
-        const toggleBackToTopButton = () => {
-            if (window.scrollY > 300) {
-                backToTopButton.classList.add('active');
-            } else {
-                backToTopButton.classList.remove('active');
+    function returnDroneHome() {
+      droneCurrentX = droneCurrentX + (droneHomeX - droneCurrentX) * 0.1;
+      droneCurrentY = droneCurrentY + (droneHomeY - droneCurrentY) * 0.1;
+      heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY}px) scale(${droneCurrentScale})`;
+      if (Math.abs(droneCurrentX - droneHomeX) < 1 && Math.abs(droneCurrentY - droneHomeY) < 1) {
+        isReturningHome = false;
+        heroLogoWithDrone.style.opacity = 1;
+        heroLogoNoDrone.style.opacity = 0;
+        heroDrone.style.opacity = 0;
+      }
+    }
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isDroneDetached && !isReturningHome) {
+        updateDronePosition();
+      }
+    });
+
+    window.addEventListener('load', () => {
+      calculateDroneHome();
+      handleDroneAnimation();
+      droneCurrentX = droneHomeX;
+      droneCurrentY = droneHomeY;
+    });
+
+    window.addEventListener('scroll', handleDroneAnimation);
+    window.addEventListener('resize', calculateDroneHome);
+
+    // Custom cursor with floating circles
+    const cursor = document.querySelector('.cursor');
+    const circles = [];
+    for (let i = 0; i < 5; i++) {
+      const circle = document.createElement('div');
+      circle.className = 'circle';
+      if (i === 4) circle.classList.add('center-circle');
+      cursor.appendChild(circle);
+      circles.push(circle);
+    }
+
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.body.style.cursor = 'none';
+      let isHovering = false;
+      const hoverPositions = [
+        { x: -8, y: -8 },
+        { x: 8, y: -8 },
+        { x: -8, y: 8 },
+        { x: 8, y: 8 },
+        { x: 0, y: 0 }
+      ];
+      const offsets = [
+        { x: -5, y: -5, speed: 0.03 },
+        { x: 5, y: -5, speed: 0.04 },
+        { x: -5, y: 5, speed: 0.05 },
+        { x: 5, y: 5, speed: 0.06 },
+        { x: 0, y: 0, speed: 0.02 }
+      ];
+      document.addEventListener('mousemove', e => {
+        cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
+      });
+      let time = 0;
+      function updateCircles() {
+        time += 0.01;
+        circles.forEach((circle, i) => {
+          if (isHovering) {
+            const pos = hoverPositions[i];
+            circle.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+            if (!circle.classList.contains('glow')) {
+              circle.classList.add('glow');
             }
-        };
-        
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+          } else {
+            const offset = offsets[i];
+            const x = Math.sin(time * offset.speed * 10) * offset.x;
+            const y = Math.cos(time * offset.speed * 10) * offset.y;
+            circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            if (circle.classList.contains('glow')) {
+              circle.classList.remove('glow');
+            }
+          }
         });
+        requestAnimationFrame(updateCircles);
+      }
+      const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
+      interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          isHovering = true;
+        });
+        el.addEventListener('mouseleave', () => {
+          isHovering = false;
+        });
+      });
+      updateCircles();
+    }
 
-        // Event listeners for scroll animations
-        window.addEventListener('scroll', fadeInOnScroll);
-        window.addEventListener('scroll', toggleBackToTopButton);
-        
-        // Run once on load
-        fadeInOnScroll();
-        toggleBackToTopButton();
-    </script>
+    // Smooth Scroll for Navigation Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (navLinks.classList.contains('active')) {
+          navLinks.classList.remove('active');
+          hamburger.querySelector('i').classList.toggle('fa-bars');
+          hamburger.querySelector('i').classList.toggle('fa-times');
+        }
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Scroll Animation for fade-in elements
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const fadeInOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        if (elementTop < triggerBottom) {
+          element.classList.add('active');
+        }
+      });
+    };
+
+    // Back to top button
+    const backToTopButton = document.querySelector('.back-to-top');
+    const toggleBackToTopButton = () => {
+      if (window.scrollY > 300) {
+        backToTopButton.classList.add('active');
+      } else {
+        backToTopButton.classList.remove('active');
+      }
+    };
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    window.addEventListener('scroll', fadeInOnScroll);
+    window.addEventListener('scroll', toggleBackToTopButton);
+    fadeInOnScroll();
+    toggleBackToTopButton();
+  </script>
 </body>
 </html>

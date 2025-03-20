@@ -19,73 +19,46 @@
             height: 300vh; /* Create enough scrollable space */
         }
 
-        /* Container for the whole animation scene */
-        .animation-container {
+        /* Main container */
+        .container {
             position: relative;
             width: 100%;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* Logo styling */
-        .logo-container {
+        /* Logo styling - this is the base logo without drone */
+        .logo {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px;
+            width: 600px;
+            max-width: 80%;
             z-index: 1;
+            opacity: 1;
         }
 
-        .logo-text {
-            font-size: 5rem;
-            font-weight: bold;
-            color: #5a6978;
-            letter-spacing: -2px;
-        }
-
-        .logo-text span {
-            color: #22a7e0;
-        }
-
-        .logo-est {
-            font-size: 1rem;
-            color: #5a6978;
-            text-align: right;
-            margin-top: -15px;
-        }
-
-        .logo-subtitle {
-            font-size: 1.8rem;
-            margin-top: 10px;
-        }
-
-        .logo-subtitle .west-coast {
-            color: #22a7e0;
-        }
-
-        .logo-subtitle .multirotor-club {
-            color: #5a6978;
-        }
-
-        /* Drone styling */
+        /* Drone styling - this is just the drone element */
         .drone {
             position: fixed;
-            top: 30%;
-            left: 65%;
+            top: 25%;
+            right: 20%;
             width: 200px;
-            height: auto;
+            max-width: 30%;
             z-index: 2;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.05s linear;
         }
 
-        /* Content sections for scrolling */
-        .content-section {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: transparent;
+        /* Combined logo and drone - will be hidden initially */
+        .logo-with-drone {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 80%;
+            z-index: 3;
+            opacity: 0; /* Start hidden */
         }
 
         /* Scroll instructions */
@@ -97,8 +70,8 @@
             color: #5a6978;
             font-size: 1rem;
             animation: fadeInOut 2s infinite;
-            opacity: 1;
-            z-index: 3;
+            z-index: 4;
+            text-align: center;
         }
 
         @keyframes fadeInOut {
@@ -121,43 +94,30 @@
             0%, 100% { transform: rotate(45deg) translate(0, 0); }
             50% { transform: rotate(45deg) translate(5px, 5px); }
         }
+
+        /* Content sections for scrolling */
+        .content-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent;
+        }
     </style>
 </head>
 <body>
-    <div class="animation-container">
-        <!-- Logo elements -->
-        <div class="logo-container">
-            <div class="logo-text">
-                WC<span>MRC</span>
-            </div>
-            <div class="logo-est">EST.2016</div>
-            <div class="logo-subtitle">
-                <span class="west-coast">west coast</span> <span class="multirotor-club">multirotor club</span>
-            </div>
-        </div>
-
-        <!-- Drone SVG -->
-        <svg class="drone" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
-            <g fill="#5a6978">
-                <ellipse cx="150" cy="75" rx="30" ry="25"/>
-                <path d="M90,60 L130,75 L90,90 Z"/>
-                <path d="M210,60 L170,75 L210,90 Z"/>
-                <path d="M120,30 L150,60 L180,30 Z"/>
-                <path d="M120,120 L150,90 L180,120 Z"/>
-            </g>
-            <circle cx="70" cy="60" r="15" fill="#22a7e0"/>
-            <circle cx="70" cy="90" r="15" fill="#22a7e0"/>
-            <circle cx="230" cy="60" r="15" fill="#22a7e0"/>
-            <circle cx="230" cy="90" r="15" fill="#22a7e0"/>
-            <rect x="70" y="48" width="160" height="5" fill="#5a6978"/>
-            <rect x="70" y="97" width="160" height="5" fill="#5a6978"/>
-            <rect x="138" y="30" width="5" height="90" fill="#5a6978"/>
-            <rect x="157" y="30" width="5" height="90" fill="#5a6978"/>
-            <ellipse cx="150" cy="75" rx="20" ry="15" fill="#22a7e0"/>
-        </svg>
+    <div class="container">
+        <!-- Logo only (image 1) -->
+        <img src="./assets/wcmrcLogoNoDrone.png" alt="WCMRC Logo" class="logo" id="logo">
+        
+        <!-- Drone only (image 2) -->
+        <img src="./assets/drone.png" alt="Drone" class="drone" id="drone">
+        
+        <!-- Combined logo with drone (image 3) - initially hidden but will be shown based on scroll position -->
+        <img src="./assets/wcmrcLogo.png" alt="WCMRC Logo with Drone" class="logo-with-drone" id="logoWithDrone">
 
         <!-- Scroll instructions -->
-        <div class="scroll-instructions">
+        <div class="scroll-instructions" id="scrollInstructions">
             <p>Scroll down to see the drone fly away</p>
             <div class="arrow-down"></div>
         </div>
@@ -168,52 +128,94 @@
     <div class="content-section" id="section2"></div>
 
     <script>
-        // Get the drone element
-        const drone = document.querySelector('.drone');
-        const scrollInstructions = document.querySelector('.scroll-instructions');
+        // Get references to DOM elements
+        const logo = document.getElementById('logo');
+        const drone = document.getElementById('drone');
+        const logoWithDrone = document.getElementById('logoWithDrone');
+        const scrollInstructions = document.getElementById('scrollInstructions');
         
-        // Initial drone position and size
-        let initialScale = 1;
-        let initialX = 65;  // percentage
-        let initialY = 30;  // percentage
+        // Animation parameters
+        const droneInitialPosition = {
+            top: 25,    // percentage from top
+            right: 20,  // percentage from right
+            scale: 1,
+            opacity: 1
+        };
         
-        // Function to update drone position based on scroll
-        function updateDronePosition() {
-            // Get the scroll position
+        // Function to handle scroll animation
+        function handleScroll() {
+            // Calculate scroll percentage
             const scrollPosition = window.scrollY;
-            const windowHeight = window.innerHeight;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            const scrollPercentage = Math.min(scrollPosition / maxScroll, 1);
             
-            // Calculate how far we've scrolled as a percentage of the page
-            const scrollPercentage = Math.min(scrollPosition / (document.body.scrollHeight - windowHeight), 1);
+            // Threshold for transition between states
+            const transitionThreshold = 0.1;  // At 10% scroll, begin the transition
             
-            // Calculate the new drone position and scale
-            const newScale = Math.max(initialScale - scrollPercentage, 0.2);
-            const newY = initialY - (scrollPercentage * 35);  // Move upward
-            const newX = initialX + (scrollPercentage * 40);  // Move to the right
+            if (scrollPercentage <= transitionThreshold) {
+                // Initial state: show both separate logo and drone
+                const progressRatio = scrollPercentage / transitionThreshold;
+                
+                // Fade in the combined image as we approach the threshold
+                logoWithDrone.style.opacity = progressRatio;
+                
+                // Fade out individual elements as we approach threshold
+                logo.style.opacity = 1 - progressRatio;
+                drone.style.opacity = 1 - progressRatio;
+            } else {
+                // Beyond threshold: hide individual elements, show combined, then animate drone away
+                logo.style.opacity = 0;
+                drone.style.opacity = 0;
+                logoWithDrone.style.opacity = 1;
+                
+                // Calculate how far into the main animation we are
+                const mainProgress = (scrollPercentage - transitionThreshold) / (1 - transitionThreshold);
+                
+                // Calculate drone animation
+                if (mainProgress > 0) {
+                    // Move drone up and right, scale down, fade out
+                    const flyAwayX = mainProgress * 100; // pixels to move right
+                    const flyAwayY = -mainProgress * 150; // pixels to move up
+                    const scaleDown = Math.max(1 - mainProgress * 0.8, 0.2); // shrink to 20% at most
+                    const fadeOut = Math.max(1 - mainProgress * 1.5, 0); // fade out faster than movement
+                    
+                    // Apply transformations to drone
+                    drone.style.transform = `translate(${flyAwayX}px, ${flyAwayY}px) scale(${scaleDown})`;
+                    drone.style.opacity = fadeOut;
+                    
+                    // Make the drone visible again for the fly-away animation
+                    if (mainProgress > 0 && mainProgress < 0.8) {
+                        drone.style.opacity = fadeOut;
+                        drone.style.zIndex = 4; // Ensure drone is above other elements
+                    }
+                }
+            }
             
-            // Apply transformations to the drone
-            drone.style.transform = `translate(-50%, -50%) scale(${newScale}) translateX(${scrollPercentage * 100}px) translateY(${-scrollPercentage * 200}px)`;
-            
-            // Adjust opacity as drone flies away
-            drone.style.opacity = Math.max(1 - scrollPercentage * 1.5, 0);
-            
-            // Hide scroll instructions when user starts scrolling
+            // Hide scroll instructions once user starts scrolling
             if (scrollPosition > 10) {
-                scrollInstructions.style.opacity = '0';
+                scrollInstructions.style.opacity = 0;
                 setTimeout(() => {
                     scrollInstructions.style.display = 'none';
                 }, 500);
-            } else {
-                scrollInstructions.style.display = 'block';
-                scrollInstructions.style.opacity = '1';
             }
         }
         
-        // Listen for scroll events
-        window.addEventListener('scroll', updateDronePosition);
+        // Add scroll event listener
+        window.addEventListener('scroll', handleScroll);
         
-        // Initial update
-        updateDronePosition();
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            handleScroll();
+            
+            // Position the drone initially
+            const droneRect = drone.getBoundingClientRect();
+            const initialTop = window.innerHeight * (droneInitialPosition.top / 100);
+            const initialRight = window.innerWidth * (droneInitialPosition.right / 100);
+            
+            // Set initial position
+            drone.style.top = `${initialTop}px`;
+            drone.style.right = `${initialRight}px`;
+        });
     </script>
 </body>
 </html>
