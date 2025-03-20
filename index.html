@@ -8,2162 +8,2650 @@
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-
-  /* Base Styles */
-  :root {
-    /* WCMRC Official Theme Variables */
-    --primary-color: #29a7df;
-    --primary-light: rgba(41, 167, 223, 0.1);
-    --primary-dark: #1a7fb0;
-    --secondary-color: #5d6b77;
-    --accent-color: #000000;
-    --background-color: #f5f7fa;
-    --text-color: #5d6b77;
-    --header-color: #5d6b77;
-    --card-bg: #ffffff;
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'Poppins', sans-serif;
-    --animation-speed: 0.3s;
-    --border-radius: 10px;
-    --section-padding: 100px 0;
-    --header-height: 80px;
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-    --logo-filter: brightness(1.15) contrast(1.2) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-    --text-shadow: none;
-    --hero-bg-gradient: linear-gradient(135deg, rgba(36, 57, 73, 0.92), rgba(41, 167, 223, 0.85));
-  }
-
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    transition: all var(--animation-speed) cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  body {
-    font-family: var(--font-primary);
-    color: var(--text-color);
-    background-color: var(--background-color);
-    overflow-x: hidden;
-    line-height: 1.7;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  ul {
-    list-style: none;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  button,
-  .btn {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background: var(--primary-color);
-    color: white;
-    padding: 14px 28px;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-family: var(--font-primary);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  button::before,
-  .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 100%;
-    background: var(--primary-dark);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: -1;
-  }
-
-  button:hover::before,
-  .btn:hover::before {
-    width: 100%;
-  }
-
-  button:hover,
-  .btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-  }
-
-  section {
-    padding: var(--section-padding);
-    position: relative;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 30px;
-    position: relative;
-    z-index: 2;
-  }
-
-  h1, h2, h3, h4, h5 {
-    font-family: var(--font-secondary);
-    margin-bottom: 24px;
-    line-height: 1.2;
-    font-weight: 600;
-    color: var(--secondary-color);
-    text-shadow: var(--text-shadow);
-  }
-
-  h1 {
-    font-size: 4rem;
-    font-weight: 700;
-  }
-
-  h2 {
-    font-size: 2.5rem;
-    position: relative;
-    padding-bottom: 15px;
-    margin-bottom: 60px;
-    text-align: center;
-  }
-
-  h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: var(--primary-color);
-    border-radius: 2px;
-  }
-
-  p {
-    margin-bottom: 18px;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  .mb-5 {
-    margin-bottom: 50px;
-  }
-
-  /* New glass effect for cards */
-  .glass-effect {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-
-  /* Theme Switcher */
-  #theme-switcher {
-    position: fixed;
-    top: 120px;
-    right: 20px;
-    z-index: 1000;
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  #theme-switcher.active {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  .theme-toggle {
-    position: fixed;
-    top: 120px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-md);
-    cursor: pointer;
-    z-index: 1001;
-    transition: all 0.4s ease;
-  }
-
-  .theme-toggle:hover {
-    transform: rotate(30deg);
-  }
-
-  .theme-btn {
-    padding: 10px 15px;
-    border-radius: var(--border-radius);
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: #eee;
-    color: #333;
-    transition: all 0.3s ease;
-  }
-
-  .theme-btn.active {
-    background: var(--primary-color);
-    color: white;
-  }
-
-  /* Header & Navigation */
-  header {
-    background-color: rgba(93, 107, 119, 0.98);
-    color: white;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    height: var(--header-height);
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    height: 60px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .logo img {
-    height: 100%;
-    width: auto;
-    filter: var(--logo-filter);
-    transition: all 0.3s ease;
-  }
-
-  .logo img:hover {
-    filter: brightness(1.2) contrast(1.25) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
-    transform: translateY(-1px);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 40px;
-  }
-
-  .nav-links a {
-    position: relative;
-    font-weight: 500;
-    font-size: 1rem;
-    padding: 5px 0;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--primary-color);
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
-  }
-
-  .hamburger {
-    display: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-  }
-
-  /* Hero Section */
-  #hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    background: var(--hero-bg-gradient),
-      url('./assets/drone2.jpg') center/cover no-repeat;
-    color: white;
-    padding-top: 0;
-    overflow: hidden;
-  }
-
-  /* Hero Logo Animation Styles */
-  .hero-logo-container {
-    position: relative;
-    width: 400px;
-    height: 120px;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Create a subtle radial gradient behind the logo for better contrast */
-  .hero-logo-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-    z-index: 1;
-    opacity: 0.8;
-    pointer-events: none;
-  }
-
-  .hero-logo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    max-width: 400px;
-    filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    transition: all 0.5s ease;
-    z-index: 2;
-  }
-
-  .hero-logo:hover {
-    filter: brightness(1.2) contrast(1.25) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
-    transform: translateY(-2px);
-  }
-
-  .hero-logo-no-drone {
-    opacity: 0;
-  }
-
-  .hero-drone {
-    position: absolute;
-    width: 90px;
-    top: 15px;
-    right: 75px;
-    transition: opacity 0.8s ease;
-    z-index: 3;
-    opacity: 0;
-    filter: brightness(1.15) contrast(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
-    will-change: transform;
-  }
-
-  .hero-content {
-    max-width: 800px;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.2s forwards;
-  }
-
-  .hero-content h1 {
-    margin-bottom: 24px;
-    font-size: 4.5rem;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    line-height: 1.1;
-  }
-
-  .hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    opacity: 0.95;
-    max-width: 600px;
-    line-height: 1.8;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 20px;
-  }
-
-  .hero-btns .btn {
-    padding: 16px 32px;
-    font-size: 1rem;
-  }
-
-  .hero-btns .btn:nth-child(2) {
-    background: transparent;
-    border: 2px solid white;
-  }
-
-  .hero-btns .btn:nth-child(2):hover {
-    background: white;
-    color: var(--primary-color);
-  }
-
-  /* Hexagonal overlay on hero */
-  #hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 1;
-    opacity: 0.5;
-    animation: slowMove 60s linear infinite alternate;
-  }
-
-  @keyframes slowMove {
-    0% {
-      background-position: 0 0;
+    /* Base Styles */
+    :root {
+      /* WCMRC Official Theme Variables */
+      --primary-color: #29a7df;
+      --primary-light: rgba(41, 167, 223, 0.1);
+      --primary-dark: #1a7fb0;
+      --secondary-color: #5d6b77;
+      --accent-color: #000000;
+      --background-color: #f5f7fa;
+      --text-color: #5d6b77;
+      --header-color: #5d6b77;
+      --card-bg: #ffffff;
+      --font-primary: 'Montserrat', sans-serif;
+      --font-secondary: 'Poppins', sans-serif;
+      --animation-speed: 0.3s;
+      --border-radius: 10px;
+      --section-padding: 100px 0;
+      --header-height: 80px;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+      --logo-filter: brightness(1.15) contrast(1.2) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+      --text-shadow: none;
+      --hero-bg-gradient: linear-gradient(135deg, rgba(36, 57, 73, 0.92), rgba(41, 167, 223, 0.85));
     }
 
-    100% {
-      background-position: 100px 100px;
-    }
-  }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all var(--animation-speed) cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    color: white;
-    text-align: center;
-    animation: fadeInUp 1s ease 1.5s both, bounce 2s ease-in-out infinite;
-  }
-
-  .scroll-indicator p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 10px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-
-  .scroll-indicator .arrow {
-    font-size: 1.5rem;
-  }
-
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-10px);
-    }
-    60% {
-      transform: translateY(-5px);
-    }
-  }
-
-  /* About Section */
-  #about {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  #about::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  .about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .about-img {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    height: 450px;
-    background: url('./assets/club1.jpg') center/cover no-repeat;
-    position: relative;
-    transform: perspective(1000px) rotateY(-5deg);
-    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  .about-img:hover {
-    transform: perspective(1000px) rotateY(0deg);
-  }
-
-  .about-img::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
-  }
-
-  .about-text h3 {
-    font-size: 2rem;
-    margin-bottom: 24px;
-    color: var(--primary-color);
-  }
-
-  .about-text p {
-    margin-bottom: 20px;
-    opacity: 0.9;
-  }
-
-  /* Featured stats */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 60px;
-    text-align: center;
-  }
-
-  .stat-item {
-    padding: 30px;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.4s ease;
-  }
-
-  .stat-item:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--secondary-color);
-  }
-
-  /* Events Section */
-  #events {
-    position: relative;
-    overflow: hidden;
-  }
-
-  #events::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .event-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .event-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .event-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 5px;
-    background: var(--primary-color);
-    z-index: 2;
-  }
-
-  .event-img {
-    height: 220px;
-    background: url('https://placehold.co/400x200/5d6b77/white?text=Event+Image') center/cover no-repeat;
-    position: relative;
-  }
-
-  .event-img::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
-  }
-
-  .event-details {
-    padding: 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .event-date {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 8px 15px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-
-  .event-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-  }
-
-  .event-card p {
-    margin-bottom: 24px;
-    flex-grow: 1;
-  }
-
-  /* Membership Section */
-  #membership {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  #membership::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  .plans-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .plan-card {
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    text-align: center;
-    padding: 50px 30px;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .plan-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: var(--shadow-lg);
-    z-index: 2;
-  }
-
-  .plan-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: var(--primary-color);
-    z-index: -1;
-  }
-
-  .plan-title {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-  }
-
-  .plan-price {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: var(--secondary-color);
-  }
-
-  .plan-features {
-    margin-bottom: 30px;
-    flex-grow: 1;
-  }
-
-  .plan-features li {
-    margin-bottom: 15px;
-    position: relative;
-    padding-left: 20px;
-    text-align: left;
-  }
-
-  .plan-features li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--primary-color);
-    font-weight: bold;
-  }
-
-  /* Gallery Section */
-  #gallery {
-    background-color: var(--background-color);
-  }
-
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    grid-auto-rows: 280px;
-    gap: 25px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .gallery-item {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    position: relative;
-    background: url('https://placehold.co/400x400/5d6b77/white?text=Gallery+Image') center/cover no-repeat;
-    cursor: pointer;
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .gallery-item:hover {
-    transform: scale(1.05);
-    z-index: 2;
-    box-shadow: var(--shadow-md);
-  }
-
-  .gallery-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .gallery-item:hover::before {
-    opacity: 1;
-  }
-
-  .gallery-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(41, 167, 223, 0.3);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .gallery-item:hover::after {
-    opacity: 1;
-  }
-
-  .gallery-item-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 25px;
-    color: white;
-    transform: translateY(50px);
-    opacity: 0;
-    transition: all 0.4s ease;
-    z-index: 2;
-  }
-
-  .gallery-item:hover .gallery-item-caption {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  /* Social Feed Section */
-  #social-feed {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: hidden;
-  }
-
-  #social-feed::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  .social-feed-container {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    flex-direction: column;
-    gap: 60px;
-  }
-
-  .social-cards {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
-  }
-
-  .social-card {
-    background-color: white;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .social-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .social-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    z-index: 1;
-  }
-
-  .facebook-card::before {
-    background-color: #1877f2;
-  }
-
-  .instagram-card::before {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  }
-
-  .discord-card::before {
-    background-color: #5865F2;
-  }
-
-  .social-card-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin: 20px auto 20px;
-    position: relative;
-    z-index: 2;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .facebook-card .social-card-icon {
-    background-color: #1877f2;
-  }
-
-  .instagram-card .social-card-icon {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  }
-
-  .discord-card .social-card-icon {
-    background-color: #5865F2;
-  }
-
-  .social-card-content {
-    padding: 20px 30px 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .social-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-
-  .social-card p {
-    margin-bottom: 20px;
-    text-align: center;
-    opacity: 0.9;
-  }
-
-  .social-stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-    text-align: center;
-  }
-
-  .social-stat {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .social-stat-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1877f2;
-  }
-
-  .social-stat-label {
-    font-size: 0.9rem;
-    opacity: 0.7;
-  }
-
-  .social-gallery {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-
-  .social-gallery-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .discord-channels {
-    background-color: #F6F6F6;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-
-  .discord-channel {
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    font-family: 'Consolas', monospace;
-    font-size: 0.9rem;
-    color: #4f545c;
-    font-weight: 500;
-  }
-
-  .discord-channel:last-child {
-    margin-bottom: 0;
-  }
-
-  .social-btn {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
-  .facebook-btn {
-    background-color: #1877f2;
-  }
-
-  .facebook-btn:hover {
-    background-color: #0e5fcc;
-  }
-
-  .instagram-btn {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  }
-
-  .discord-btn {
-    background-color: #5865F2;
-  }
-
-  .discord-btn:hover {
-    background-color: #4752c4;
-  }
-
-  /* Recent Updates Section */
-  #recent-updates {
-    background-color: var(--background-color);
-    position: relative;
-    overflow: hidden;
-    padding: var(--section-padding);
-  }
-
-  #recent-updates::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  .updates-container {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .feed-section {
-    width: 100%;
-  }
-
-  .feed-post {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 30px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .feed-post:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .feed-post-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 20px 20px 10px;
-  }
-
-  .feed-post-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .feed-post-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .feed-post-meta {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .feed-post-author {
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--secondary-color);
-  }
-
-  .feed-post-date {
-    font-size: 0.85rem;
-    opacity: 0.7;
-  }
-
-  .feed-post-content {
-    padding: 0 20px 20px;
-  }
-
-  .feed-post-content p {
-    margin-bottom: 15px;
-    line-height: 1.5;
-  }
-
-  .feed-post-image {
-    margin-bottom: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .feed-post-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .feed-post-gallery {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-
-  .feed-post-gallery img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-  }
-
-  .feed-post-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px 20px;
-    border-top: 1px solid #f5f5f5;
-  }
-
-  .feed-post-stats {
-    display: flex;
-    gap: 20px;
-  }
-
-  .feed-post-stats span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-  }
-
-  .feed-post-stats i {
-    color: var(--primary-color);
-  }
-
-  .view-more-container {
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
-
-  .view-more-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--secondary-color);
-    padding: 12px 24px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-  }
-
-  .view-more-btn:hover {
-    background-color: var(--primary-color);
-  }
-
-  /* Contact Section */
-  #contact {
-    background-color: var(--card-bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  #contact::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  .contact-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: start;
-    position: relative;
-    z-index: 1;
-  }
-
-  .contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 25px;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    transition: transform 0.4s ease, box-shadow 0.3s ease;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .contact-item:hover {
-    transform: translateX(10px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .contact-item i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-top: 5px;
-  }
-
-  .contact-item h3 {
-    margin-bottom: 5px;
-    font-size: 1.2rem;
-  }
-
-  .contact-form {
-    background-color: var(--background-color);
-    padding: 40px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .contact-form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40%;
-    height: 5px;
-    background: var(--primary-color);
-  }
-
-  .form-group {
-    margin-bottom: 25px;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 0.95rem;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    font-family: var(--font-primary);
-    font-size: 1rem;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    background-color: white;
-  }
-
-  .form-control:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.1);
-  }
-
-  textarea.form-control {
-    resize: vertical;
-    min-height: 150px;
-  }
-
-  /* Resources Section */
-  #resources {
-    position: relative;
-    overflow: hidden;
-  }
-
-  #resources::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  .resources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .resource-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .resource-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .resource-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 120px;
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 3rem;
-  }
-
-  .resource-details {
-    padding: 30px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .resource-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-  }
-
-  .resource-card p {
-    margin-bottom: 24px;
-    flex-grow: 1;
-  }
-
-  /* Footer */
-  footer {
-    background-color: var(--header-color);
-    color: white;
-    padding: 80px 0 40px;
-    position: relative;
-  }
-
-  footer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, rgba(41, 167, 223, 0) 100%);
-  }
-
-  .footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 50px;
-    margin-bottom: 60px;
-  }
-
-  .footer-col h3 {
-    position: relative;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 1.4rem;
-    color: white;
-  }
-
-  .footer-col h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: var(--primary-color);
-  }
-
-  .footer-links li {
-    margin-bottom: 15px;
-  }
-
-  .footer-links li a {
-    transition: transform 0.3s ease, color 0.3s ease;
-    display: inline-block;
-    opacity: 0.8;
-  }
-
-  .footer-links li a:hover {
-    transform: translateX(5px);
-    color: var(--primary-color);
-    opacity: 1;
-  }
-
-  .social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-  }
-
-  .social-links a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.2rem;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  .social-links a:hover {
-    background-color: var(--primary-color);
-    transform: translateY(-5px);
-  }
-
-  .footer-bottom {
-    text-align: center;
-    padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .footer-logo {
-    display: block;
-    margin: 0 auto 30px;
-    height: 70px;
-    width: auto;
-    filter: brightness(1.2) contrast(1.1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  }
-
-  /* Animation for elements on scroll */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .fade-in.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Back to top button */
-  .back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 99;
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    font-size: 1.2rem;
-  }
-
-  .back-to-top.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .back-to-top:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-5px);
-  }
-
-  /* Newsletter form in footer */
-  .footer-newsletter .form-control {
-    border-radius: var(--border-radius);
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-  }
-
-  .footer-newsletter .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .footer-newsletter .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.2);
-  }
-
-  .footer-newsletter .btn {
-    width: 100%;
-  }
-
-  /* Responsive Styles */
-  @media (max-width: 1200px) {
-    h1 {
-      font-size: 3.5rem;
+    body {
+      font-family: var(--font-primary);
+      color: var(--text-color);
+      background-color: var(--background-color);
+      overflow-x: hidden;
+      line-height: 1.7;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
     }
 
-    h2 {
-      font-size: 2.2rem;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    .hero-logo-container {
-      max-width: 350px;
+    ul {
+      list-style: none;
     }
 
-    .stats-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 992px) {
-    h1 {
-      font-size: 3rem;
-    }
-
-    h2 {
-      font-size: 2rem;
-    }
-
-    .hero-logo-container {
-      max-width: 300px;
-    }
-
-    .about-content,
-    .contact-container {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-
-    .about-img {
-      order: -1;
-      height: 400px;
-    }
-
-    .stats-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .nav-links {
-      position: fixed;
-      top: var(--header-height);
-      left: -100%;
-      width: 100%;
-      height: calc(100vh - var(--header-height));
-      background-color: rgba(93, 107, 119, 0.98);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-      transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .nav-links.active {
-      left: 0;
-    }
-
-    .hamburger {
+    img {
+      max-width: 100%;
+      height: auto;
       display: block;
     }
 
-    .logo img {
-      height: 50px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    :root {
-      --section-padding: 80px 0;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 40px;
-    }
-
-    .hero-logo-container {
-      max-width: 250px;
+    button,
+    .btn {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background: var(--primary-color);
+      color: white;
+      padding: 14px 28px;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-family: var(--font-primary);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
     }
 
-    .hero-content h1 {
-      font-size: 2.8rem;
+    button::before,
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: var(--primary-dark);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: -1;
     }
 
-    .hero-btns {
-      flex-direction: column;
-      gap: 15px;
+    button:hover::before,
+    .btn:hover::before {
+      width: 100%;
     }
 
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+    button:hover,
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
     }
 
-    .events-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .contact-form {
-      padding: 30px;
-    }
-
-    .event-img,
-    .about-img {
-      height: 300px;
-    }
-  }
-
-  @media (max-width: 576px) {
-    :root {
-      --section-padding: 60px 0;
+    section {
+      padding: var(--section-padding);
+      position: relative;
     }
 
     .container {
-      padding: 0 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: var(--font-secondary);
+      margin-bottom: 24px;
+      line-height: 1.2;
+      font-weight: 600;
+      color: var(--secondary-color);
+      text-shadow: var(--text-shadow);
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 4rem;
+      font-weight: 700;
     }
 
     h2 {
-      font-size: 1.6rem;
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 60px;
+      text-align: center;
     }
 
-    .hero-content h1 {
-      font-size: 2.2rem;
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--primary-color);
+      border-radius: 2px;
     }
 
-    .hero-content p {
-      font-size: 1rem;
+    p {
+      margin-bottom: 18px;
     }
 
-    .hero-logo-container {
-      max-width: 200px;
+    .text-center {
+      text-align: center;
     }
 
-    .gallery-grid {
-      grid-template-columns: 1fr;
-      grid-auto-rows: 250px;
+    .mb-5 {
+      margin-bottom: 50px;
     }
 
-    .stats-grid {
-      grid-template-columns: 1fr;
+    /* New glass effect for cards */
+    .glass-effect {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* Theme Switcher */
+    #theme-switcher {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      z-index: 1000;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #theme-switcher.active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.4s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
+
+    .theme-btn {
+      padding: 10px 15px;
+      border-radius: var(--border-radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #eee;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .theme-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    /* Header & Navigation */
+    header {
+      background-color: rgba(93, 107, 119, 0.98);
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      height: var(--header-height);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      position: relative;
+      z-index: 2;
     }
 
     .logo img {
-      height: 40px;
+      height: 100%;
+      width: auto;
+      filter: var(--logo-filter);
+      transition: all 0.3s ease;
+    }
+
+    .logo img:hover {
+      filter: brightness(1.2) contrast(1.25) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+      transform: translateY(-1px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+    }
+
+    .nav-links a {
+      position: relative;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    /* Hero Section */
+    #hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: var(--hero-bg-gradient),
+        url('./assets/drone2.jpg') center/cover no-repeat;
+      color: white;
+      padding-top: 0;
+      overflow: hidden;
+    }
+
+    /* Hero Logo Animation Styles */
+    .hero-logo-container {
+      position: relative;
+      width: 400px;
+      height: 120px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Create a subtle radial gradient behind the logo for better contrast */
+    .hero-logo-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+      z-index: 1;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      max-width: 400px;
+      filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      transition: all 0.5s ease;
+      z-index: 2;
+    }
+
+    .hero-logo:hover {
+      filter: brightness(1.2) contrast(1.25) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+      transform: translateY(-2px);
+    }
+
+    .hero-logo-no-drone {
+      opacity: 0;
+    }
+
+    .hero-drone {
+      position: absolute;
+      width: 90px;
+      top: 15px;
+      right: 75px;
+      transition: opacity 0.8s ease;
+      z-index: 3;
+      opacity: 0;
+      filter: brightness(1.15) contrast(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+      will-change: transform;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.2s ease 0.2s forwards;
+    }
+
+    .hero-content h1 {
+      margin-bottom: 24px;
+      font-size: 4.5rem;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      line-height: 1.1;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      max-width: 600px;
+      line-height: 1.8;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 20px;
+    }
+
+    .hero-btns .btn {
+      padding: 16px 32px;
+      font-size: 1rem;
+    }
+
+    .hero-btns .btn:nth-child(2) {
+      background: transparent;
+      border: 2px solid white;
+    }
+
+    .hero-btns .btn:nth-child(2):hover {
+      background: white;
+      color: var(--primary-color);
+    }
+
+    /* Hexagonal overlay on hero */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 1;
+      opacity: 0.5;
+      animation: slowMove 60s linear infinite alternate;
+    }
+
+    @keyframes slowMove {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: 100px 100px;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      color: white;
+      text-align: center;
+      animation: fadeInUp 1s ease 1.5s both, bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 10px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .scroll-indicator .arrow {
+      font-size: 1.5rem;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+      }
+
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* About Section */
+    #about {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-img {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      height: 450px;
+      background: url('./assets/club1.jpg') center/cover no-repeat;
+      position: relative;
+      transform: perspective(1000px) rotateY(-5deg);
+      transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .about-img:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+
+    .about-img::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
+    }
+
+    .about-text h3 {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      color: var(--primary-color);
+    }
+
+    .about-text p {
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    /* Featured stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 30px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.4s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--secondary-color);
+    }
+
+    /* Events Section */
+    #events {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #events::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .event-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 5px;
+      background: var(--primary-color);
+      z-index: 2;
+    }
+
+    .event-img {
+      height: 220px;
+      background: url('https://placehold.co/400x200/5d6b77/white?text=Event+Image') center/cover no-repeat;
+      position: relative;
+    }
+
+    .event-img::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+    }
+
+    .event-details {
+      padding: 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-date {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .event-card h3 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .event-card p {
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    /* Membership Section */
+    #membership {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #membership::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .plans-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-card {
+      background-color: var(--background-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      padding: 50px 30px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-lg);
+      z-index: 2;
+    }
+
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-color);
+      z-index: -1;
+    }
+
+    .plan-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: var(--secondary-color);
+    }
+
+    .plan-features {
+      margin-bottom: 30px;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      margin-bottom: 15px;
+      position: relative;
+      padding-left: 20px;
+      text-align: left;
+    }
+
+    .plan-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    /* Gallery Section */
+    #gallery {
+      background-color: var(--background-color);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-auto-rows: 280px;
+      gap: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gallery-item {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      position: relative;
+      background: url('https://placehold.co/400x400/5d6b77/white?text=Gallery+Image') center/cover no-repeat;
+      cursor: pointer;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      z-index: 2;
+      box-shadow: var(--shadow-md);
+    }
+
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .gallery-item:hover::before {
+      opacity: 1;
+    }
+
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(41, 167, 223, 0.3);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+
+    .gallery-item-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 25px;
+      color: white;
+      transform: translateY(50px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      z-index: 2;
+    }
+
+    .gallery-item:hover .gallery-item-caption {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Social Feed Section */
+    #social-feed {
+      background-color: var(--background-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #social-feed::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .social-feed-container {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    .social-cards {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .social-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .social-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .social-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      z-index: 1;
+    }
+
+    .facebook-card::before {
+      background-color: #1877f2;
+    }
+
+    .instagram-card::before {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-card::before {
+      background-color: #5865F2;
+    }
+
+    .social-card-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 20px auto 20px;
+      position: relative;
+      z-index: 2;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .facebook-card .social-card-icon {
+      background-color: #1877f2;
+    }
+
+    .instagram-card .social-card-icon {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-card .social-card-icon {
+      background-color: #5865F2;
+    }
+
+    .social-card-content {
+      padding: 20px 30px 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .social-card p {
+      margin-bottom: 20px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .social-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .social-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1877f2;
+    }
+
+    .social-stat-label {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .social-gallery {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .social-gallery-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .discord-channels {
+      background-color: #F6F6F6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .discord-channel {
+      padding: 5px 10px;
+      margin-bottom: 5px;
+      font-family: 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: #4f545c;
+      font-weight: 500;
+    }
+
+    .discord-channel:last-child {
+      margin-bottom: 0;
+    }
+
+    .social-btn {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .facebook-btn {
+      background-color: #1877f2;
+    }
+
+    .facebook-btn:hover {
+      background-color: #0e5fcc;
+    }
+
+    .instagram-btn {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .discord-btn {
+      background-color: #5865F2;
+    }
+
+    .discord-btn:hover {
+      background-color: #4752c4;
+    }
+
+    /* Recent Updates Section */
+    #recent-updates {
+      background-color: var(--background-color);
+      position: relative;
+      overflow: hidden;
+      padding: var(--section-padding);
+    }
+
+    #recent-updates::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .updates-container {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .feed-section {
+      width: 100%;
+    }
+
+    .feed-post {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 30px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feed-post:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feed-post-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 20px 10px;
+    }
+
+    .feed-post-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .feed-post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feed-post-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feed-post-author {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--secondary-color);
+    }
+
+    .feed-post-date {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .feed-post-content {
+      padding: 0 20px 20px;
+    }
+
+    .feed-post-content p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .feed-post-image {
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .feed-post-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .feed-post-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .feed-post-gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .feed-post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px 20px;
+      border-top: 1px solid #f5f5f5;
+    }
+
+    .feed-post-stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .feed-post-stats span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+    }
+
+    .feed-post-stats i {
+      color: var(--primary-color);
+    }
+
+    .view-more-container {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .view-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--secondary-color);
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .view-more-btn:hover {
+      background-color: var(--primary-color);
+    }
+
+    /* Contact Section */
+    #contact {
+      background-color: var(--card-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
     }
 
     .contact-item {
-      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 25px;
+      background-color: var(--background-color);
+      border-radius: var(--border-radius);
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+      box-shadow: var(--shadow-sm);
     }
-  }
 
-  /* Theme styles */
-  .theme-cyberpunk {
-    --primary-color: #ff00ff;
-    --primary-light: rgba(255, 0, 255, 0.1);
-    --primary-dark: #cc00cc;
-    --secondary-color: #00ffff;
-    --accent-color: #ffff00;
-    --background-color: #121212;
-    --text-color: #ffffff;
-    --header-color: #000000;
-    --card-bg: #1e1e1e;
-    --font-primary: 'Orbitron', sans-serif;
-    --font-secondary: 'Rajdhani', sans-serif;
-    --animation-speed: 0.5s;
-    --border-radius: 0;
-    --logo-filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.3));
-    --text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-    --hero-bg-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8));
-  }
-
-  .theme-cyberpunk .hero-logo-container::before {
-    background: radial-gradient(circle, rgba(255, 0, 255, 0.15) 0%, rgba(0, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
-    animation: pulse 3s infinite alternate;
-  }
-
-  .theme-cyberpunk .hero-logo {
-    filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.3));
-  }
-
-  .theme-cyberpunk .hero-logo:hover {
-    filter: brightness(1.3) contrast(1.2) drop-shadow(0 0 15px rgba(255, 0, 255, 0.8)) drop-shadow(0 0 30px rgba(0, 255, 255, 0.4));
-  }
-
-  .theme-cyberpunk .hero-drone {
-    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7));
-  }
-
-  @keyframes pulse {
-    0% {
-      opacity: 0.5;
+    .contact-item:hover {
+      transform: translateX(10px);
+      box-shadow: var(--shadow-md);
     }
-    100% {
-      opacity: 0.9;
+
+    .contact-item i {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-top: 5px;
     }
-  }
 
-  .theme-cyberpunk h2::after {
-    height: 2px;
-    width: 100px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  }
+    .contact-item h3 {
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
 
-  .theme-cyberpunk .btn,
-  .theme-cyberpunk button {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    border: 1px solid var(--secondary-color);
-    color: black;
-    font-weight: 700;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
+    .contact-form {
+      background-color: var(--background-color);
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
 
-  .theme-cyberpunk .theme-btn {
-    background: #333;
-    color: white;
-    border: 1px solid var(--secondary-color);
-  }
+    .contact-form::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: 5px;
+      background: var(--primary-color);
+    }
 
-  .theme-cyberpunk .theme-btn.active {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    color: black;
-  }
+    .form-group {
+      margin-bottom: 25px;
+    }
 
-  .theme-cyberpunk .btn::before,
-  .theme-cyberpunk button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-    z-index: -1;
-  }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
 
-  .theme-cyberpunk .btn:hover::before,
-  .theme-cyberpunk button:hover::before {
-    left: 100%;
-  }
+    .form-control {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+      background-color: white;
+    }
 
-  .theme-cyberpunk .event-card,
-  .theme-cyberpunk .resource-card,
-  .theme-cyberpunk .plan-card,
-  .theme-cyberpunk .contact-form,
-  .theme-cyberpunk .social-feed-card {
-    border: 1px solid var(--secondary-color);
-    box-shadow: 0 0 15px var(--primary-color);
-  }
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.1);
+    }
 
-  .theme-cyberpunk .event-card h3,
-  .theme-cyberpunk .resource-card h3,
-  .theme-cyberpunk .plan-card h3,
-  .theme-cyberpunk .social-card h3,
-  .theme-cyberpunk .contact-form h3 {
-    color: var(--secondary-color);
-  }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 150px;
+    }
 
-  .theme-cyberpunk .stat-item {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--secondary-color);
-  }
+    /* Resources Section */
+    #resources {
+      position: relative;
+      overflow: hidden;
+    }
 
-  .theme-cyberpunk .stat-number {
-    color: var(--primary-color);
-    text-shadow: 0 0 10px var(--primary-color);
-  }
+    #resources::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%2329a7df' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 0;
+      opacity: 0.4;
+    }
 
-  .theme-cyberpunk .stat-label {
-    color: var(--secondary-color);
-  }
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
 
-  .theme-cyberpunk .plan-title {
-    color: var(--primary-color);
-    text-shadow: 0 0 8px var(--primary-color);
-  }
+    .resource-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .theme-cyberpunk .plan-features li::before {
-    color: var(--secondary-color);
-    text-shadow: 0 0 5px var(--secondary-color);
-  }
+    .resource-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+    }
 
-  .theme-cyberpunk .feed-post,
-  .theme-cyberpunk .social-card,
-  .theme-cyberpunk .contact-item {
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid var(--primary-color);
-  }
+    .resource-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 3rem;
+    }
 
-  .theme-cyberpunk .nav-links a::after {
-    background-color: var(--secondary-color);
-    box-shadow: 0 0 10px var(--secondary-color);
-    height: 1px;
-  }
+    .resource-details {
+      padding: 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .theme-cyberpunk .form-control {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--secondary-color);
-    color: white;
-  }
+    .resource-card h3 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
 
-  .theme-cyberpunk .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
+    .resource-card p {
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
 
-  .theme-minimalist {
-    --primary-color: #000000;
-    --primary-light: rgba(0, 0, 0, 0.05);
-    --primary-dark: #333333;
-    --secondary-color: #333333;
-    --accent-color: #ff4500;
-    --background-color: #ffffff;
-    --text-color: #333333;
-    --header-color: #ffffff;
-    --card-bg: #f9f9f9;
-    --font-primary: 'Quicksand', sans-serif;
-    --font-secondary: 'Quicksand', sans-serif;
-    --animation-speed: 0.2s;
-    --border-radius: 0;
-    --shadow-sm: none;
-    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
-    --logo-filter: contrast(1.4) brightness(0.9) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    --text-shadow: none;
-    --hero-bg-gradient: linear-gradient(135deg, rgba(245, 245, 245, 0.9), rgba(250, 250, 250, 0.95));
-  }
+    /* Footer */
+    footer {
+      background-color: var(--header-color);
+      color: white;
+      padding: 80px 0 40px;
+      position: relative;
+    }
 
-  .theme-minimalist .hero-logo-container::before {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%);
-  }
+    footer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary-color) 0%, rgba(41, 167, 223, 0) 100%);
+    }
 
-  .theme-minimalist .hero-logo {
-    filter: contrast(1.4) brightness(0.85) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
-  }
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 50px;
+      margin-bottom: 60px;
+    }
 
-  .theme-minimalist .hero-logo:hover {
-    filter: contrast(1.5) brightness(0.9) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
-  }
+    .footer-col h3 {
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      font-size: 1.4rem;
+      color: white;
+    }
 
-  .theme-minimalist header {
-    box-shadow: none;
-    border-bottom: 1px solid #eee;
-  }
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: var(--primary-color);
+    }
 
-  .theme-minimalist .logo,
-  .theme-minimalist .nav-links a {
-    color: var(--text-color);
-  }
+    .footer-links li {
+      margin-bottom: 15px;
+    }
 
-  .theme-minimalist h2::after {
-    display: none;
-  }
+    .footer-links li a {
+      transition: transform 0.3s ease, color 0.3s ease;
+      display: inline-block;
+      opacity: 0.8;
+    }
 
-  .theme-minimalist h2 {
-    font-weight: 300;
-    letter-spacing: 2px;
-  }
+    .footer-links li a:hover {
+      transform: translateX(5px);
+      color: var(--primary-color);
+      opacity: 1;
+    }
 
-  .theme-minimalist h1 {
-    font-weight: 300;
-    letter-spacing: 1px;
-  }
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
 
-  .theme-minimalist .btn,
-  .theme-minimalist button {
-    background: transparent;
-    color: var(--text-color);
-    border: 1px solid var(--text-color);
-    border-radius: 0;
-    font-weight: 400;
-    letter-spacing: 2px;
-    padding: 12px 30px;
-  }
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-  .theme-minimalist .hero-btns .btn:nth-child(2) {
-    border: 1px solid var(--text-color);
-  }
+    .social-links a:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-5px);
+    }
 
-  .theme-minimalist .btn:hover,
-  .theme-minimalist button:hover {
-    background: var(--text-color);
-    color: white;
-    transform: none;
-    box-shadow: none;
-  }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-  .theme-minimalist #hero {
-    background: #f9f9f9;
-    color: var(--text-color);
-  }
+    .footer-logo {
+      display: block;
+      margin: 0 auto 30px;
+      height: 70px;
+      width: auto;
+      filter: brightness(1.2) contrast(1.1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
 
-  .theme-minimalist .hero-content h1 {
-    color: var(--text-color);
-    text-shadow: none;
-  }
+    /* Animation for elements on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
 
-  .theme-minimalist .hero-content p {
-    color: var(--text-color);
-    text-shadow: none;
-  }
+    .fade-in.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-  .theme-minimalist .scroll-indicator {
-    color: var(--text-color);
-  }
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      font-size: 1.2rem;
+    }
 
-  .theme-minimalist .scroll-indicator p {
-    text-shadow: none;
-  }
+    .back-to-top.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-  .theme-minimalist .event-card,
-  .theme-minimalist .resource-card,
-  .theme-minimalist .plan-card,
-  .theme-minimalist .contact-form,
-  .theme-minimalist .social-feed-card {
-    box-shadow: none;
-    border: 1px solid #eee;
-  }
+    .back-to-top:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-5px);
+    }
 
-  .theme-minimalist .event-card:hover,
-  .theme-minimalist .resource-card:hover,
-  .theme-minimalist .plan-card:hover,
-  .theme-minimalist .social-feed-card:hover {
-    transform: none;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  }
+    /* Newsletter form in footer */
+    .footer-newsletter .form-control {
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+    }
 
-  .theme-minimalist .nav-links a::after {
-    height: 1px;
-    background-color: var(--text-color);
-  }
+    .footer-newsletter .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
 
-  .theme-minimalist .gallery-item::before {
-    background: rgba(255, 255, 255, 0.8);
-  }
+    .footer-newsletter .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(41, 167, 223, 0.2);
+    }
 
-  .theme-minimalist .gallery-item-caption {
-    color: var(--text-color);
-  }
+    .footer-newsletter .btn {
+      width: 100%;
+    }
 
-  .theme-minimalist .contact-item {
-    background: transparent;
-    border-bottom: 1px solid #eee;
-    border-radius: 0;
-    padding-left: 0;
-  }
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: 3.5rem;
+      }
 
-  .theme-minimalist .contact-item:hover {
-    transform: none;
-  }
+      h2 {
+        font-size: 2.2rem;
+      }
 
-  .theme-minimalist footer {
-    background: var(--background-color);
-    color: var(--text-color);
-    border-top: 1px solid #eee;
-  }
+      .hero-logo-container {
+        max-width: 350px;
+      }
 
-  .theme-minimalist .footer-col h3 {
-    color: var(--text-color);
-  }
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
 
-  .theme-minimalist .footer-col h3::after {
-    background: var(--text-color);
-  }
+    @media (max-width: 992px) {
+      h1 {
+        font-size: 3rem;
+      }
 
-  .theme-minimalist .social-links a {
-    background: transparent;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-  }
+      h2 {
+        font-size: 2rem;
+      }
 
-  .theme-minimalist .social-links a:hover {
-    background: var(--text-color);
-    color: white;
-    transform: none;
-  }
+      .hero-logo-container {
+        max-width: 300px;
+      }
 
-  .theme-minimalist .footer-bottom {
-    border-top: 1px solid #eee;
-  }
+      .about-content,
+      .contact-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
 
-  .theme-minimalist .footer-newsletter .form-control {
-    background-color: #f5f5f5;
-    border: 1px solid #eee;
-    color: var(--text-color);
-  }
+      .about-img {
+        order: -1;
+        height: 400px;
+      }
 
-  .theme-minimalist .footer-newsletter .form-control::placeholder {
-    color: #999;
-  }
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-  /* Custom cursor styles */
-  .cursor {
-    position: fixed;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    will-change: transform;
-    transform: translate3d(-50%, -50%, 0);
-    left: 0;
-    top: 0;
-    backface-visibility: hidden;
-  }
+      .nav-links {
+        position: fixed;
+        top: var(--header-height);
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        background-color: rgba(93, 107, 119, 0.98);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
 
-  .circle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    will-change: transform;
-    transform: translate3d(-50%, -50%, 0);
-    transition: transform 0.3s ease-out, background-color 0.3s ease;
-    backface-visibility: hidden;
-  }
+      .nav-links.active {
+        left: 0;
+      }
 
-  .center-circle {
-    width: 8px;
-    height: 8px;
-    background: var(--primary-color);
-    opacity: 0.8;
-  }
+      .hamburger {
+        display: block;
+      }
 
-  .circle.glow {
-    box-shadow: 0 0 8px var(--primary-color);
-    background: #fff;
-    opacity: 0.9;
-  }
+      .logo img {
+        height: 50px;
+      }
+    }
 
-  .hero-drone {
-    position: absolute;
-    width: 90px;
-    top: 15px;
-    right: 75px;
-    transition: opacity 0.8s ease;
-    z-index: 3;
-    opacity: 0;
-    filter: brightness(1.15) contrast(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
-    will-change: transform;
-  }
+    @media (max-width: 768px) {
+      :root {
+        --section-padding: 80px 0;
+      }
 
-  @media (hover: none) {
-    .cursor {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+      }
+
+      .hero-logo-container {
+        max-width: 250px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.8rem;
+      }
+
+      .hero-btns {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-form {
+        padding: 30px;
+      }
+
+      .event-img,
+      .about-img {
+        height: 300px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      :root {
+        --section-padding: 60px 0;
+      }
+
+      .container {
+        padding: 0 20px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-content p {
+        font-size: 1rem;
+      }
+
+      .hero-logo-container {
+        max-width: 200px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 250px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo img {
+        height: 40px;
+      }
+
+      .contact-item {
+        padding: 20px;
+      }
+    }
+
+    /* Theme styles */
+    .theme-cyberpunk {
+      --primary-color: #ff00ff;
+      --primary-light: rgba(255, 0, 255, 0.1);
+      --primary-dark: #cc00cc;
+      --secondary-color: #00ffff;
+      --accent-color: #ffff00;
+      --background-color: #121212;
+      --text-color: #ffffff;
+      --header-color: #000000;
+      --card-bg: #1e1e1e;
+      --font-primary: 'Orbitron', sans-serif;
+      --font-secondary: 'Rajdhani', sans-serif;
+      --animation-speed: 0.5s;
+      --border-radius: 0;
+      --logo-filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.3));
+      --text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      --hero-bg-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8));
+    }
+
+    .theme-cyberpunk .hero-logo-container::before {
+      background: radial-gradient(circle, rgba(255, 0, 255, 0.15) 0%, rgba(0, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
+      animation: pulse 3s infinite alternate;
+    }
+
+    .theme-cyberpunk .hero-logo {
+      filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.3));
+    }
+
+    .theme-cyberpunk .hero-logo:hover {
+      filter: brightness(1.3) contrast(1.2) drop-shadow(0 0 15px rgba(255, 0, 255, 0.8)) drop-shadow(0 0 30px rgba(0, 255, 255, 0.4));
+    }
+
+    .theme-cyberpunk .hero-drone {
+      filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 0, 255, 0.7));
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 0.9;
+      }
+    }
+
+    .theme-cyberpunk h2::after {
+      height: 2px;
+      width: 100px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .theme-cyberpunk .btn,
+    .theme-cyberpunk button {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border: 1px solid var(--secondary-color);
+      color: black;
+      font-weight: 700;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .theme-cyberpunk .theme-btn {
+      background: #333;
+      color: white;
+      border: 1px solid var(--secondary-color);
+    }
+
+    .theme-cyberpunk .theme-btn.active {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: black;
+    }
+
+    .theme-cyberpunk .btn::before,
+    .theme-cyberpunk button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+      z-index: -1;
+    }
+
+    .theme-cyberpunk .btn:hover::before,
+    .theme-cyberpunk button:hover::before {
+      left: 100%;
+    }
+
+    .theme-cyberpunk .event-card,
+    .theme-cyberpunk .resource-card,
+    .theme-cyberpunk .plan-card,
+    .theme-cyberpunk .contact-form,
+    .theme-cyberpunk .social-feed-card {
+      border: 1px solid var(--secondary-color);
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    .theme-cyberpunk .event-card h3,
+    .theme-cyberpunk .resource-card h3,
+    .theme-cyberpunk .plan-card h3,
+    .theme-cyberpunk .social-card h3,
+    .theme-cyberpunk .contact-form h3 {
+      color: var(--secondary-color);
+    }
+
+    .theme-cyberpunk .stat-item {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--secondary-color);
+    }
+
+    .theme-cyberpunk .stat-number {
+      color: var(--primary-color);
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .theme-cyberpunk .stat-label {
+      color: var(--secondary-color);
+    }
+
+    .theme-cyberpunk .plan-title {
+      color: var(--primary-color);
+      text-shadow: 0 0 8px var(--primary-color);
+    }
+
+    .theme-cyberpunk .plan-features li::before {
+      color: var(--secondary-color);
+      text-shadow: 0 0 5px var(--secondary-color);
+    }
+
+    .theme-cyberpunk .feed-post,
+    .theme-cyberpunk .social-card,
+    .theme-cyberpunk .contact-item {
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--primary-color);
+    }
+
+    .theme-cyberpunk .nav-links a::after {
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 10px var(--secondary-color);
+      height: 1px;
+    }
+
+    .theme-cyberpunk .form-control {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--secondary-color);
+      color: white;
+    }
+
+    .theme-cyberpunk .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .theme-minimalist {
+      --primary-color: #000000;
+      --primary-light: rgba(0, 0, 0, 0.05);
+      --primary-dark: #333333;
+      --secondary-color: #333333;
+      --accent-color: #ff4500;
+      --background-color: #ffffff;
+      --text-color: #333333;
+      --header-color: #ffffff;
+      --card-bg: #f9f9f9;
+      --font-primary: 'Quicksand', sans-serif;
+      --font-secondary: 'Quicksand', sans-serif;
+      --animation-speed: 0.2s;
+      --border-radius: 0;
+      --shadow-sm: none;
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --logo-filter: contrast(1.4) brightness(0.9) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      --text-shadow: none;
+      --hero-bg-gradient: linear-gradient(135deg, rgba(245, 245, 245, 0.9), rgba(250, 250, 250, 0.95));
+    }
+
+    .theme-minimalist .hero-logo-container::before {
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%);
+    }
+
+    .theme-minimalist .hero-logo {
+      filter: contrast(1.4) brightness(0.85) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    }
+
+    .theme-minimalist .hero-logo:hover {
+      filter: contrast(1.5) brightness(0.9) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
+    }
+
+    .theme-minimalist header {
+      box-shadow: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    .theme-minimalist .logo,
+    .theme-minimalist .nav-links a {
+      color: var(--text-color);
+    }
+
+    .theme-minimalist h2::after {
       display: none;
     }
-  }
+
+    .theme-minimalist h2 {
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .theme-minimalist h1 {
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .theme-minimalist .btn,
+    .theme-minimalist button {
+      background: transparent;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      border-radius: 0;
+      font-weight: 400;
+      letter-spacing: 2px;
+      padding: 12px 30px;
+    }
+
+    .theme-minimalist .hero-btns .btn:nth-child(2) {
+      border: 1px solid var(--text-color);
+    }
+
+    .theme-minimalist .btn:hover,
+    .theme-minimalist button:hover {
+      background: var(--text-color);
+      color: white;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .theme-minimalist #hero {
+      background: #f9f9f9;
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .hero-content h1 {
+      color: var(--text-color);
+      text-shadow: none;
+    }
+
+    .theme-minimalist .hero-content p {
+      color: var(--text-color);
+      text-shadow: none;
+    }
+
+    .theme-minimalist .scroll-indicator {
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .scroll-indicator p {
+      text-shadow: none;
+    }
+
+    .theme-minimalist .event-card,
+    .theme-minimalist .resource-card,
+    .theme-minimalist .plan-card,
+    .theme-minimalist .contact-form,
+    .theme-minimalist .social-feed-card {
+      box-shadow: none;
+      border: 1px solid #eee;
+    }
+
+    .theme-minimalist .event-card:hover,
+    .theme-minimalist .resource-card:hover,
+    .theme-minimalist .plan-card:hover,
+    .theme-minimalist .social-feed-card:hover {
+      transform: none;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .theme-minimalist .nav-links a::after {
+      height: 1px;
+      background-color: var(--text-color);
+    }
+
+    .theme-minimalist .gallery-item::before {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .theme-minimalist .gallery-item-caption {
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .contact-item {
+      background: transparent;
+      border-bottom: 1px solid #eee;
+      border-radius: 0;
+      padding-left: 0;
+    }
+
+    .theme-minimalist .contact-item:hover {
+      transform: none;
+    }
+
+    .theme-minimalist footer {
+      background: var(--background-color);
+      color: var(--text-color);
+      border-top: 1px solid #eee;
+    }
+
+    .theme-minimalist .footer-col h3 {
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .footer-col h3::after {
+      background: var(--text-color);
+    }
+
+    .theme-minimalist .social-links a {
+      background: transparent;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .social-links a:hover {
+      background: var(--text-color);
+      color: white;
+      transform: none;
+    }
+
+    .theme-minimalist .footer-bottom {
+      border-top: 1px solid #eee;
+    }
+
+    .theme-minimalist .footer-newsletter .form-control {
+      background-color: #f5f5f5;
+      border: 1px solid #eee;
+      color: var(--text-color);
+    }
+
+    .theme-minimalist .footer-newsletter .form-control::placeholder {
+      color: #999;
+    }
+
+    /* Custom cursor styles */
+    .cursor {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
+      left: 0;
+      top: 0;
+      backface-visibility: hidden;
+    }
+
+    .circle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
+      transition: transform 0.3s ease-out, background-color 0.3s ease;
+      backface-visibility: hidden;
+    }
+
+    .center-circle {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-color);
+      opacity: 0.8;
+    }
+
+    .circle.glow {
+      box-shadow: 0 0 8px var(--primary-color);
+      background: #fff;
+      opacity: 0.9;
+    }
+
+    .hero-drone {
+      position: absolute;
+      width: 90px;
+      top: 15px;
+      right: 75px;
+      transition: opacity 0.8s ease;
+      z-index: 3;
+      opacity: 0;
+      filter: brightness(1.15) contrast(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+      will-change: transform;
+    }
+
+    /* Pilot Profiles Section Styles */
+
+    /* Carousel Container */
+    .pilot-carousel-container {
+      width: 100%;
+      height: 600px;
+      overflow: hidden;
+      position: relative;
+      padding: 40px 0;
+      perspective: 1000px;
+    }
+
+    /* Carousel Track */
+    .pilot-carousel {
+      display: flex;
+      position: absolute;
+      width: max-content;
+      height: 100%;
+      transition: transform 0.5s ease-out;
+      gap: 30px;
+      padding: 0 calc(50vw - 180px);
+      will-change: transform;
+    }
+
+    .pilot-carousel:hover {
+      animation-play-state: paused;
+    }
+
+    /* Automatic scrolling animation */
+    @keyframes carouselScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-1800px);
+        /* Adjust based on your card width + gap */
+      }
+    }
+
+    /* Pilot Card Base Styles */
+    .pilot-card {
+      width: 330px;
+      height: 520px;
+      flex-shrink: 0;
+      perspective: 1000px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .pilot-card:hover {
+      transform: scale(1);
+    }
+
+    .pilot-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .pilot-card.flipped .pilot-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Card Front and Back Common Styles */
+    .pilot-card-front,
+    .pilot-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Card Front Styles */
+    .pilot-card-front {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pilot-card-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(41, 167, 223, 0.7) 0%, rgba(41, 167, 223, 0) 50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .pilot-card-position {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      z-index: 3;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .pilot-card-image {
+      width: 100%;
+      height: 60%;
+      background-size: cover;
+      background-position: center top;
+      border-bottom: 3px solid var(--primary-color);
+    }
+
+    .pilot-card-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      position: relative;
+      background: white;
+    }
+
+    .pilot-card-number {
+      position: absolute;
+      top: -40px;
+      left: 20px;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
+
+    .pilot-card-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+      color: var(--secondary-color);
+    }
+
+    .pilot-card-specialty {
+      font-size: 0.9rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .pilot-card-team {
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: rgba(41, 167, 223, 0.3);
+      letter-spacing: 2px;
+    }
+
+    /* Holographic Card Shine Effect */
+    .pilot-card-shine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.1) 25%,
+          rgba(255, 255, 255, 0.3) 50%,
+          rgba(255, 255, 255, 0.1) 75%,
+          rgba(255, 255, 255, 0) 100%);
+      opacity: 0;
+      z-index: 4;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .pilot-card:hover .pilot-card-shine {
+      opacity: 1;
+      transform: translateX(100%);
+      transition: transform 1s ease;
+    }
+
+    /* Card Back Styles */
+    .pilot-card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #f1f1f1 0%, #dcdcdc 100%);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pilot-card-back-content {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .pilot-card-nickname {
+      color: var(--primary-color);
+      font-style: italic;
+      font-weight: 500;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .pilot-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .pilot-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pilot-stat-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 2px;
+    }
+
+    .pilot-stat-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    .pilot-bio {
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .pilot-drone-specs {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .pilot-drone-specs h4 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--primary-color);
+    }
+
+    .pilot-drone-specs ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .pilot-drone-specs li {
+      margin-bottom: 5px;
+      position: relative;
+      padding-left: 15px;
+    }
+
+    .pilot-drone-specs li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--primary-color);
+    }
+
+    /* Cyberpunk Theme Overrides */
+    .theme-cyberpunk .pilot-card-front {
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      color: white;
+      border: 1px solid var(--primary-color);
+    }
+
+    .theme-cyberpunk .pilot-card-banner {
+      background: linear-gradient(135deg, rgba(255, 0, 255, 0.5) 0%, rgba(255, 0, 255, 0) 60%);
+    }
+
+    .theme-cyberpunk .pilot-card-position {
+      background-color: var(--secondary-color);
+      color: black;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+      border: 1px solid var(--primary-color);
+    }
+
+    .theme-cyberpunk .pilot-card-image {
+      border-bottom: 3px solid var(--primary-color);
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    .theme-cyberpunk .pilot-card-info {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+    }
+
+    .theme-cyberpunk .pilot-card-name {
+      color: var(--secondary-color);
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    }
+
+    .theme-cyberpunk .pilot-card-specialty {
+      color: var(--primary-color);
+      text-shadow: 0 0 3px var(--primary-color);
+    }
+
+    .theme-cyberpunk .pilot-card-team {
+      color: rgba(0, 255, 255, 0.3);
+    }
+
+    .theme-cyberpunk .pilot-card-shine {
+      background: linear-gradient(135deg,
+          rgba(255, 0, 255, 0) 0%,
+          rgba(255, 0, 255, 0.1) 25%,
+          rgba(255, 0, 255, 0.3) 50%,
+          rgba(255, 0, 255, 0.1) 75%,
+          rgba(255, 0, 255, 0) 100%);
+    }
+
+    .theme-cyberpunk .pilot-card-back {
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      border: 1px solid var(--primary-color);
+    }
+
+    .theme-cyberpunk .pilot-card-back-content {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: 1px solid var(--secondary-color);
+    }
+
+    .theme-cyberpunk .pilot-stat-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .theme-cyberpunk .pilot-stat-value {
+      color: var(--secondary-color);
+    }
+
+    .theme-cyberpunk .pilot-drone-specs {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+
+    /* Minimalist Theme Overrides */
+    .theme-minimalist .pilot-card-front {
+      background: white;
+      border: 1px solid #eee;
+      box-shadow: none;
+    }
+
+    .theme-minimalist .pilot-card-banner {
+      display: none;
+    }
+
+    .theme-minimalist .pilot-card-position {
+      background-color: white;
+      color: black;
+      border: 1px solid black;
+    }
+
+    .theme-minimalist .pilot-card-image {
+      border-bottom: 1px solid #eee;
+    }
+
+    .theme-minimalist .pilot-card-info {
+      background: white;
+    }
+
+    .theme-minimalist .pilot-card-number {
+      color: black;
+      text-shadow: none;
+    }
+
+    .theme-minimalist .pilot-card:hover {
+      transform: scale(0.98);
+    }
+
+    .theme-minimalist .pilot-card-back {
+      background: white;
+      border: 1px solid #eee;
+      box-shadow: none;
+    }
+
+    .theme-minimalist .pilot-card-back-content {
+      box-shadow: none;
+      border: 1px solid #eee;
+    }
+
+    .theme-minimalist .pilot-drone-specs {
+      background-color: white;
+      border: 1px solid #eee;
+    }
+
+    /* Animation Settings */
+    .pilot-carousel {
+      animation: carouselScroll 60s linear infinite;
+    }
+
+    /* Clone cards for seamless animation */
+    .pilot-card.clone {
+      opacity: 0.999;
+      /* Fix for Safari rendering bug */
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .pilot-carousel-container {
+        height: 550px;
+      }
+
+      .pilot-card {
+        width: 300px;
+        height: 480px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .pilot-carousel-container {
+        height: 500px;
+      }
+
+      .pilot-card {
+        width: 280px;
+        height: 450px;
+      }
+
+      .pilot-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pilot-carousel-container {
+        height: 460px;
+      }
+
+      .pilot-card {
+        width: 250px;
+        height: 400px;
+      }
+
+      .pilot-card-name {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .pilot-carousel-container {
+        height: 440px;
+      }
+
+      .pilot-card {
+        width: 230px;
+        height: 380px;
+      }
+
+      .pilot-card-number {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (hover: none) {
+      .cursor {
+        display: none;
+      }
+    }
   </style>
 </head>
 
@@ -2197,7 +2685,7 @@
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#events">Events</a></li>
-          <li><a href="#membership">Membership</a></li>
+          <li><a href="#membership">Pilots</a></li>
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="#social-feed">Updates</a></li>
           <li><a href="#contact">Contact</a></li>
@@ -2216,8 +2704,8 @@
       <div class="hero-content">
         <div class="hero-logo-container">
           <!-- Logo without drone (initially hidden) -->
-          <img src="./assets/wcmrcLogoNoDrone.png" alt="West Coast Mulirotor Club"
-            class="hero-logo hero-logo-no-drone" id="heroLogoNoDrone" />
+          <img src="./assets/wcmrcLogoNoDrone.png" alt="West Coast Mulirotor Club" class="hero-logo hero-logo-no-drone"
+            id="heroLogoNoDrone" />
           <!-- Combined logo with drone (initially visible) -->
           <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="hero-logo hero-logo-with-drone"
             id="heroLogoWithDrone" />
@@ -2225,9 +2713,10 @@
           <img src="./assets/drone.png" alt="Drone" class="hero-drone" id="heroDrone" />
         </div>
         <h1>Where Speed Meets the Sky</h1>
-        <p>Western Australia's premier drone racing club. Technology, skill, and adrenaline soar over our stunning landscapes. At West Coast Mulirotor, we’re pushing the limits of this fast-growing sport.</p>
+        <p>Western Australia's premier drone racing club. Technology, skill, and adrenaline soar over our stunning
+          landscapes. At West Coast Mulirotor, we’re pushing the limits of this fast-growing sport.</p>
         <div class="hero-btns">
-          <a href="#membership" class="btn">Join Now</a>
+          <a href="#pilots" class="btn">Pilots</a>
           <a href="#events" class="btn">Upcoming Races</a>
         </div>
       </div>
@@ -2327,58 +2816,486 @@
     </div>
   </section>
 
-  <!-- Membership Section -->
+  <!-- Pilot Profiles Section (Replacement for Membership Section) -->
   <section id="membership">
     <div class="container">
-      <h2>Join Our Community</h2>
-      <p class="text-center mb-5">Join a vibrant community of tech enthusiasts, engineering minds, and competitive racers who share knowledge, troubleshoot builds, and celebrate the art of flight together. Our members range from weekend hobbyists to professional pilots competing on the international circuit. What unites us is our dedication to the craft and the camaraderie that comes from shared challenges and triumphs.
-      </p>
-      <div class="plans-container">
-        <div class="plan-card fade-in">
-          <h3 class="plan-title">Rookie</h3>
-          <div class="plan-price">$25/month</div>
-          <ul class="plan-features">
-            <li>Access to weekly practice sessions</li>
-            <li>Basic race entry (3 races/month)</li>
-            <li>Equipment rentals at discounted rates</li>
-            <li>Online community access</li>
-          </ul>
-          <a href="#" class="btn">Select Plan</a>
-        </div>
-        <div class="plan-card fade-in">
-          <h3 class="plan-title">Pilot</h3>
-          <div class="plan-price">$45/month</div>
-          <ul class="plan-features">
-            <li>Unlimited practice session access</li>
-            <li>Race entries included (unlimited)</li>
-            <li>Free basic equipment rentals</li>
-            <li>Workshop discounts (20% off)</li>
-            <li>Online community access</li>
-          </ul>
-          <a href="#" class="btn">Select Plan</a>
-        </div>
-        <div class="plan-card fade-in">
-          <h3 class="plan-title">Pro</h3>
-          <div class="plan-price">$75/month</div>
-          <ul class="plan-features">
-            <li>All Pilot benefits included</li>
-            <li>Priority registration for competitions</li>
-            <li>Advanced equipment access</li>
-            <li>1-on-1 coaching sessions (2 per month)</li>
-            <li>Sponsor connection opportunities</li>
-            <li>Team racing eligibility</li>
-          </ul>
-          <a href="#" class="btn">Select Plan</a>
+      <h2>Our Pilots</h2>
+      <p class="text-center mb-5">Meet the skilled pilots who represent West Coast Multirotor in competitions across the
+        country. From national champions to rising stars, these are the faces behind the fastest drones in the west.</p>
+
+      <!-- Card carousel container -->
+      <div class="pilot-carousel-container fade-in">
+        <div class="pilot-carousel">
+          <!-- Pilot Card 1 -->
+          <div class="pilot-card">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">PRO</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/29a7df/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#01</div>
+                  <h3 class="pilot-card-name">Max "Afterburner" Reynolds</h3>
+                  <div class="pilot-card-specialty">Race Champion</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Max Reynolds</h3>
+                  <div class="pilot-card-nickname">"Afterburner"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">6 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">145 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">23</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">38</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">5" Freestyle</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Aggressive</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>2-time national champion known for aggressive cornering and unmatched speed through technical
+                      sections. Max has been with the club since 2019 and currently holds 3 track records.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: TBS Source One</li>
+                      <li>Motors: T-Motor F40 PRO</li>
+                      <li>FC: SpeedyBee F7</li>
+                      <li>Camera: DJI O3 Air Unit</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilot Card 2 -->
+          <div class="pilot-card">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">TECH</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/5d6b77/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#42</div>
+                  <h3 class="pilot-card-name">Samantha "Circuit" Chen</h3>
+                  <div class="pilot-card-specialty">Technical Freestyle</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Samantha Chen</h3>
+                  <div class="pilot-card-nickname">"Circuit"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">4 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">128 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">12</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">27</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">3" Cinewhoop</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Technical</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>An electrical engineer by day, Samantha brings technical precision to her flights. She
+                      specializes in proximity freestyle and has pioneered several innovative build techniques.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: GepRC Mark4</li>
+                      <li>Motors: iFlight XING-E 2207</li>
+                      <li>FC: Holybro Kakute F7</li>
+                      <li>Camera: Caddx Vista</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilot Card 3 -->
+          <div class="pilot-card">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">ROOKIE</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/000000/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#99</div>
+                  <h3 class="pilot-card-name">Tyler "Turbulence" Jackson</h3>
+                  <div class="pilot-card-specialty">Freestyle Wizard</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Tyler Jackson</h3>
+                  <div class="pilot-card-nickname">"Turbulence"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">2 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">132 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">3</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">8</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">5" Freestyle</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Dynamic</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>Rising star with a background in skateboarding, Tyler brings a creative flair to freestyle
+                      competitions. His dynamic flying style and signature power loops have earned him a growing
+                      fanbase.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: ImpulseRC Apex</li>
+                      <li>Motors: EMax ECO II 2306</li>
+                      <li>FC: Matek F722-SE</li>
+                      <li>Camera: RunCam Phoenix 2</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilot Card 4 -->
+          <div class="pilot-card">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">VETERAN</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/5d6b77/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#07</div>
+                  <h3 class="pilot-card-name">Marcus "Falcon" Williams</h3>
+                  <div class="pilot-card-specialty">Long Range Expert</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Marcus Williams</h3>
+                  <div class="pilot-card-nickname">"Falcon"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">8 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">120 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">19</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">42</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">7" Long Range</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Tactical</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>Club co-founder and long-range specialist, Marcus holds the club record for longest flight. His
+                      methodical approach to racing and technical knowledge makes him a valued mentor to new pilots.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: Flywoo Explorer LR</li>
+                      <li>Motors: Brother Hobby R5 2207</li>
+                      <li>FC: Matek H743-WING</li>
+                      <li>Camera: Walksnail Avatar</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilot Card 5 -->
+          <div class="pilot-card">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">MICRO</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/29a7df/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#23</div>
+                  <h3 class="pilot-card-name">Olivia "Microchip" Martinez</h3>
+                  <div class="pilot-card-specialty">Tiny Whoop Master</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Olivia Martinez</h3>
+                  <div class="pilot-card-nickname">"Microchip"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">5 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">80 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">31</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">47</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">Tiny Whoop</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Precision</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>The club's micro drone specialist, Olivia dominates the indoor racing scene. Her exceptional
+                      control and smooth flying style have made her a three-time regional micro class champion.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: BetaFPV 75X HD</li>
+                      <li>Motors: 0802 19000KV</li>
+                      <li>FC: HGLRC Zeus F4 AIO</li>
+                      <li>Camera: RunCam Nano HD</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Added copies of first cards to create seamless loop -->
+          <div class="pilot-card clone">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">PRO</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/29a7df/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#01</div>
+                  <h3 class="pilot-card-name">Max "Afterburner" Reynolds</h3>
+                  <div class="pilot-card-specialty">Race Champion</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Max Reynolds</h3>
+                  <div class="pilot-card-nickname">"Afterburner"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">6 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">145 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">23</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">38</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">5" Freestyle</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Aggressive</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>2-time national champion known for aggressive cornering and unmatched speed through technical
+                      sections. Max has been with the club since 2019 and currently holds 3 track records.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: TBS Source One</li>
+                      <li>Motors: T-Motor F40 PRO</li>
+                      <li>FC: SpeedyBee F7</li>
+                      <li>Camera: DJI O3 Air Unit</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pilot-card clone">
+            <div class="pilot-card-inner">
+              <!-- Card Front -->
+              <div class="pilot-card-front">
+                <div class="pilot-card-banner"></div>
+                <div class="pilot-card-position">TECH</div>
+                <div class="pilot-card-image"
+                  style="background-image: url('https://placehold.co/400x500/5d6b77/white?text=Pilot')"></div>
+                <div class="pilot-card-info">
+                  <div class="pilot-card-number">#42</div>
+                  <h3 class="pilot-card-name">Samantha "Circuit" Chen</h3>
+                  <div class="pilot-card-specialty">Technical Freestyle</div>
+                </div>
+                <div class="pilot-card-team">WCMRC</div>
+                <div class="pilot-card-shine"></div>
+              </div>
+              <!-- Card Back -->
+              <div class="pilot-card-back">
+                <div class="pilot-card-back-content">
+                  <h3 class="pilot-card-name">Samantha Chen</h3>
+                  <div class="pilot-card-nickname">"Circuit"</div>
+                  <div class="pilot-stats">
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Experience</div>
+                      <div class="pilot-stat-value">4 Years</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Top Speed</div>
+                      <div class="pilot-stat-value">128 KPH</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Wins</div>
+                      <div class="pilot-stat-value">12</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Podiums</div>
+                      <div class="pilot-stat-value">27</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Preferred Class</div>
+                      <div class="pilot-stat-value">3" Cinewhoop</div>
+                    </div>
+                    <div class="pilot-stat">
+                      <div class="pilot-stat-label">Racing Style</div>
+                      <div class="pilot-stat-value">Technical</div>
+                    </div>
+                  </div>
+                  <div class="pilot-bio">
+                    <p>An electrical engineer by day, Samantha brings technical precision to her flights. She
+                      specializes in proximity freestyle and has pioneered several innovative build techniques.</p>
+                  </div>
+                  <div class="pilot-drone-specs">
+                    <h4>Current Build</h4>
+                    <ul>
+                      <li>Frame: GepRC Mark4</li>
+                      <li>Motors: iFlight XING-E 2207</li>
+                      <li>FC: Holybro Kakute F7</li>
+                      <li>Camera: Caddx Vista</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
-
   <!-- Gallery Section -->
   <section id="gallery">
     <div class="container">
       <h2>Moments from the Track</h2>
-      <p  class="text-center mb-5">Where the future of racing takes flight – right here on the West Coast.</p>
+      <p class="text-center mb-5">Where the future of racing takes flight – right here on the West Coast.</p>
       <div class="gallery-grid">
         <div class="gallery-item fade-in">
           <div class="gallery-item-caption">
@@ -2418,8 +3335,11 @@
   <section id="social-feed">
     <div class="container">
       <h2>Connect With Us</h2>
-      <p class="text-center mb-5">Whether you're taking your first steps into the world of drone racing or looking to refine your competitive edge, West Coast Mulirotor offers the facilities, expertise, and community to elevate your experience. Come fly with us and discover why drone racing is capturing imaginations across Western Australia and beyond.
-        </p>
+      <p class="text-center mb-5">Whether you're taking your first steps into the world of drone racing or looking to
+        refine your competitive edge, West Coast Mulirotor offers the facilities, expertise, and community to elevate
+        your experience. Come fly with us and discover why drone racing is capturing imaginations across Western
+        Australia and beyond.
+      </p>
       <div class="social-feed-container">
         <div class="social-cards">
           <!-- Facebook Card -->
@@ -2754,6 +3674,157 @@
   </footer>
 
   <script>
+
+    // Pilot Profiles Section Functionality
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get all pilot cards
+      const pilotCards = document.querySelectorAll('.pilot-card');
+      const carousel = document.querySelector('.pilot-carousel');
+
+      // Toggle flip animation on click
+      pilotCards.forEach(card => {
+        card.addEventListener('click', function () {
+          this.classList.toggle('flipped');
+        });
+      });
+
+      // Pause animation when hovering over carousel
+      carousel.addEventListener('mouseenter', function () {
+        this.style.animationPlayState = 'paused';
+      });
+
+      // Resume animation when mouse leaves carousel
+      carousel.addEventListener('mouseleave', function () {
+        this.style.animationPlayState = 'running';
+
+        // Also unflip all cards when mouse leaves carousel
+        pilotCards.forEach(card => {
+          card.classList.remove('flipped');
+        });
+      });
+
+      // Advanced touch controls for mobile
+      let startX;
+      let isDragging = false;
+      let initialOffset = 0;
+      let currentTranslate = 0;
+
+      carousel.addEventListener('touchstart', function (e) {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        initialOffset = getCurrentTranslate();
+
+        // Pause the animation while dragging
+        carousel.style.animationPlayState = 'paused';
+      });
+
+      carousel.addEventListener('touchmove', function (e) {
+        if (!isDragging) return;
+        const currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        currentTranslate = initialOffset + diff;
+        carousel.style.transform = `translateX(${currentTranslate}px)`;
+      });
+
+      carousel.addEventListener('touchend', function () {
+        isDragging = false;
+        // Resume the animation after a brief pause
+        setTimeout(() => {
+          carousel.style.transform = '';
+          carousel.style.animationPlayState = 'running';
+        }, 1000);
+      });
+
+      // Helper function to get current translate value
+      function getCurrentTranslate() {
+        const style = window.getComputedStyle(carousel);
+        const matrix = new WebKitCSSMatrix(style.transform);
+        return matrix.m41;
+      }
+
+      // Add dynamic shine effect on mousemove
+      pilotCards.forEach(card => {
+        const shine = card.querySelector('.pilot-card-shine');
+
+        card.addEventListener('mousemove', function (e) {
+          if (card.classList.contains('flipped')) return;
+
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Calculate positions as percentages
+          const xPercent = x / rect.width * 100;
+          const yPercent = y / rect.height * 100;
+
+          // Set dynamic gradient position
+          shine.style.opacity = '1';
+          shine.style.background = `
+        radial-gradient(
+          circle at ${xPercent}% ${yPercent}%, 
+          rgba(255, 255, 255, 0.3) 0%, 
+          rgba(255, 255, 255, 0.1) 40%, 
+          rgba(255, 255, 255, 0) 70%
+        )
+      `;
+        });
+
+        card.addEventListener('mouseleave', function () {
+          shine.style.opacity = '0';
+        });
+      });
+
+      // Dynamic card colors based on position in the carousel
+      function updateCardColors() {
+        const positions = ['PRO', 'TECH', 'ROOKIE', 'VETERAN', 'MICRO'];
+        const colors = {
+          'PRO': '#29a7df',
+          'TECH': '#5d6b77',
+          'ROOKIE': '#4caf50',
+          'VETERAN': '#ff9800',
+          'MICRO': '#e91e63'
+        };
+
+        const cyberpunkColors = {
+          'PRO': '#ff00ff',
+          'TECH': '#00ffff',
+          'ROOKIE': '#ffff00',
+          'VETERAN': '#ff8800',
+          'MICRO': '#00ff88'
+        };
+
+        pilotCards.forEach(card => {
+          const position = card.querySelector('.pilot-card-position').textContent;
+          const banner = card.querySelector('.pilot-card-banner');
+          const image = card.querySelector('.pilot-card-image');
+
+          // Base theme
+          if (position in colors) {
+            image.style.borderBottomColor = colors[position];
+            banner.style.background = `linear-gradient(135deg, ${colors[position]}80 0%, ${colors[position]}00 60%)`;
+
+            // Special style for cyberpunk theme
+            if (document.body.classList.contains('theme-cyberpunk')) {
+              image.style.borderBottomColor = cyberpunkColors[position];
+              image.style.boxShadow = `0 0 15px ${cyberpunkColors[position]}`;
+              banner.style.background = `linear-gradient(135deg, ${cyberpunkColors[position]}80 0%, ${cyberpunkColors[position]}00 60%)`;
+            }
+          }
+        });
+      }
+
+      // Update colors on theme change
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      themeButtons.forEach(button => {
+        button.addEventListener('click', updateCardColors);
+      });
+
+      // Initial color update
+      updateCardColors();
+    });
+
+
     // Mobile Navigation Toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
@@ -2797,119 +3868,119 @@
     // Complete Drone Animation Fix - Replace all drone code
 
     document.addEventListener('DOMContentLoaded', function () {
-  // Elements
-  const heroLogoContainer = document.querySelector('.hero-logo-container');
-  const heroDrone = document.getElementById('heroDrone');
+      // Elements
+      const heroLogoContainer = document.querySelector('.hero-logo-container');
+      const heroDrone = document.getElementById('heroDrone');
 
-  // Initial setup
-  heroDrone.style.opacity = '0'; // Hidden by default
-  heroDrone.style.position = 'absolute';
+      // Initial setup
+      heroDrone.style.opacity = '0'; // Hidden by default
+      heroDrone.style.position = 'absolute';
 
-  // State variables
-  let mouseX = 0;
-  let mouseY = 0;
-  let droneLeft = 0;
-  let droneTop = 0;
-  let homeLeft = 0;
-  let homeTop = 0;
-  let isChasing = false;
-  let isOrbiting = false;
-  let orbitAngle = 0;
-  const orbitRadius = 150;
-  const chaseSpeed = 0.1;
-  const orbitSpeed = 0.05;
-  let droneAngle = 0;
+      // State variables
+      let mouseX = 0;
+      let mouseY = 0;
+      let droneLeft = 0;
+      let droneTop = 0;
+      let homeLeft = 0;
+      let homeTop = 0;
+      let isChasing = false;
+      let isOrbiting = false;
+      let orbitAngle = 0;
+      const orbitRadius = 150;
+      const chaseSpeed = 0.1;
+      const orbitSpeed = 0.05;
+      let droneAngle = 0;
 
-  // Track mouse position
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-  });
+      // Track mouse position
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+      });
 
-  // Initialize drone position at the center of the logo container
-  function initDrone() {
-    const parentRect = heroLogoContainer.getBoundingClientRect();
-    homeLeft = parentRect.width / 2;
-    homeTop = parentRect.height / 2;
-    droneLeft = homeLeft;
-    droneTop = homeTop;
-
-    // Event listeners
-    heroLogoContainer.addEventListener('mouseleave', () => {
-      isChasing = true;
-      isOrbiting = false;
-      heroDrone.style.opacity = '1';
-    });
-
-    heroLogoContainer.addEventListener('click', () => {
-      if (isOrbiting) {
-        isChasing = false;
-        isOrbiting = false;
-      }
-    });
-  }
-
-  // Animation loop
-  function animateDrone() {
-    // Get parent container's position for coordinate conversion
-    const parentRect = heroLogoContainer.getBoundingClientRect();
-    const parentLeft = parentRect.left + window.scrollX;
-    const parentTop = parentRect.top + window.scrollY;
-
-    // Convert mouse position to parent coordinates
-    const mouseLeft = mouseX - parentLeft;
-    const mouseTop = mouseY - parentTop;
-
-    if (isChasing) {
-      const dx = mouseLeft - droneLeft;
-      const dy = mouseTop - droneTop;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < 15 && !isOrbiting) {
-        isOrbiting = true;
-        orbitAngle = Math.atan2(dy, dx);
-      }
-
-      if (isOrbiting) {
-        orbitAngle += orbitSpeed;
-        // Set position directly to eliminate offset
-        droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
-        droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
-        droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
-      } else {
-        droneLeft += dx * chaseSpeed;
-        droneTop += dy * chaseSpeed;
-        droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-      }
-    } else {
-      // Return to home
-      const dx = homeLeft - droneLeft;
-      const dy = homeTop - droneTop;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 1) {
+      // Initialize drone position at the center of the logo container
+      function initDrone() {
+        const parentRect = heroLogoContainer.getBoundingClientRect();
+        homeLeft = parentRect.width / 2;
+        homeTop = parentRect.height / 2;
         droneLeft = homeLeft;
         droneTop = homeTop;
-        heroDrone.style.opacity = '0';
-      } else {
-        droneLeft += dx * 0.1;
-        droneTop += dy * 0.1;
-        droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+        // Event listeners
+        heroLogoContainer.addEventListener('mouseleave', () => {
+          isChasing = true;
+          isOrbiting = false;
+          heroDrone.style.opacity = '1';
+        });
+
+        heroLogoContainer.addEventListener('click', () => {
+          if (isOrbiting) {
+            isChasing = false;
+            isOrbiting = false;
+          }
+        });
       }
-    }
 
-    // Apply position and rotation, with hover in transform
-    const hover = Math.sin(Date.now() / 300) * 2;
-    heroDrone.style.left = `${droneLeft}px`;
-    heroDrone.style.top = `${droneTop}px`;
-    heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+      // Animation loop
+      function animateDrone() {
+        // Get parent container's position for coordinate conversion
+        const parentRect = heroLogoContainer.getBoundingClientRect();
+        const parentLeft = parentRect.left + window.scrollX;
+        const parentTop = parentRect.top + window.scrollY;
 
-    requestAnimationFrame(animateDrone);
-  }
+        // Convert mouse position to parent coordinates
+        const mouseLeft = mouseX - parentLeft;
+        const mouseTop = mouseY - parentTop;
 
-  // Start the animation
-  initDrone();
-  requestAnimationFrame(animateDrone);
-});
+        if (isChasing) {
+          const dx = mouseLeft - droneLeft;
+          const dy = mouseTop - droneTop;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 15 && !isOrbiting) {
+            isOrbiting = true;
+            orbitAngle = Math.atan2(dy, dx);
+          }
+
+          if (isOrbiting) {
+            orbitAngle += orbitSpeed;
+            // Set position directly to eliminate offset
+            droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
+            droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
+            droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
+          } else {
+            droneLeft += dx * chaseSpeed;
+            droneTop += dy * chaseSpeed;
+            droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+          }
+        } else {
+          // Return to home
+          const dx = homeLeft - droneLeft;
+          const dy = homeTop - droneTop;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 1) {
+            droneLeft = homeLeft;
+            droneTop = homeTop;
+            heroDrone.style.opacity = '0';
+          } else {
+            droneLeft += dx * 0.1;
+            droneTop += dy * 0.1;
+            droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+          }
+        }
+
+        // Apply position and rotation, with hover in transform
+        const hover = Math.sin(Date.now() / 300) * 2;
+        heroDrone.style.left = `${droneLeft}px`;
+        heroDrone.style.top = `${droneTop}px`;
+        heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+
+        requestAnimationFrame(animateDrone);
+      }
+
+      // Start the animation
+      initDrone();
+      requestAnimationFrame(animateDrone);
+    });
     // Custom cursor with floating circles
     const cursor = document.querySelector('.cursor');
     const circles = [];
