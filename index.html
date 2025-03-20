@@ -2095,9 +2095,8 @@
           <!-- Separate drone element for animation -->
           <img src="./assets/drone.png" alt="Drone" class="hero-drone" id="heroDrone" />
         </div>
-        <h1>Experience the Thrill of Drone Racing</h1>
-        <p>Join our passionate community of pilots and enthusiasts. Learn, compete, and push the boundaries of what's
-          possible with FPV drone racing.</p>
+        <h1>Where Speed Meets the Sky in Western Australia</h1>
+        <p>Welcome to Western Australia's premier drone racing club, where technology, skill, and adrenaline converge above the stunning West Australian landscape. At West Coast Multi Rotor, we're not just flying drones – we're pushing the boundaries of what's possible in the fastest growing aerial sport on the planet.</p>
         <div class="hero-btns">
           <a href="#membership" class="btn">Join Now</a>
           <a href="#events" class="btn">Upcoming Races</a>
@@ -2119,12 +2118,16 @@
       <div class="about-content">
         <div class="about-text fade-in">
           <h3>Founded by passionate FPV pilots</h3>
-          <p>West Coast Multi Rotor Club was established in 2016 by a small group of drone enthusiasts who sought to
-            create a community where pilots of all skill levels could meet, learn, and race together. What started as
-            casual meetups has evolved into one of the region's premier drone racing clubs.</p>
-          <p>Our club is affiliated with the National Drone Racing Association and hosts regular races that comply with
-            official competition standards. We pride ourselves on maintaining a welcoming atmosphere for beginners while
-            providing challenging courses for experienced pilots.</p>
+          <p>WCMRC is Perth’s ultimate FPV Drone Racing Club! If you love the thrill of high-speed drone racing or just
+            want to try not crashing into a tree on your first lap, we’ve got you covered! We hold epic fortnightly race
+            events throughout the year, plus casual beginner-friendly race and freestyle days—because everyone has to
+            start somewhere (even if that means a few crash landings).
+          </p>
+          <p>Our race setup? Next-level. We’re talking top-tier gates, insane obstacles, and precision race timing
+            gear—all kept in peak condition by the legends of the WCMRC Committee. Our home base at Thomas Kelly
+            Pavilion, Kwinana, is fully equipped with a shaded flying area, power to keep those LIPO's topped up,
+            toilets, a canteen (for mid-race snacks), a licensed sports bar (because even drones need pit stops), TV
+            screens and ground stations to keep up with the action.</p>
           <p>Our mission is to promote the exciting sport of FPV drone racing, foster innovation in drone technology,
             and build a supportive community of pilots who share a passion for pushing the boundaries of what's possible
             in the air.</p>
@@ -2136,7 +2139,7 @@
       <!-- Stats Section -->
       <div class="stats-grid fade-in">
         <div class="stat-item">
-          <div class="stat-number">120+</div>
+          <div class="stat-number">50+</div>
           <div class="stat-label">Active Members</div>
         </div>
         <div class="stat-item">
@@ -2199,7 +2202,7 @@
   <section id="membership">
     <div class="container">
       <h2>Join Our Community</h2>
-      <p class="text-center mb-5">Choose the membership option that fits your needs and start racing with our community.
+      <p class="text-center mb-5">Join a vibrant community of tech enthusiasts, engineering minds, and competitive racers who share knowledge, troubleshoot builds, and celebrate the art of flight together. Our members range from weekend hobbyists to professional pilots competing on the international circuit. What unites us is our dedication to the craft and the camaraderie that comes from shared challenges and triumphs.
       </p>
       <div class="plans-container">
         <div class="plan-card fade-in">
@@ -2246,6 +2249,7 @@
   <section id="gallery">
     <div class="container">
       <h2>Moments from the Track</h2>
+      <p  class="text-center mb-5">Where the future of racing takes flight – right here on the West Coast.</p>
       <div class="gallery-grid">
         <div class="gallery-item fade-in">
           <div class="gallery-item-caption">
@@ -2285,7 +2289,8 @@
   <section id="social-feed">
     <div class="container">
       <h2>Connect With Us</h2>
-      <p class="text-center mb-5">Stay connected with our community and never miss an update.</p>
+      <p class="text-center mb-5">Whether you're taking your first steps into the world of drone racing or looking to refine your competitive edge, West Coast Multi Rotor offers the facilities, expertise, and community to elevate your experience. Come fly with us and discover why drone racing is capturing imaginations across Western Australia and beyond.
+        </p>
       <div class="social-feed-container">
         <div class="social-cards">
           <!-- Facebook Card -->
@@ -2662,169 +2667,120 @@
 
     // Complete Drone Animation Fix - Replace all drone code
 
-    // Drone Animation Handler
     document.addEventListener('DOMContentLoaded', function () {
-      // Get necessary elements
-      const heroLogoNoDrone = document.getElementById('heroLogoNoDrone');
-      const heroLogoWithDrone = document.getElementById('heroLogoWithDrone');
-      const heroDrone = document.getElementById('heroDrone');
-      const heroLogoContainer = document.querySelector('.hero-logo-container');
+  // Elements
+  const heroLogoContainer = document.querySelector('.hero-logo-container');
+  const heroDrone = document.getElementById('heroDrone');
 
-      // Force initial state
-      heroLogoWithDrone.style.opacity = '1';
-      heroLogoNoDrone.style.opacity = '0';
-      heroDrone.style.opacity = '0';
+  // Initial setup
+  heroDrone.style.opacity = '0'; // Hidden by default
+  heroDrone.style.position = 'absolute';
 
-      // State variables
-      let mouseX = 0;
-      let mouseY = 0;
-      let droneHomeX = 0;
-      let droneHomeY = 0;
-      let droneCurrentX = 0;
-      let droneCurrentY = 0;
-      let isChasing = false;
-      let smoothedAngle = 0;
-      let orbitAngle = 0;
-      let isOrbiting = false;
-      let orbitSize = 15; // Reduced for tighter orbit around mouse
+  // State variables
+  let mouseX = 0;
+  let mouseY = 0;
+  let droneLeft = 0;
+  let droneTop = 0;
+  let homeLeft = 0;
+  let homeTop = 0;
+  let isChasing = false;
+  let isOrbiting = false;
+  let orbitAngle = 0;
+  const orbitRadius = 150;
+  const chaseSpeed = 0.1;
+  const orbitSpeed = 0.05;
+  let droneAngle = 0;
 
-      // Track exact mouse position in document coordinates
-      document.addEventListener('mousemove', function (e) {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-      });
+  // Track mouse position
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+  });
 
-      // Initialize drone
-      function initDrone() {
-        const droneRect = heroDrone.getBoundingClientRect();
-        droneHomeX = droneRect.left + window.scrollX;
-        droneHomeY = droneRect.top + window.scrollY;
-        droneCurrentX = droneHomeX;
-        droneCurrentY = droneHomeY;
+  // Initialize drone position at the center of the logo container
+  function initDrone() {
+    const parentRect = heroLogoContainer.getBoundingClientRect();
+    homeLeft = parentRect.width / 2;
+    homeTop = parentRect.height / 2;
+    droneLeft = homeLeft;
+    droneTop = homeTop;
 
-        // Event listeners
-        heroLogoContainer.addEventListener('mouseenter', function () {
-          if (isChasing) {
-            returnDroneHome();
-          }
-        });
+    // Event listeners
+    heroLogoContainer.addEventListener('mouseleave', () => {
+      isChasing = true;
+      isOrbiting = false;
+      heroDrone.style.opacity = '1';
+    });
 
-        heroLogoContainer.addEventListener('mouseleave', function () {
-          startChasing();
-        });
-
-        // Click only returns drone home if orbiting
-        heroLogoContainer.addEventListener('click', function () {
-          if (isOrbiting) {
-            returnDroneHome();
-          }
-        });
-      }
-
-      // Start chasing
-      function startChasing() {
-        if (!isChasing) {
-          isChasing = true;
-          isOrbiting = false;
-          heroLogoWithDrone.style.opacity = '0';
-          heroLogoNoDrone.style.opacity = '1';
-          heroDrone.style.opacity = '1';
-        }
-      }
-
-      // Return home
-      function returnDroneHome() {
+    heroLogoContainer.addEventListener('click', () => {
+      if (isOrbiting) {
         isChasing = false;
         isOrbiting = false;
       }
-
-      function animateDrone() {
-        // Update home position to handle scrolling/resizing
-        const droneRect = heroDrone.getBoundingClientRect();
-        const currentHomeX = droneRect.left + window.scrollX;
-        const currentHomeY = droneRect.top + window.scrollY;
-        if (!isChasing) {
-          droneHomeX = currentHomeX;
-          droneHomeY = currentHomeY;
-        }
-
-        if (isChasing) {
-          const dx = mouseX - droneCurrentX;
-          const dy = mouseY - droneCurrentY;
-          const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
-
-          // Start orbiting when very close to mouse
-          if (distanceToMouse < 5 && !isOrbiting) {
-            isOrbiting = true;
-            orbitAngle = Math.atan2(dy, dx);
-          }
-
-          if (isOrbiting) {
-            orbitAngle += 0.07; // Slightly faster orbit
-            const targetX = mouseX + Math.cos(orbitAngle) * orbitSize;
-            const targetY = mouseY + Math.sin(orbitAngle) * orbitSize;
-            // Higher easing for tighter orbiting
-            droneCurrentX = droneCurrentX + (targetX - droneCurrentX) * 0.7;
-            droneCurrentY = droneCurrentY + (targetY - droneCurrentY) * 0.7;
-            const pointAngle = orbitAngle + Math.PI / 2;
-            smoothedAngle = pointAngle * (180 / Math.PI);
-            // Stop orbiting if mouse moves too far
-            if (distanceToMouse > orbitSize * 2) {
-              isOrbiting = false;
-            }
-          } else {
-            // Chasing behavior
-            const speed = Math.min(0.25, 0.1 + distanceToMouse / 1000);
-            droneCurrentX += dx * speed;
-            droneCurrentY += dy * speed;
-            const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-            let angleDiff = targetAngle - smoothedAngle;
-            while (angleDiff > 180) angleDiff -= 360;
-            while (angleDiff < -180) angleDiff += 360;
-            smoothedAngle += angleDiff * 0.2;
-          }
-
-          applyDroneStyles();
-        } else {
-          // Return home behavior
-          const dx = droneHomeX - droneCurrentX;
-          const dy = droneHomeY - droneCurrentY;
-          const distanceToHome = Math.sqrt(dx * dx + dy * dy);
-
-          if (distanceToHome < 5) {
-            droneCurrentX = droneHomeX;
-            droneCurrentY = droneHomeY;
-            heroLogoWithDrone.style.opacity = '1';
-            heroLogoNoDrone.style.opacity = '0';
-            heroDrone.style.opacity = '0';
-          } else {
-            droneCurrentX += dx * 0.1;
-            droneCurrentY += dy * 0.1;
-            const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-            let angleDiff = targetAngle - smoothedAngle;
-            while (angleDiff > 180) angleDiff -= 360;
-            while (angleDiff < -180) angleDiff += 360;
-            smoothedAngle += angleDiff * 0.2;
-            applyDroneStyles();
-          }
-        }
-
-        requestAnimationFrame(animateDrone);
-      }
-
-      // Apply visual styles to drone
-      function applyDroneStyles() {
-        const hoverY = Math.sin(Date.now() / 300) * 3;
-        const dx = droneCurrentX - droneHomeX;
-        const dy = droneCurrentY - droneHomeY;
-        heroDrone.style.transform = `translate(${dx}px, ${dy + hoverY}px) rotate(${smoothedAngle}deg)`;
-      }
-
-      // Start everything
-      initDrone();
-      requestAnimationFrame(animateDrone);
     });
+  }
 
+  // Animation loop
+  function animateDrone() {
+    // Get parent container's position for coordinate conversion
+    const parentRect = heroLogoContainer.getBoundingClientRect();
+    const parentLeft = parentRect.left + window.scrollX;
+    const parentTop = parentRect.top + window.scrollY;
+
+    // Convert mouse position to parent coordinates
+    const mouseLeft = mouseX - parentLeft;
+    const mouseTop = mouseY - parentTop;
+
+    if (isChasing) {
+      const dx = mouseLeft - droneLeft;
+      const dy = mouseTop - droneTop;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 15 && !isOrbiting) {
+        isOrbiting = true;
+        orbitAngle = Math.atan2(dy, dx);
+      }
+
+      if (isOrbiting) {
+        orbitAngle += orbitSpeed;
+        // Set position directly to eliminate offset
+        droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
+        droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
+        droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
+      } else {
+        droneLeft += dx * chaseSpeed;
+        droneTop += dy * chaseSpeed;
+        droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      }
+    } else {
+      // Return to home
+      const dx = homeLeft - droneLeft;
+      const dy = homeTop - droneTop;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 1) {
+        droneLeft = homeLeft;
+        droneTop = homeTop;
+        heroDrone.style.opacity = '0';
+      } else {
+        droneLeft += dx * 0.1;
+        droneTop += dy * 0.1;
+        droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      }
+    }
+
+    // Apply position and rotation, with hover in transform
+    const hover = Math.sin(Date.now() / 300) * 2;
+    heroDrone.style.left = `${droneLeft}px`;
+    heroDrone.style.top = `${droneTop}px`;
+    heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+
+    requestAnimationFrame(animateDrone);
+  }
+
+  // Start the animation
+  initDrone();
+  requestAnimationFrame(animateDrone);
+});
     // Custom cursor with floating circles
     const cursor = document.querySelector('.cursor');
     const circles = [];
