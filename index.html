@@ -2597,65 +2597,111 @@
     let heroRect;
 
     function calculateDroneHome() {
-      const containerRect = heroSection.getBoundingClientRect();
-      heroRect = containerRect;
-      // Set home position relative to hero section (centered if desired)
-      droneHomeX = 0;
-      droneHomeY = 0;
-    }
+  const logoContainer = document.querySelector('.hero-logo-container');
+  const logoContainerRect = logoContainer.getBoundingClientRect();
+  const heroRect = heroSection.getBoundingClientRect();
+  
+  // Calculate the drone's position relative to the hero section
+  // Based on the CSS positioning (top: 15px, right: 75px)
+  const logoWidth = logoContainerRect.width;
+  
+  droneHomeX = logoContainerRect.left - heroRect.left + (logoWidth - 75);
+  droneHomeY = logoContainerRect.top - heroRect.top + 15;
+  
+  // Store the hero rect for use in other functions
+  heroRect = heroRect;
+}
 
-    function handleDroneAnimation() {
-      const scrollPosition = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-      const isInHeroSection = scrollPosition < heroHeight;
-
-      if (isInHeroSection) {
-        if (scrollPosition > 50 && !isDroneDetached) {
-          isDroneDetached = true;
-          heroLogoWithDrone.style.opacity = 0;
-          heroLogoNoDrone.style.opacity = 1;
-          heroDrone.style.opacity = 1;
-          isReturningHome = false;
-        } else if (scrollPosition <= 50 && isDroneDetached) {
-          isDroneDetached = false;
-          isReturningHome = true;
-        }
-        if (isDroneDetached && !isReturningHome) {
-          updateDronePosition();
-        }
-      } else if (isDroneDetached) {
-        isDroneDetached = false;
-        isReturningHome = true;
-      }
-      if (isReturningHome) {
-        returnDroneHome();
-      }
-    }
-
-    function updateDronePosition() {
-      const heroMargin = 50;
-      const targetX = Math.max(heroMargin, Math.min(mouseX - heroRect.left - (heroDrone.offsetWidth / 2), heroRect.width - heroMargin));
-      const targetY = Math.max(heroMargin, Math.min(mouseY - heroRect.top - (heroDrone.offsetHeight / 2), heroRect.height - heroMargin));
-      droneCurrentX = droneCurrentX + (targetX - droneCurrentX) * 0.05;
-      droneCurrentY = droneCurrentY + (targetY - droneCurrentY) * 0.05;
-      const xDiff = targetX - droneCurrentX;
-      const rotateZ = Math.max(-15, Math.min(15, xDiff * 0.5));
-      const hoverY = Math.sin(Date.now() / 500) * 5;
-      heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY + hoverY}px) scale(${droneCurrentScale}) rotateZ(${rotateZ}deg)`;
-    }
-
-    function returnDroneHome() {
-      droneCurrentX = droneCurrentX + (droneHomeX - droneCurrentX) * 0.1;
-      droneCurrentY = droneCurrentY + (droneHomeY - droneCurrentY) * 0.1;
+function handleDroneAnimation() {
+  const scrollPosition = window.scrollY;
+  const heroHeight = heroSection.offsetHeight;
+  const isInHeroSection = scrollPosition < heroHeight;
+  
+  // Update hero rect on scroll to ensure accurate positions
+  heroRect = heroSection.getBoundingClientRect();
+  
+  if (isInHeroSection) {
+    // Start detaching the drone after scrolling a certain amount
+    if (scrollPosition > 50 && !isDroneDetached) {
+      isDroneDetached = true;
+      
+      // Set the drone's position to match its position in the logo
+      droneCurrentX = droneHomeX;
+      droneCurrentY = droneHomeY;
       heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY}px) scale(${droneCurrentScale})`;
-      if (Math.abs(droneCurrentX - droneHomeX) < 1 && Math.abs(droneCurrentY - droneHomeY) < 1) {
-        isReturningHome = false;
-        heroLogoWithDrone.style.opacity = 1;
-        heroLogoNoDrone.style.opacity = 0;
-        heroDrone.style.opacity = 0;
-      }
+      
+      // Then make the transition
+      setTimeout(() => {
+        heroLogoWithDrone.style.opacity = 0;
+        heroLogoNoDrone.style.opacity = 1;
+        heroDrone.style.opacity = 1;
+      }, 50);
+      
+      isReturningHome = false;
+    } else if (scrollPosition <= 50 && isDroneDetached) {
+      isDroneDetached = false;
+      isReturningHome = true;
     }
+    
+    if (isDroneDetached && !isReturningHome) {
+      updateDronePosition();
+    }
+  } else if (isDroneDetached) {
+    isDroneDetached = false;
+    isReturningHome = true;
+  }
+  
+  if (isReturningHome) {
+    returnDroneHome();
+  }
+}
 
+function updateDronePosition() {
+  // Set margins to keep the drone within the hero section
+  const heroMargin = 50;
+  
+  // Calculate target position relative to the hero section
+  const targetX = Math.max(heroMargin, Math.min(mouseX - heroRect.left, heroRect.width - heroMargin));
+  const targetY = Math.max(heroMargin, Math.min(mouseY - heroRect.top, heroRect.height - heroMargin));
+  
+  // Smooth movement with easing (increased for more responsive movement)
+  droneCurrentX = droneCurrentX + (targetX - droneCurrentX) * 0.08;
+  droneCurrentY = droneCurrentY + (targetY - droneCurrentY) * 0.08;
+  
+  // Calculate rotation based on movement direction
+  const xDiff = targetX - droneCurrentX;
+  const rotateZ = Math.max(-20, Math.min(20, xDiff * 0.5));
+  
+  // Add a slight hover effect
+  const hoverY = Math.sin(Date.now() / 400) * 5;
+  
+  // Apply transforms
+  heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY + hoverY}px) scale(${droneCurrentScale}) rotateZ(${rotateZ}deg)`;
+}
+
+function returnDroneHome() {
+  // Smoothly move back to home position (faster return)
+  droneCurrentX = droneCurrentX + (droneHomeX - droneCurrentX) * 0.15;
+  droneCurrentY = droneCurrentY + (droneHomeY - droneCurrentY) * 0.15;
+  
+  // Add a small hover effect during return
+  const hoverY = Math.sin(Date.now() / 400) * 3;
+  
+  // Apply transforms
+  heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY + hoverY}px) scale(${droneCurrentScale})`;
+  
+  // When close enough to home position, complete the transition
+  if (Math.abs(droneCurrentX - droneHomeX) < 2 && Math.abs(droneCurrentY - droneHomeY) < 2) {
+    isReturningHome = false;
+    
+    // Fade transition back to the logo with drone
+    setTimeout(() => {
+      heroLogoWithDrone.style.opacity = 1;
+      heroLogoNoDrone.style.opacity = 0;
+      heroDrone.style.opacity = 0;
+    }, 50);
+  }
+}
     document.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
@@ -2665,12 +2711,15 @@
     });
 
     window.addEventListener('load', () => {
-      calculateDroneHome();
-      handleDroneAnimation();
-      droneCurrentX = droneHomeX;
-      droneCurrentY = droneHomeY;
-    });
-
+  calculateDroneHome();
+  
+  // Set initial position
+  droneCurrentX = droneHomeX;
+  droneCurrentY = droneHomeY;
+  heroDrone.style.transform = `translate(${droneCurrentX}px, ${droneCurrentY}px) scale(${droneCurrentScale})`;
+  
+  handleDroneAnimation();
+});
     window.addEventListener('scroll', handleDroneAnimation);
     window.addEventListener('resize', calculateDroneHome);
 
