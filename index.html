@@ -14,10 +14,9 @@
 
 <body>
   <!-- Facebook SDK -->
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" 
-        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" 
-        nonce="random_nonce"></script>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"
+    nonce="random_nonce"></script>
   <!-- Custom cursor element -->
   <div class="cursor"></div>
 
@@ -134,29 +133,20 @@
     </div>
   </section>
 
-  <!-- Events Section -->
   <section id="events">
     <div class="container">
       <h2>Upcoming Events</h2>
-      <div class="facebook-events-container">
-        <div class="fb-page" 
-             data-href="https://www.facebook.com/groups/westcoastmultirotorclub/" 
-             data-tabs="events" 
-             data-width="" 
-             data-height="" 
-             data-small-header="false" 
-             data-adapt-container-width="true" 
-             data-hide-cover="false" 
-             data-show-facepile="true">
-          <blockquote cite="https://www.facebook.com/groups/westcoastmultirotorclub/" class="fb-xfbml-parse-ignore">
-            <a href="https://www.facebook.com/groups/westcoastmultirotorclub/">West Coast Multirotor Club</a>
-          </blockquote>
-        </div>
+      <div id="facebook-events-container" class="events-grid">
+        <div class="loading-events">Loading events...</div>
+      </div>
+
+      <div class="view-more-container" style="text-align: center; margin-top: 40px;">
+        <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">
+          <i class="fas fa-external-link-alt"></i> VIEW ALL EVENTS
+        </a>
       </div>
     </div>
-    </div>
   </section>
-
   <!-- Pilot Profiles Section (Replacement for Membership Section) -->
   <section id="membership">
     <div class="container">
@@ -643,27 +633,27 @@
             <h3>High-speed chase through the forest course</h3>
           </div>
         </div>
-        <div class="gallery-item fade-in"style="background-image: url('./assets/club1.jpg')">
+        <div class="gallery-item fade-in" style="background-image: url('./assets/club1.jpg')">
           <div class="gallery-item-caption">
             <h3>Pilots preparing for the national qualifier</h3>
           </div>
         </div>
-        <div class="gallery-item fade-in"style="background-image: url('./assets/drone5.jpg')">
+        <div class="gallery-item fade-in" style="background-image: url('./assets/drone5.jpg')">
           <div class="gallery-item-caption">
             <h3>Night race with LED-equipped drones</h3>
           </div>
         </div>
-        <div class="gallery-item fade-in"style="background-image: url('./assets/drone6.jpg')">
+        <div class="gallery-item fade-in" style="background-image: url('./assets/drone6.jpg')">
           <div class="gallery-item-caption">
             <h3>Close finish at the summer championship</h3>
           </div>
         </div>
-        <div class="gallery-item fade-in"style="background-image: url('./assets/oldGathering.jpg')">
+        <div class="gallery-item fade-in" style="background-image: url('./assets/oldGathering.jpg')">
           <div class="gallery-item-caption">
             <h3>Aerial view of our custom-built race track</h3>
           </div>
         </div>
-        <div class="gallery-item fade-in"style="background-image: url('./assets/people1.jpg')">
+        <div class="gallery-item fade-in" style="background-image: url('./assets/people1.jpg')">
           <div class="gallery-item-caption">
             <h3>Technical pit stop during endurance race</h3>
           </div>

@@ -422,4 +422,60 @@
       window.addEventListener('scroll', toggleBackToTopButton);
       fadeInOnScroll();
       toggleBackToTopButton();
+   // Load Facebook SDK
+   window.fbAsyncInit = function() {
+    FB.init({
+      appId: '123456789', // You need to create a Facebook app and get an App ID
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: 'v18.0'
+    });
+    
+    loadFacebookEvents();
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
   
+  function loadFacebookEvents() {
+    FB.api(
+      '/westcoastmultirotorclub/events',
+      'GET',
+      {},
+      function(response) {
+        const container = document.getElementById('facebook-events-container');
+        
+        if (response && !response.error) {
+          container.innerHTML = '';
+          
+          response.data.slice(0, 3).forEach(event => {
+            const eventDate = new Date(event.start_time);
+            const card = document.createElement('div');
+            card.className = 'event-card fade-in';
+            card.innerHTML = `
+              <div class="event-img" style="background-image: url('${event.cover ? event.cover.source : './assets/default-event.jpg'}')"></div>
+              <div class="event-details">
+                <span class="event-date">${eventDate.toLocaleDateString()}</span>
+                <h3>${event.name}</h3>
+                <p>${event.description ? event.description.substring(0, 150) + '...' : 'No description available.'}</p>
+                <a href="https://www.facebook.com/events/${event.id}" target="_blank" class="btn">View on Facebook</a>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        } else {
+          container.innerHTML = `
+            <div class="event-fetch-error">
+              <p>Unable to load events automatically. Please check our Facebook page for the latest events.</p>
+              <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">View Events on Facebook</a>
+            </div>
+          `;
+        }
+      }
+    );
+  }

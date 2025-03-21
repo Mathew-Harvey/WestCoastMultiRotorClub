@@ -2662,7 +2662,27 @@
     .fb-page iframe {
         width: 100% !important;
     }
-
+    .facebook-events-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto 30px;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: transform 0.4s ease, box-shadow 0.3s ease;
+        background-color: var(--card-bg);
+      }
+      
+      .facebook-events-container:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+      }
+      
+      .facebook-events-container iframe {
+        width: 100%;
+        max-width: 500px;
+        display: block;
+      }
     @media (hover: none) {
         .cursor {
             display: none;
