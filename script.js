@@ -473,7 +473,7 @@ function loadFacebookEvents() {
                     loadingElement.style.display = 'none';
                     console.error("User cancelled login or did not authorize app");
                 }
-            }, {scope: 'groups_access_member_info'});
+            }, {scope: 'public_profile'});
         }
     });
     
