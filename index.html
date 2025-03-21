@@ -136,17 +136,27 @@
   <section id="events">
     <div class="container">
       <h2>Upcoming Events</h2>
-      <div id="facebook-events-container" class="events-grid">
-        <div class="loading-events">Loading events...</div>
-      </div>
-
-      <div class="view-more-container" style="text-align: center; margin-top: 40px;">
-        <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">
-          <i class="fas fa-external-link-alt"></i> VIEW ALL EVENTS
-        </a>
+      
+      <div class="facebook-events-container fade-in">
+        <!-- Facebook Page Plugin -->
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" 
+                src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
+                
+        <div class="fb-page" 
+             data-href="https://www.facebook.com/groups/westcoastmultirotorclub" 
+             data-tabs="events" 
+             data-width="500" 
+             data-height="500" 
+             data-small-header="false" 
+             data-adapt-container-width="true" 
+             data-hide-cover="false" 
+             data-show-facepile="true">
+        </div>
       </div>
     </div>
   </section>
+
   <!-- Pilot Profiles Section (Replacement for Membership Section) -->
   <section id="membership">
     <div class="container">
