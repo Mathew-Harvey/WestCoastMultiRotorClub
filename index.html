@@ -45,7 +45,7 @@
           <li><a href="#events">Events</a></li>
           <li><a href="#membership">Pilots</a></li>
           <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#social-feed">Updates</a></li>
+          <li><a href="#sponsors">Sponsors</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="#resources">Resources</a></li>
         </ul>
@@ -133,16 +133,16 @@
   <section id="events">
     <div class="container">
       <h2>Upcoming Events</h2>
-      
+
       <!-- Loading state initially displayed -->
       <div id="events-loading" class="events-loading">
         <i class="fas fa-spinner fa-spin"></i>
         <p>Loading events from Facebook...</p>
       </div>
-      
+
       <!-- Container for dynamically loaded events -->
       <div id="events-container" class="events-grid" style="display: none;"></div>
-      
+
       <!-- Error fallback (hidden by default) -->
       <div id="events-error" class="events-error" style="display: none;">
         <p>Unable to load events automatically. Please check our Facebook page for the latest events.</p>
@@ -666,178 +666,105 @@
       </div>
     </div>
   </section>
-
-  <!-- Social Feed Section -->
-  <section id="social-feed">
+  <!-- Sponsors Section -->
+  <section id="sponsors">
     <div class="container">
-      <h2>Connect With Us</h2>
-      <p class="text-center mb-5">Whether you're taking your first steps into the world of drone racing or looking to
-        refine your competitive edge, West Coast Mulirotor offers the facilities, expertise, and community to elevate
-        your experience. Come fly with us and discover why drone racing is capturing imaginations across Western
-        Australia and beyond.
-      </p>
-      <div class="social-feed-container">
-        <div class="social-cards">
-          <!-- Facebook Card -->
-          <div class="social-card facebook-card fade-in">
-            <div class="social-card-icon">
-              <i class="fab fa-facebook-f"></i>
-            </div>
-            <div class="social-card-content">
-              <h3>Facebook Group</h3>
-              <p>Join our active community of over 500 drone enthusiasts. Share your builds, ask questions, and connect
-                with local pilots.</p>
-              <div class="social-stats">
-                <div class="social-stat">
-                  <span class="social-stat-number">502</span>
-                  <span class="social-stat-label">Members</span>
-                </div>
-                <div class="social-stat">
-                  <span class="social-stat-number">24</span>
-                  <span class="social-stat-label">Posts/Week</span>
-                </div>
-              </div>
-              <a href="https://www.facebook.com/groups/657768627690432" target="_blank"
-                class="btn social-btn facebook-btn">
-                <i class="fab fa-facebook-f"></i> JOIN OUR GROUP
-              </a>
-            </div>
+      <h2>Our Sponsors</h2>
+      <p class="text-center mb-5">We're proud to partner with these amazing companies who support drone racing in
+        Western Australia.</p>
+
+      <div class="sponsors-carousel-container fade-in">
+        <div class="sponsors-carousel">
+          <!-- Sponsor logos -->
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/29a7df/white?text=DJI" alt="DJI">
           </div>
-          <!-- Instagram Card -->
-          <div class="social-card instagram-card fade-in">
-            <div class="social-card-icon">
-              <i class="fab fa-instagram"></i>
-            </div>
-            <div class="social-card-content">
-              <h3>Instagram</h3>
-              <p>Follow us for stunning drone photography, race highlights, and behind-the-scenes footage from our
-                events.</p>
-              <div class="social-gallery">
-                <div class="social-gallery-img"
-                  style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Race+Photo')"></div>
-                <div class="social-gallery-img"
-                  style="background-image: url('https://placehold.co/150x150/29a7df/white?text=Drone+Photo')"></div>
-                <div class="social-gallery-img"
-                  style="background-image: url('https://placehold.co/150x150/5d6b77/white?text=Event+Photo')"></div>
-              </div>
-              <a href="https://www.instagram.com/" target="_blank" class="btn social-btn instagram-btn">
-                <i class="fab fa-instagram"></i> FOLLOW US
-              </a>
-            </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=GoPro" alt="GoPro">
           </div>
-          <!-- Discord Card -->
-          <div class="social-card discord-card fade-in">
-            <div class="social-card-icon">
-              <i class="fab fa-discord"></i>
-            </div>
-            <div class="social-card-content">
-              <h3>Discord Server</h3>
-              <p>Join our Discord for real-time discussions, tech support, and to organize impromptu flying sessions.
-              </p>
-              <div class="discord-channels">
-                <div class="discord-channel"># race-announcements</div>
-                <div class="discord-channel"># build-help</div>
-                <div class="discord-channel"># flight-spots</div>
-              </div>
-              <a href="https://discord.gg/" target="_blank" class="btn social-btn discord-btn">
-                <i class="fab fa-discord"></i> JOIN SERVER
-              </a>
-            </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/29a7df/white?text=FatShark" alt="FatShark">
+          </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=TBS" alt="Team BlackSheep">
+          </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/29a7df/white?text=BetaFPV" alt="BetaFPV">
+          </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=Lumenier" alt="Lumenier">
+          </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/29a7df/white?text=RDQ" alt="Race Day Quads">
+          </div>
+          <div class="sponsor-item">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=GetFPV" alt="GetFPV">
+          </div>
+
+          <!-- Clones for infinite loop -->
+          <div class="sponsor-item clone">
+            <img src="https://placehold.co/200x100/29a7df/white?text=DJI" alt="DJI">
+          </div>
+          <div class="sponsor-item clone">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=GoPro" alt="GoPro">
+          </div>
+          <div class="sponsor-item clone">
+            <img src="https://placehold.co/200x100/29a7df/white?text=FatShark" alt="FatShark">
+          </div>
+          <div class="sponsor-item clone">
+            <img src="https://placehold.co/200x100/5d6b77/white?text=TBS" alt="Team BlackSheep">
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Recent Updates Section -->
-  <section id="recent-updates">
-    <div class="container">
-      <h2>Recent Updates</h2>
-      <div class="updates-container">
-        <div class="feed-section fade-in">
-          <!-- Feed Post 1 -->
-          <div class="feed-post">
-            <div class="feed-post-header">
-              <div class="feed-post-avatar">
-                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Mulirotor Club" />
-              </div>
-              <div class="feed-post-meta">
-                <div class="feed-post-author">West Coast Mulirotor Club</div>
-                <div class="feed-post-date">March 15, 2025</div>
-              </div>
+      <div class="sponsor-tiers">
+        <div class="sponsor-tier platinum">
+          <h3>Platinum Sponsors</h3>
+          <div class="sponsor-tier-logos">
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/250x150/29a7df/white?text=DJI" alt="DJI">
             </div>
-            <div class="feed-post-content">
-              <p>Exciting news! Our Spring Championship has been officially sanctioned by the National Drone Racing
-                Association. This means all race results will count toward national rankings. Registration closes next
-                week!</p>
-              <div class="feed-post-image">
-                <img src="https://placehold.co/800x400/5d6b77/white?text=Race+Announcement" alt="Race Announcement" />
-              </div>
-            </div>
-            <div class="feed-post-footer">
-              <div class="feed-post-stats">
-                <span><i class="fas fa-thumbs-up"></i> 45</span>
-                <span><i class="fas fa-comment"></i> 12</span>
-                <span><i class="fas fa-share"></i> 8</span>
-              </div>
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/250x150/5d6b77/white?text=GoPro" alt="GoPro">
             </div>
           </div>
-          <!-- Feed Post 2 -->
-          <div class="feed-post">
-            <div class="feed-post-header">
-              <div class="feed-post-avatar">
-                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Mulirotor Club" />
-              </div>
-              <div class="feed-post-meta">
-                <div class="feed-post-author">West Coast Mulirotor Club</div>
-                <div class="feed-post-date">March 10, 2025</div>
-              </div>
+        </div>
+
+        <div class="sponsor-tier gold">
+          <h3>Gold Sponsors</h3>
+          <div class="sponsor-tier-logos">
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/200x120/29a7df/white?text=FatShark" alt="FatShark">
             </div>
-            <div class="feed-post-content">
-              <p>Last weekend's beginner workshop was a huge success! We had 15 new pilots take to the sky for the first
-                time. Big thanks to our volunteer instructors and everyone who helped set up the training course.</p>
-              <div class="feed-post-gallery">
-                <img src="https://placehold.co/400x300/5d6b77/white?text=Workshop" alt="Workshop" />
-                <img src="https://placehold.co/400x300/29a7df/white?text=Training" alt="Training" />
-              </div>
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/200x120/5d6b77/white?text=TBS" alt="Team BlackSheep">
             </div>
-            <div class="feed-post-footer">
-              <div class="feed-post-stats">
-                <span><i class="fas fa-thumbs-up"></i> 37</span>
-                <span><i class="fas fa-comment"></i> 8</span>
-                <span><i class="fas fa-share"></i> 3</span>
-              </div>
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/200x120/29a7df/white?text=BetaFPV" alt="BetaFPV">
             </div>
           </div>
-          <!-- Feed Post 3 -->
-          <div class="feed-post">
-            <div class="feed-post-header">
-              <div class="feed-post-avatar">
-                <img src="https://placehold.co/60x60/29a7df/white?text=WCMRC" alt="West Coast Mulirotor Club" />
-              </div>
-              <div class="feed-post-meta">
-                <div class="feed-post-author">West Coast Mulirotor Club</div>
-                <div class="feed-post-date">March 5, 2025</div>
-              </div>
+        </div>
+
+        <div class="sponsor-tier silver">
+          <h3>Silver Sponsors</h3>
+          <div class="sponsor-tier-logos">
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/180x100/5d6b77/white?text=Lumenier" alt="Lumenier">
             </div>
-            <div class="feed-post-content">
-              <p>New track features have been installed at the main field! We've added three elevated gates, a tunnel
-                section, and redesigned the hairpin turn for more technical racing. Come check it out at this weekend's
-                practice session!</p>
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/180x100/29a7df/white?text=RDQ" alt="Race Day Quads">
             </div>
-            <div class="feed-post-footer">
-              <div class="feed-post-stats">
-                <span><i class="fas fa-thumbs-up"></i> 29</span>
-                <span><i class="fas fa-comment"></i> 15</span>
-                <span><i class="fas fa-share"></i> 2</span>
-              </div>
+            <div class="sponsor-tier-logo">
+              <img src="https://placehold.co/180x100/5d6b77/white?text=GetFPV" alt="GetFPV">
             </div>
           </div>
-          <div class="view-more-container">
-            <a href="https://www.facebook.com/groups/657768627690432" target="_blank" class="btn view-more-btn">
-              <i class="fas fa-external-link-alt"></i> VIEW ALL UPDATES
-            </a>
-          </div>
+        </div>
+
+        <div class="sponsor-cta">
+          <h3>Become a Sponsor</h3>
+          <p>Support the future of drone racing in Western Australia. Contact us to learn about our sponsorship
+            packages.</p>
+          <a href="#contact" class="btn">Contact Us</a>
         </div>
       </div>
     </div>
@@ -954,6 +881,7 @@
   </section>
 
   <!-- Footer -->
+  <!-- Footer -->
   <footer>
     <div class="container">
       <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
@@ -976,9 +904,9 @@
             <li><a href="#hero">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#events">Events</a></li>
-            <li><a href="#membership">Membership</a></li>
+            <li><a href="#membership">Pilots</a></li>
             <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#social-feed">Updates</a></li>
+            <li><a href="#sponsors">Sponsors</a></li>
             <li><a href="#contact">Contact</a></li>
             <li><a href="#resources">Resources</a></li>
           </ul>
