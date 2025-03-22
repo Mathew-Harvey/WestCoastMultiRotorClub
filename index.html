@@ -72,7 +72,7 @@
         </div>
         <h1>Where Speed Meets the Sky</h1>
         <p>Western Australia's premier drone racing club. Technology, skill, and adrenaline soar over our stunning
-          landscapes. At West Coast Mulirotor, we’re pushing the limits of this fast-growing sport.</p>
+          landscapes. At West Coast Mulirotor, we're pushing the limits of this fast-growing sport.</p>
         <div class="hero-btns">
           <a href="#pilots" class="btn">Pilots</a>
           <a href="#events" class="btn">Upcoming Races</a>
@@ -94,12 +94,12 @@
       <div class="about-content">
         <div class="about-text fade-in">
           <h3>Founded by passionate FPV pilots</h3>
-          <p>WCMRC is Perth’s ultimate FPV Drone Racing Club! If you love the thrill of high-speed drone racing or just
-            want to try not crashing into a tree on your first lap, we’ve got you covered! We hold epic fortnightly race
+          <p>WCMRC is Perth's ultimate FPV Drone Racing Club! If you love the thrill of high-speed drone racing or just
+            want to try not crashing into a tree on your first lap, we've got you covered! We hold epic fortnightly race
             events throughout the year, plus casual beginner-friendly race and freestyle days—because everyone has to
             start somewhere (even if that means a few crash landings).
           </p>
-          <p>Our race setup? Next-level. We’re talking top-tier gates, insane obstacles, and precision race timing
+          <p>Our race setup? Next-level. We're talking top-tier gates, insane obstacles, and precision race timing
             gear—all kept in peak condition by the legends of the WCMRC Committee. Our home base at Thomas Kelly
             Pavilion, Kwinana, is fully equipped with a shaded flying area, power to keep those LIPO's topped up,
             toilets, a canteen (for mid-race snacks), a licensed sports bar (because even drones need pit stops), TV
@@ -130,28 +130,57 @@
     </div>
   </section>
 
-  <section id="events">
-    <div class="container">
-      <h2>Upcoming Events</h2>
-
-      <!-- Loading state initially displayed -->
-      <div id="events-loading" class="events-loading">
-        <i class="fas fa-spinner fa-spin"></i>
-        <p>Loading events from Facebook...</p>
+<!-- Events Section -->
+<section id="events">
+  <div class="container">
+    <h2>Upcoming Events</h2>
+    
+    <div class="events-layout fade-in">
+      <!-- Calendar column -->
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button id="prevMonth" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+          <h3 id="currentMonthYear">March 2025</h3>
+          <button id="nextMonth" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <div class="calendar-weekdays">
+          <div>S</div>
+          <div>M</div>
+          <div>T</div>
+          <div>W</div>
+          <div>T</div>
+          <div>F</div>
+          <div>S</div>
+        </div>
+        
+        <div id="calendarDays" class="calendar-days">
+          <!-- Days will be generated here -->
+        </div>
       </div>
-
-      <!-- Container for dynamically loaded events -->
-      <div id="events-container" class="events-grid" style="display: none;"></div>
-
-      <!-- Error fallback (hidden by default) -->
-      <div id="events-error" class="events-error" style="display: none;">
-        <p>Unable to load events automatically. Please check our Facebook page for the latest events.</p>
-        <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">
-          <i class="fab fa-facebook"></i> VIEW ALL EVENTS
-        </a>
+      
+      <!-- Events column -->
+      <div class="upcoming-events-container">
+        <h3 id="eventsTitle">Upcoming Races</h3>
+        <div id="upcomingEventsList" class="upcoming-events-list">
+          <!-- Example of event card structure (will be replaced by JS) -->
+          <div class="event-card fade-in active">
+            <div class="event-img" style="background-image: url('./assets/drone5.jpg')"></div>
+            <div class="event-details">
+              <span class="event-date">Sunday, March 23, 2025 at 8:00 AM</span>
+              <h3>Global Drone Solutions Summer Series round 8</h3>
+              <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">VIEW DETAILS</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="events-cta">
+          <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">VIEW ALL EVENTS</a>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>  
   <!-- Pilot Profiles Section (Replacement for Membership Section) -->
   <section id="membership">
     <div class="container">
@@ -891,7 +920,6 @@
           <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
             FPV flight.</p>
           <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>

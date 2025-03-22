@@ -348,71 +348,71 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Custom cursor with floating circles
+// Ultra-simplified cursor for maximum performance
 const cursor = document.querySelector('.cursor');
-const circles = [];
-for (let i = 0; i < 5; i++) {
-    const circle = document.createElement('div');
-    circle.className = 'circle';
-    if (i === 4) circle.classList.add('center-circle');
-    cursor.appendChild(circle);
-    circles.push(circle);
-}
+
+// Remove existing circles if any
+cursor.innerHTML = '';
+
+// Create just one center circle and one outer circle (for hover effect only)
+const centerCircle = document.createElement('div');
+centerCircle.className = 'circle center-circle';
+cursor.appendChild(centerCircle);
+
+// Add option to disable custom cursor
+const cursorToggle = document.createElement('div');
+cursorToggle.className = 'cursor-toggle';
+cursorToggle.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+cursorToggle.title = "Toggle custom cursor";
+document.body.appendChild(cursorToggle);
+
+let cursorEnabled = true;
+
+cursorToggle.addEventListener('click', () => {
+    cursorEnabled = !cursorEnabled;
+    if (cursorEnabled) {
+        document.body.style.cursor = 'none';
+        cursor.style.display = 'block';
+    } else {
+        document.body.style.cursor = 'auto';
+        cursor.style.display = 'none';
+    }
+    cursorToggle.classList.toggle('cursor-disabled');
+});
 
 if (window.matchMedia('(hover: hover)').matches) {
     document.body.style.cursor = 'none';
-    let isHovering = false;
-    const hoverPositions = [
-        { x: -8, y: -8 },
-        { x: 8, y: -8 },
-        { x: -8, y: 8 },
-        { x: 8, y: 8 },
-        { x: 0, y: 0 }
-    ];
-    const offsets = [
-        { x: -5, y: -5, speed: 0.03 },
-        { x: 5, y: -5, speed: 0.04 },
-        { x: -5, y: 5, speed: 0.05 },
-        { x: 5, y: 5, speed: 0.06 },
-        { x: 0, y: 0, speed: 0.02 }
-    ];
+    
+    // Use requestAnimationFrame for optimal performance
+    let mouseX = 0;
+    let mouseY = 0;
+    
     document.addEventListener('mousemove', e => {
-        cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     });
-    let time = 0;
-    function updateCircles() {
-        time += 0.01;
-        circles.forEach((circle, i) => {
-            if (isHovering) {
-                const pos = hoverPositions[i];
-                circle.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-                if (!circle.classList.contains('glow')) {
-                    circle.classList.add('glow');
-                }
-            } else {
-                const offset = offsets[i];
-                const x = Math.sin(time * offset.speed * 10) * offset.x;
-                const y = Math.cos(time * offset.speed * 10) * offset.y;
-                circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                if (circle.classList.contains('glow')) {
-                    circle.classList.remove('glow');
-                }
-            }
-        });
-        requestAnimationFrame(updateCircles);
+    
+    // Separate the render from the event for better performance
+    function updateCursor() {
+        if (cursorEnabled) {
+            cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        }
+        requestAnimationFrame(updateCursor);
     }
+    requestAnimationFrame(updateCursor);
+    
+    // Interactive elements hover state - simplified
     const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            isHovering = true;
+            if (cursorEnabled) centerCircle.classList.add('active');
         });
+        
         el.addEventListener('mouseleave', () => {
-            isHovering = false;
+            if (cursorEnabled) centerCircle.classList.remove('active');
         });
     });
-    updateCircles();
 }
-
 // Smooth Scroll for Navigation Links - FIXED VERSION
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
@@ -482,200 +482,6 @@ window.addEventListener('scroll', toggleBackToTopButton);
 fadeInOnScroll();
 toggleBackToTopButton();
 
-// Initialize Facebook SDK with improved error handling - FIXED VERSION
-function initFacebookSDK() {
-    // Check if the script is already being loaded
-    if (document.getElementById('facebook-jssdk')) {
-        return;
-    }
-    
-    // Load the Facebook SDK asynchronously
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        js.onerror = function() {
-            console.error("Failed to load Facebook SDK");
-            const loadingElement = document.getElementById('events-loading');
-            if (loadingElement) loadingElement.style.display = 'none';
-            loadFacebookEvents(); // This will use fallback events
-        };
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    
-    // Initialize the SDK once loaded
-    window.fbAsyncInit = function() {
-        try {
-            FB.init({
-                appId: '1001307304711772',
-                xfbml: true,
-                version: 'v18.0'
-            });
-            
-            // After initialization, load events
-            loadFacebookEvents();
-        } catch (error) {
-            console.error("Error initializing Facebook SDK:", error);
-            loadFacebookEvents(); // This will use fallback events
-        }
-    };
-}
-
-// Load Facebook Events - FIXED VERSION
-function loadFacebookEvents() {
-    // Make sure our containers exist
-    const loadingElement = document.getElementById('events-loading');
-    const eventsContainer = document.getElementById('events-container');
-    const errorElement = document.getElementById('events-error');
-
-    // If elements don't exist, don't proceed
-    if (!loadingElement || !eventsContainer || !errorElement) {
-        console.error("Required DOM elements for Facebook events not found");
-        return;
-    }
-
-    // Try to fetch events with a page access token
-    const attemptFacebookFetch = () => {
-        // First check if FB is loaded
-        if (typeof FB === 'undefined') {
-            console.warn("Facebook SDK not yet loaded");
-            showFallbackEvents();
-            return;
-        }
-
-        FB.api(
-            '/657768627690432/events',
-            'GET',
-            {
-                fields: "name,start_time,end_time,description,cover", 
-                limit: "3",
-                access_token: '1001307304711772|' + 'EAABZC' // This is just a public app ID marker
-            },
-            function(response) {
-                // Hide loading indicator
-                loadingElement.style.display = 'none';
-
-                if (response && !response.error && response.data && response.data.length > 0) {
-                    displayEvents(response.data);
-                } else {
-                    console.error("Facebook events error:", response ? response.error : "No response");
-                    showFallbackEvents();
-                }
-            }
-        );
-    };
-
-    // Display events in the container
-    const displayEvents = (events) => {
-        // Display events container
-        eventsContainer.style.display = 'grid';
-        
-        // Clear previous content
-        eventsContainer.innerHTML = '';
-        
-        // Process each event
-        events.forEach(function(event) {
-            // Format dates
-            const startDate = new Date(event.start_time);
-            const formattedDate = startDate.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long', 
-                day: 'numeric'
-            });
-            
-            // Create event card HTML
-            const eventCard = document.createElement('div');
-            eventCard.className = 'event-card fade-in';
-            
-            // Set card content
-            eventCard.innerHTML = `
-                <div class="event-img" style="background-image: url('${event.cover ? event.cover.source : './assets/default-event.jpg'}')">
-                    <!-- Image from Facebook -->
-                </div>
-                <div class="event-details">
-                    <span class="event-date">${formattedDate}</span>
-                    <h3>${event.name}</h3>
-                    <p>${event.description ? event.description.substring(0, 120) + '...' : 'No description available.'}</p>
-                    <a href="https://www.facebook.com/events/${event.id}" target="_blank" class="btn">
-                        <i class="fab fa-facebook"></i> View Event
-                    </a>
-                </div>
-            `;
-            
-            // Add card to container
-            eventsContainer.appendChild(eventCard);
-        });
-    };
-
-    // Show hard-coded fallback events when API fails
-    const showFallbackEvents = () => {
-        // Create some fallback events with upcoming dates
-        const today = new Date();
-        const fallbackEvents = [
-            {
-                id: "facebook-event-placeholder-1",
-                name: "Monthly Race Day",
-                start_time: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 10).toISOString(),
-                description: "Join us for our monthly race competition! All skill levels welcome. Registration starts at 9 AM.",
-                cover: { source: './assets/drone5.jpg' }
-            },
-            {
-                id: "facebook-event-placeholder-2",
-                name: "Beginner Drone Workshop",
-                start_time: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 17).toISOString(),
-                description: "Learn the basics of drone flying in our hands-on workshop. Perfect for newcomers to the hobby!",
-                cover: { source: './assets/drone6.jpg' }
-            },
-            {
-                id: "facebook-event-placeholder-3",
-                name: "FPV Night Racing",
-                start_time: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 24).toISOString(),
-                description: "Experience the thrill of night racing with LED-equipped drones! Spectators welcome.",
-                cover: { source: './assets/champaign.jpg' }
-            }
-        ];
-        
-        // Display the fallback events
-        displayEvents(fallbackEvents);
-        
-        // Add a note that these are placeholder events
-        const disclaimerElement = document.createElement('div');
-        disclaimerElement.className = 'events-disclaimer';
-        disclaimerElement.innerHTML = `
-            <p>* Preview events shown. Visit our <a href="https://www.facebook.com/groups/657768627690432/events" 
-            target="_blank">Facebook page</a> for the latest official events.</p>
-        `;
-        eventsContainer.appendChild(disclaimerElement);
-    };
-    
-    // Try to get events from Facebook, with fallback for failures
-    try {
-        // Set a timeout in case the Facebook API takes too long
-        const timeoutId = setTimeout(() => {
-            console.warn("Facebook events request timed out");
-            loadingElement.style.display = 'none';
-            showFallbackEvents();
-        }, 5000);
-        
-        // Attempt to get events
-        attemptFacebookFetch();
-        
-        // Clear the timeout if we get a response
-        clearTimeout(timeoutId);
-    } catch (error) {
-        console.error("Error fetching Facebook events:", error);
-        loadingElement.style.display = 'none';
-        showFallbackEvents();
-    }
-}
-
-// Start the process when the document is ready
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Facebook SDK which will in turn load events
-    initFacebookSDK();
-});
-
 // Sponsors Carousel Initialization
 document.addEventListener('DOMContentLoaded', function() {
     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
@@ -737,3 +543,404 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+// Event Calendar Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Define event data (make sure this is at the top level of your events code)
+    const eventData = [
+        {
+            title: "Global Drone Solutions Summer Series round 8",
+            date: new Date(2025, 2, 23, 8, 0), // March 23, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Grand Final",
+            date: new Date(2025, 3, 12, 8, 0), // April 12, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 1",
+            date: new Date(2025, 4, 10, 8, 0), // May 10, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 2",
+            date: new Date(2025, 4, 24, 8, 0), // May 24, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 3",
+            date: new Date(2025, 5, 7, 8, 0), // June 7, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 4",
+            date: new Date(2025, 5, 21, 8, 0), // June 21, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 5",
+            date: new Date(2025, 6, 5, 8, 0), // July 5, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 6",
+            date: new Date(2025, 6, 19, 8, 0), // July 19, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 7",
+            date: new Date(2025, 7, 2, 8, 0), // August 2, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series round 8",
+            date: new Date(2025, 7, 16, 8, 0), // August 16, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter series Grand final",
+            date: new Date(2025, 7, 30, 8, 0), // August 30, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Freestyle day",
+            date: new Date(2025, 8, 13, 9, 0), // September 13, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Open day",
+            date: new Date(2025, 9, 4, 9, 0), // October 4, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "The Global Drone Solutions WA State Championships",
+            date: new Date(2025, 9, 11, 9, 0), // October 11, 2025
+            endDate: new Date(2025, 9, 12, 17, 0), // October 12, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            image: "./assets/drone6.jpg"
+        }
+    ];
+
+    // Calendar elements
+    const prevMonthBtn = document.getElementById('prevMonth');
+    const nextMonthBtn = document.getElementById('nextMonth');
+    const currentMonthYearElement = document.getElementById('currentMonthYear');
+    const calendarDaysElement = document.getElementById('calendarDays');
+    const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+
+    // Current date tracking
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    // Month navigation
+    prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+    });
+
+    function renderCalendar() {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        // Update month/year display
+        currentMonthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        
+        // Clear existing calendar
+        calendarDaysElement.innerHTML = '';
+        
+        // Calculate first day and days in month
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        
+        // Add empty cells for days before first of month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day empty';
+            calendarDaysElement.appendChild(emptyDay);
+        }
+        
+        // Create calendar days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            
+            // Create day number element
+            const dayNumber = document.createElement('span');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            dayElement.appendChild(dayNumber);
+            
+            // Check for events on this day
+            const checkDate = new Date(currentYear, currentMonth, day);
+            const dayEvents = eventData.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate.getDate() === day && 
+                       eventDate.getMonth() === currentMonth && 
+                       eventDate.getFullYear() === currentYear;
+            });
+            
+            // Add event indicators and handlers
+            if (dayEvents.length > 0) {
+                dayElement.classList.add('has-events');
+                
+                // Create tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'event-tooltip';
+                dayEvents.forEach(event => {
+                    const eventTime = event.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    tooltip.innerHTML += `
+                        <div class="tooltip-event">
+                            <span class="tooltip-time">${eventTime}</span>
+                            ${event.title}
+                        </div>
+                    `;
+                });
+                dayElement.appendChild(tooltip);
+                
+                // Add click handler
+                dayElement.addEventListener('click', () => {
+                    showEventsForDate(checkDate);
+                });
+            }
+            
+            // Highlight today
+            const today = new Date();
+            if (day === today.getDate() && 
+                currentMonth === today.getMonth() && 
+                currentYear === today.getFullYear()) {
+                dayElement.classList.add('today');
+            }
+            
+            calendarDaysElement.appendChild(dayElement);
+        }
+        
+        // Add click handlers to days with events
+        addDayClickHandlers();
+        
+        // Show upcoming events by default
+        showUpcomingEvents();
+    }
+
+ // This is the updated showEventsForDate function that ensures events are displayed properly
+function showEventsForDate(date) {
+    const dayEvents = eventData.filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate.getDate() === date.getDate() && 
+               eventDate.getMonth() === date.getMonth() && 
+               eventDate.getFullYear() === date.getFullYear();
+    });
+    
+    // Debug log
+    console.log('Events for selected date:', dayEvents);
+    
+    // Clear and update the events list
+    const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+    upcomingEventsListElement.innerHTML = '';
+    
+    if (dayEvents.length === 0) {
+        upcomingEventsListElement.innerHTML = '<p class="no-events">No events scheduled for this date</p>';
+        return;
+    }
+    
+    // FIXED: Use the correct Facebook URL for all event links
+    const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
+    
+    dayEvents.forEach(event => {
+        // Create card container
+        const eventCard = document.createElement('div');
+        eventCard.className = 'event-card fade-in active';
+        
+        // Create image section
+        const eventImgDiv = document.createElement('div');
+        eventImgDiv.className = 'event-img';
+        eventImgDiv.style.backgroundImage = `url('${event.image}')`;
+        
+        // Create details section
+        const eventDetailsDiv = document.createElement('div');
+        eventDetailsDiv.className = 'event-details';
+        
+        // Format date and time
+        const eventDate = new Date(event.date);
+        const formattedDate = eventDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const formattedTime = eventDate.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Create date display
+        const eventDateSpan = document.createElement('span');
+        eventDateSpan.className = 'event-date';
+        eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
+        
+        // Create title display - ENSURE THIS IS VISIBLE
+        const eventTitle = document.createElement('h3');
+        eventTitle.textContent = event.title;
+        eventTitle.style.display = 'block'; // Force display
+        eventTitle.style.margin = '0 0 12px 0'; // Ensure spacing
+        
+        // Create link button
+        const eventLink = document.createElement('a');
+        eventLink.href = facebookEventsPage;
+        eventLink.target = '_blank';
+        eventLink.className = 'btn';
+        eventLink.textContent = 'VIEW EVENT';
+        
+        // Build the DOM structure
+        eventDetailsDiv.appendChild(eventDateSpan);
+        eventDetailsDiv.appendChild(eventTitle);
+        eventDetailsDiv.appendChild(eventLink);
+        
+        eventCard.appendChild(eventImgDiv);
+        eventCard.appendChild(eventDetailsDiv);
+        
+        // Add the card to the events list
+        upcomingEventsListElement.appendChild(eventCard);
+    });
+}
+
+// This is the updated showUpcomingEvents function that ensures events are displayed properly
+function showUpcomingEvents() {
+    const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+    if (!upcomingEventsListElement) {
+        console.error('Could not find upcomingEventsList element');
+        return;
+    }
+    
+    const today = new Date();
+    console.log('Today:', today);
+    
+    // Clear the events list
+    upcomingEventsListElement.innerHTML = '';
+    
+    // Filter and sort upcoming events
+    const upcomingEvents = eventData
+        .filter(event => event.date > today) // Get only future events
+        .sort((a, b) => a.date - b.date) // Sort by date
+        .slice(0, 5); // Get next 5 events
+    
+    console.log('Filtered upcoming events:', upcomingEvents);
+    
+    // If no upcoming events
+    if (upcomingEvents.length === 0) {
+        upcomingEventsListElement.innerHTML = '<p class="no-events">No upcoming events scheduled</p>';
+        return;
+    }
+    
+    // FIXED: Use the correct Facebook URL for all event links
+    const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
+    
+    // Render each event
+    upcomingEvents.forEach(event => {
+        // Create card container
+        const eventCard = document.createElement('div');
+        eventCard.className = 'event-card fade-in active';
+        
+        // Create image section
+        const eventImgDiv = document.createElement('div');
+        eventImgDiv.className = 'event-img';
+        eventImgDiv.style.backgroundImage = `url('${event.image}')`;
+        
+        // Create details section
+        const eventDetailsDiv = document.createElement('div');
+        eventDetailsDiv.className = 'event-details';
+        
+        // Format date and time
+        const eventDate = new Date(event.date);
+        const formattedDate = eventDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const formattedTime = eventDate.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Create date display
+        const eventDateSpan = document.createElement('span');
+        eventDateSpan.className = 'event-date';
+        eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
+        
+        // Create title display - ENSURE THIS IS VISIBLE
+        const eventTitle = document.createElement('h3');
+        eventTitle.textContent = event.title;
+        eventTitle.style.display = 'block'; // Force display
+        eventTitle.style.margin = '0 0 12px 0'; // Ensure spacing
+        
+        // Create link button
+        const eventLink = document.createElement('a');
+        eventLink.href = facebookEventsPage;
+        eventLink.target = '_blank';
+        eventLink.className = 'btn';
+        eventLink.textContent = 'VIEW DETAILS';
+        
+        // Build the DOM structure
+        eventDetailsDiv.appendChild(eventDateSpan);
+        eventDetailsDiv.appendChild(eventTitle);
+        eventDetailsDiv.appendChild(eventLink);
+        
+        eventCard.appendChild(eventImgDiv);
+        eventCard.appendChild(eventDetailsDiv);
+        
+        // Add the card to the events list
+        upcomingEventsListElement.appendChild(eventCard);
+    });
+}
+    // Add this to your existing calendar day click handler
+    function addDayClickHandlers() {
+        const calendarDays = document.querySelectorAll('.calendar-day');
+        calendarDays.forEach(day => {
+            if (day.classList.contains('has-events')) {
+                day.addEventListener('click', function() {
+                    const dayNumber = this.querySelector('.day-number').textContent;
+                    const selectedDate = new Date(currentYear, currentMonth, parseInt(dayNumber));
+                    showEventsForDate(selectedDate);
+                });
+            }
+        });
+    }
+
+    // FIXED: Update the VIEW ALL EVENTS button to link to the correct page
+    const viewAllEventsBtn = document.querySelector('.events-cta .btn');
+    if (viewAllEventsBtn) {
+        viewAllEventsBtn.href = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
+        viewAllEventsBtn.target = "_blank";
+    }
+
+    // Initialize calendar when the page loads
+    renderCalendar();
+});
