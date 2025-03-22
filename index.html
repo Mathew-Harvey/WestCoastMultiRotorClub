@@ -36,7 +36,7 @@
   <header>
     <div class="container">
       <nav class="navbar">
-        <a href="#" class="logo">
+        <a href="#hero" class="logo">
           <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
         </a>
         <ul class="nav-links">
@@ -74,7 +74,7 @@
         <p>Western Australia's premier drone racing club. Technology, skill, and adrenaline soar over our stunning
           landscapes. At West Coast Mulirotor, we're pushing the limits of this fast-growing sport.</p>
         <div class="hero-btns">
-          <a href="#pilots" class="btn">Pilots</a>
+          <a href="#membership" class="btn">Pilots</a>
           <a href="#events" class="btn">Upcoming Races</a>
         </div>
       </div>
@@ -130,57 +130,59 @@
     </div>
   </section>
 
-<!-- Events Section -->
-<section id="events">
-  <div class="container">
-    <h2>Upcoming Events</h2>
-    
-    <div class="events-layout fade-in">
-      <!-- Calendar column -->
-      <div class="calendar-container">
-        <div class="calendar-header">
-          <button id="prevMonth" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
-          <h3 id="currentMonthYear">March 2025</h3>
-          <button id="nextMonth" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
-        </div>
-        
-        <div class="calendar-weekdays">
-          <div>S</div>
-          <div>M</div>
-          <div>T</div>
-          <div>W</div>
-          <div>T</div>
-          <div>F</div>
-          <div>S</div>
-        </div>
-        
-        <div id="calendarDays" class="calendar-days">
-          <!-- Days will be generated here -->
-        </div>
-      </div>
-      
-      <!-- Events column -->
-      <div class="upcoming-events-container">
-        <h3 id="eventsTitle">Upcoming Races</h3>
-        <div id="upcomingEventsList" class="upcoming-events-list">
-          <!-- Example of event card structure (will be replaced by JS) -->
-          <div class="event-card fade-in active">
-            <div class="event-img" style="background-image: url('./assets/drone5.jpg')"></div>
-            <div class="event-details">
-              <span class="event-date">Sunday, March 23, 2025 at 8:00 AM</span>
-              <h3>Global Drone Solutions Summer Series round 8</h3>
-              <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">VIEW DETAILS</a>
-            </div>
+  <!-- Events Section -->
+  <section id="events">
+    <div class="container">
+      <h2>Upcoming Events</h2>
+
+      <div class="events-layout fade-in">
+        <!-- Calendar column -->
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <button id="prevMonth" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <h3 id="currentMonthYear">March 2025</h3>
+            <button id="nextMonth" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+          </div>
+
+          <div class="calendar-weekdays">
+            <div>S</div>
+            <div>M</div>
+            <div>T</div>
+            <div>W</div>
+            <div>T</div>
+            <div>F</div>
+            <div>S</div>
+          </div>
+
+          <div id="calendarDays" class="calendar-days">
+            <!-- Days will be generated here -->
           </div>
         </div>
-        
-        <div class="events-cta">
-          <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">VIEW ALL EVENTS</a>
+
+        <!-- Events column -->
+        <div class="upcoming-events-container">
+          <h3 id="eventsTitle">Upcoming Races</h3>
+          <div id="upcomingEventsList" class="upcoming-events-list">
+            <!-- Example of event card structure (will be replaced by JS) -->
+            <div class="event-card fade-in active">
+              <div class="event-img" style="background-image: url('./assets/drone5.jpg')"></div>
+              <div class="event-details">
+                <span class="event-date">Sunday, March 23, 2025 at 8:00 AM</span>
+                <h3>Global Drone Solutions Summer Series round 8</h3>
+                <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank"
+                  class="btn">VIEW DETAILS</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="events-cta">
+            <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" class="btn">VIEW
+              ALL EVENTS</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>  
+  </section>
   <!-- Pilot Profiles Section (Replacement for Membership Section) -->
   <section id="membership">
     <div class="container">
@@ -197,13 +199,13 @@
               <!-- Card Front -->
               <div class="pilot-card-front">
                 <div class="pilot-card-banner"></div>
-                <div class="pilot-card-position">PRO</div>
+                <div class="pilot-card-position">VETERAN</div>
                 <div class="pilot-card-image"
-                  style="background-image: url('https://placehold.co/400x500/29a7df/white?text=Pilot')"></div>
+                  style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
                 <div class="pilot-card-info">
                   <div class="pilot-card-number">#01</div>
-                  <h3 class="pilot-card-name">Max "Afterburner" Reynolds</h3>
-                  <div class="pilot-card-specialty">Race Champion</div>
+                  <h3 class="pilot-card-name">DukeGod</h3>
+                  <div class="pilot-card-specialty">Founder VETERAN</div>
                 </div>
                 <div class="pilot-card-team">WCMRC</div>
                 <div class="pilot-card-shine"></div>
@@ -211,16 +213,16 @@
               <!-- Card Back -->
               <div class="pilot-card-back">
                 <div class="pilot-card-back-content">
-                  <h3 class="pilot-card-name">Max Reynolds</h3>
-                  <div class="pilot-card-nickname">"Afterburner"</div>
+                  <h3 class="pilot-card-name">Terry Johnson</h3>
+                  <div class="pilot-card-nickname">"DukeGod"</div>
                   <div class="pilot-stats">
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Experience</div>
-                      <div class="pilot-stat-value">6 Years</div>
+                      <div class="pilot-stat-value">10 Years</div>
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Top Speed</div>
-                      <div class="pilot-stat-value">145 KPH</div>
+                      <div class="pilot-stat-value">FukNose KPH</div>
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Wins</div>
@@ -232,11 +234,11 @@
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Preferred Class</div>
-                      <div class="pilot-stat-value">5" Freestyle</div>
+                      <div class="pilot-stat-value">5" Racing</div>
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Racing Style</div>
-                      <div class="pilot-stat-value">Aggressive</div>
+                      <div class="pilot-stat-value">HoleShot or Die</div>
                     </div>
                   </div>
                   <div class="pilot-bio">
@@ -265,11 +267,11 @@
                 <div class="pilot-card-banner"></div>
                 <div class="pilot-card-position">TECH</div>
                 <div class="pilot-card-image"
-                  style="background-image: url('https://placehold.co/400x500/5d6b77/white?text=Pilot')"></div>
+                  style="background-image: url('./assets/pilots/LeStar.png')"></div>
                 <div class="pilot-card-info">
                   <div class="pilot-card-number">#42</div>
-                  <h3 class="pilot-card-name">Samantha "Circuit" Chen</h3>
-                  <div class="pilot-card-specialty">Technical Freestyle</div>
+                  <h3 class="pilot-card-name">LeStar</h3>
+                  <div class="pilot-card-specialty">Hard Out Racing .. and whoops</div>
                 </div>
                 <div class="pilot-card-team">WCMRC</div>
                 <div class="pilot-card-shine"></div>
@@ -277,12 +279,12 @@
               <!-- Card Back -->
               <div class="pilot-card-back">
                 <div class="pilot-card-back-content">
-                  <h3 class="pilot-card-name">Samantha Chen</h3>
-                  <div class="pilot-card-nickname">"Circuit"</div>
+                  <h3 class="pilot-card-name">Brett Leicester</h3>
+                  <div class="pilot-card-nickname">"LeStar"</div>
                   <div class="pilot-stats">
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Experience</div>
-                      <div class="pilot-stat-value">4 Years</div>
+                      <div class="pilot-stat-value">5 Years</div>
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Top Speed</div>
@@ -329,13 +331,13 @@
               <!-- Card Front -->
               <div class="pilot-card-front">
                 <div class="pilot-card-banner"></div>
-                <div class="pilot-card-position">ROOKIE</div>
+                <div class="pilot-card-position">SPORT</div>
                 <div class="pilot-card-image"
-                  style="background-image: url('https://placehold.co/400x500/000000/white?text=Pilot')"></div>
+                  style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
                 <div class="pilot-card-info">
                   <div class="pilot-card-number">#99</div>
-                  <h3 class="pilot-card-name">Tyler "Turbulence" Jackson</h3>
-                  <div class="pilot-card-specialty">Freestyle Wizard</div>
+                  <h3 class="pilot-card-name">Toe...Gah</h3>
+                  <div class="pilot-card-specialty">Pro Pilot Loading... watch here</div>
                 </div>
                 <div class="pilot-card-team">WCMRC</div>
                 <div class="pilot-card-shine"></div>
@@ -343,12 +345,12 @@
               <!-- Card Back -->
               <div class="pilot-card-back">
                 <div class="pilot-card-back-content">
-                  <h3 class="pilot-card-name">Tyler Jackson</h3>
-                  <div class="pilot-card-nickname">"Turbulence"</div>
+                  <h3 class="pilot-card-name">Nathan Lanchbury </h3>
+                  <div class="pilot-card-nickname">"ToGa"</div>
                   <div class="pilot-stats">
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Experience</div>
-                      <div class="pilot-stat-value">2 Years</div>
+                      <div class="pilot-stat-value">3 Years</div>
                     </div>
                     <div class="pilot-stat">
                       <div class="pilot-stat-label">Top Speed</div>
@@ -695,169 +697,65 @@
       </div>
     </div>
   </section>
+
   <!-- Sponsors Section -->
   <section id="sponsors">
     <div class="container">
-      <h2>Our Sponsors</h2>
-      <p class="text-center mb-5">We're proud to partner with these amazing companies who support drone racing in
-        Western Australia.</p>
+      <h2>Our Partners</h2>
+      <p class="sponsors-intro">Industry leaders who share our passion for advancing drone technology and racing.</p>
 
-      <div class="sponsors-carousel-container fade-in">
-        <div class="sponsors-carousel">
-          <!-- Sponsor logos -->
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/29a7df/white?text=DJI" alt="DJI">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=GoPro" alt="GoPro">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/29a7df/white?text=FatShark" alt="FatShark">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=TBS" alt="Team BlackSheep">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/29a7df/white?text=BetaFPV" alt="BetaFPV">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=Lumenier" alt="Lumenier">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/29a7df/white?text=RDQ" alt="Race Day Quads">
-          </div>
-          <div class="sponsor-item">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=GetFPV" alt="GetFPV">
-          </div>
+      <div class="sponsors-showcase">
+        <div class="sponsors-carousel-container">
+          <div class="sponsors-carousel">
+            <!-- Sponsor logos -->
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/awa.png" alt="Aeromodelers West Australia">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/bms.png" alt="BMS Racing">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/ck.png" alt="City Of Kwinana">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/elf.png" alt="Extreme Limit Films">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/gds.png" alt="Global Drone Solutions">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/gemfan.png" alt="Gemfan">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/mds.png" alt="Mandurah Drone Services">
+            </div>
+            <div class="sponsor-item">
+              <img src="./assets/sponsors/mf.png" alt="Mantis FPV">
+            </div>
 
-          <!-- Clones for infinite loop -->
-          <div class="sponsor-item clone">
-            <img src="https://placehold.co/200x100/29a7df/white?text=DJI" alt="DJI">
-          </div>
-          <div class="sponsor-item clone">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=GoPro" alt="GoPro">
-          </div>
-          <div class="sponsor-item clone">
-            <img src="https://placehold.co/200x100/29a7df/white?text=FatShark" alt="FatShark">
-          </div>
-          <div class="sponsor-item clone">
-            <img src="https://placehold.co/200x100/5d6b77/white?text=TBS" alt="Team BlackSheep">
+            <!-- Clones for infinite loop -->
+            <div class="sponsor-item clone">
+              <img src="./assets/sponsors/rs.png" alt="Rising Sun FPV">
+            </div>
+            <div class="sponsor-item clone">
+              <img src="./assets/sponsors/torvol.png" alt="Torvol">
+            </div>
+
           </div>
         </div>
       </div>
 
-      <div class="sponsor-tiers">
-        <div class="sponsor-tier platinum">
-          <h3>Platinum Sponsors</h3>
-          <div class="sponsor-tier-logos">
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/250x150/29a7df/white?text=DJI" alt="DJI">
-            </div>
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/250x150/5d6b77/white?text=GoPro" alt="GoPro">
-            </div>
-          </div>
-        </div>
+      <div class="sponsor-divider"></div>
 
-        <div class="sponsor-tier gold">
-          <h3>Gold Sponsors</h3>
-          <div class="sponsor-tier-logos">
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/200x120/29a7df/white?text=FatShark" alt="FatShark">
-            </div>
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/200x120/5d6b77/white?text=TBS" alt="Team BlackSheep">
-            </div>
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/200x120/29a7df/white?text=BetaFPV" alt="BetaFPV">
-            </div>
-          </div>
-        </div>
-
-        <div class="sponsor-tier silver">
-          <h3>Silver Sponsors</h3>
-          <div class="sponsor-tier-logos">
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/180x100/5d6b77/white?text=Lumenier" alt="Lumenier">
-            </div>
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/180x100/29a7df/white?text=RDQ" alt="Race Day Quads">
-            </div>
-            <div class="sponsor-tier-logo">
-              <img src="https://placehold.co/180x100/5d6b77/white?text=GetFPV" alt="GetFPV">
-            </div>
-          </div>
-        </div>
-
-        <div class="sponsor-cta">
-          <h3>Become a Sponsor</h3>
-          <p>Support the future of drone racing in Western Australia. Contact us to learn about our sponsorship
-            packages.</p>
-          <a href="#contact" class="btn">Contact Us</a>
+      <div class="become-sponsor">
+        <div class="become-sponsor-content">
+          <h3>Become a Partner</h3>
+          <p>Join leading brands in supporting West Coast Multirotor Club. Showcase your commitment to innovation while
+            connecting with our passionate community of pilots and tech enthusiasts.</p>
+          <a href="mailto:president@westcoastmultirotors.com.au" class="btn btn-sponsor">Request Partnership
+            Information</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact">
-    <div class="container">
-      <h2>Get in Touch</h2>
-      <div class="contact-container">
-        <div class="contact-info">
-          <div class="contact-item fade-in">
-            <i class="fas fa-map-marker-alt"></i>
-            <div>
-              <h3>Location</h3>
-              <p>123 Skyline Drive<br />Drone Valley, CA 90210</p>
-            </div>
-          </div>
-          <div class="contact-item fade-in">
-            <i class="fas fa-envelope"></i>
-            <div>
-              <h3>Email</h3>
-              <p>info@wcmrc.com</p>
-            </div>
-          </div>
-          <div class="contact-item fade-in">
-            <i class="fas fa-phone-alt"></i>
-            <div>
-              <h3>Phone</h3>
-              <p>(555) 123-4567</p>
-            </div>
-          </div>
-          <div class="contact-item fade-in">
-            <i class="fas fa-clock"></i>
-            <div>
-              <h3>Practice Hours</h3>
-              <p>Tuesday &amp; Thursday: 4 PM - 8 PM<br />Saturday &amp; Sunday: 10 AM - 6 PM</p>
-            </div>
-          </div>
-        </div>
-        <div class="contact-form fade-in">
-          <h3>Send us a message</h3>
-          <form>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Your Name" />
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" class="form-control" placeholder="Your Email" />
-            </div>
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input type="text" id="subject" class="form-control" placeholder="Subject" />
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" class="form-control" placeholder="Your Message"></textarea>
-            </div>
-            <button type="submit" class="btn">Send Message</button>
-          </form>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- Resources Section -->

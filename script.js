@@ -749,177 +749,170 @@ document.addEventListener('DOMContentLoaded', function() {
         showUpcomingEvents();
     }
 
- // This is the updated showEventsForDate function that ensures events are displayed properly
-function showEventsForDate(date) {
-    const dayEvents = eventData.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate.getDate() === date.getDate() && 
-               eventDate.getMonth() === date.getMonth() && 
-               eventDate.getFullYear() === date.getFullYear();
-    });
-    
-    // Debug log
-    console.log('Events for selected date:', dayEvents);
-    
-    // Clear and update the events list
-    const upcomingEventsListElement = document.getElementById('upcomingEventsList');
-    upcomingEventsListElement.innerHTML = '';
-    
-    if (dayEvents.length === 0) {
-        upcomingEventsListElement.innerHTML = '<p class="no-events">No events scheduled for this date</p>';
-        return;
+    // This is the updated showEventsForDate function
+    function showEventsForDate(date) {
+        const dayEvents = eventData.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate.getDate() === date.getDate() && 
+                   eventDate.getMonth() === date.getMonth() && 
+                   eventDate.getFullYear() === date.getFullYear();
+        });
+        
+        const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+        upcomingEventsListElement.innerHTML = '';
+        
+        // Update the section title to show selected date
+        const eventsTitle = document.getElementById('eventsTitle');
+        if (eventsTitle) {
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            eventsTitle.textContent = `Events for ${formattedDate}`;
+        }
+        
+        if (dayEvents.length === 0) {
+            upcomingEventsListElement.innerHTML = '<div class="no-events">No events scheduled for this date</div>';
+            return;
+        }
+        
+        const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
+        
+        dayEvents.forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.className = 'event-card fade-in active';
+            
+            const eventImgDiv = document.createElement('div');
+            eventImgDiv.className = 'event-img';
+            eventImgDiv.style.backgroundImage = `url('${event.image}')`;
+            
+            const eventDetailsDiv = document.createElement('div');
+            eventDetailsDiv.className = 'event-details';
+            
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            const formattedTime = eventDate.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const eventDateSpan = document.createElement('span');
+            eventDateSpan.className = 'event-date';
+            eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
+            
+            const eventTitle = document.createElement('h3');
+            eventTitle.textContent = event.title;
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.marginTop = 'auto';
+            
+            const eventLink = document.createElement('a');
+            eventLink.href = facebookEventsPage;
+            eventLink.target = '_blank';
+            eventLink.className = 'btn';
+            eventLink.textContent = 'VIEW DETAILS';
+            
+            buttonContainer.appendChild(eventLink);
+            
+            eventDetailsDiv.appendChild(eventDateSpan);
+            eventDetailsDiv.appendChild(eventTitle);
+            eventDetailsDiv.appendChild(buttonContainer);
+            
+            eventCard.appendChild(eventImgDiv);
+            eventCard.appendChild(eventDetailsDiv);
+            
+            upcomingEventsListElement.appendChild(eventCard);
+        });
     }
-    
-    // FIXED: Use the correct Facebook URL for all event links
-    const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
-    
-    dayEvents.forEach(event => {
-        // Create card container
-        const eventCard = document.createElement('div');
-        eventCard.className = 'event-card fade-in active';
-        
-        // Create image section
-        const eventImgDiv = document.createElement('div');
-        eventImgDiv.className = 'event-img';
-        eventImgDiv.style.backgroundImage = `url('${event.image}')`;
-        
-        // Create details section
-        const eventDetailsDiv = document.createElement('div');
-        eventDetailsDiv.className = 'event-details';
-        
-        // Format date and time
-        const eventDate = new Date(event.date);
-        const formattedDate = eventDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        });
-        
-        const formattedTime = eventDate.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        // Create date display
-        const eventDateSpan = document.createElement('span');
-        eventDateSpan.className = 'event-date';
-        eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
-        
-        // Create title display - ENSURE THIS IS VISIBLE
-        const eventTitle = document.createElement('h3');
-        eventTitle.textContent = event.title;
-        eventTitle.style.display = 'block'; // Force display
-        eventTitle.style.margin = '0 0 12px 0'; // Ensure spacing
-        
-        // Create link button
-        const eventLink = document.createElement('a');
-        eventLink.href = facebookEventsPage;
-        eventLink.target = '_blank';
-        eventLink.className = 'btn';
-        eventLink.textContent = 'VIEW EVENT';
-        
-        // Build the DOM structure
-        eventDetailsDiv.appendChild(eventDateSpan);
-        eventDetailsDiv.appendChild(eventTitle);
-        eventDetailsDiv.appendChild(eventLink);
-        
-        eventCard.appendChild(eventImgDiv);
-        eventCard.appendChild(eventDetailsDiv);
-        
-        // Add the card to the events list
-        upcomingEventsListElement.appendChild(eventCard);
-    });
-}
 
-// This is the updated showUpcomingEvents function that ensures events are displayed properly
-function showUpcomingEvents() {
-    const upcomingEventsListElement = document.getElementById('upcomingEventsList');
-    if (!upcomingEventsListElement) {
-        console.error('Could not find upcomingEventsList element');
-        return;
-    }
-    
-    const today = new Date();
-    console.log('Today:', today);
-    
-    // Clear the events list
-    upcomingEventsListElement.innerHTML = '';
-    
-    // Filter and sort upcoming events
-    const upcomingEvents = eventData
-        .filter(event => event.date > today) // Get only future events
-        .sort((a, b) => a.date - b.date) // Sort by date
-        .slice(0, 5); // Get next 5 events
-    
-    console.log('Filtered upcoming events:', upcomingEvents);
-    
-    // If no upcoming events
-    if (upcomingEvents.length === 0) {
-        upcomingEventsListElement.innerHTML = '<p class="no-events">No upcoming events scheduled</p>';
-        return;
-    }
-    
-    // FIXED: Use the correct Facebook URL for all event links
-    const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
-    
-    // Render each event
-    upcomingEvents.forEach(event => {
-        // Create card container
-        const eventCard = document.createElement('div');
-        eventCard.className = 'event-card fade-in active';
+    // This is the updated showUpcomingEvents function
+    function showUpcomingEvents() {
+        const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+        if (!upcomingEventsListElement) {
+            console.error('Could not find upcomingEventsList element');
+            return;
+        }
         
-        // Create image section
-        const eventImgDiv = document.createElement('div');
-        eventImgDiv.className = 'event-img';
-        eventImgDiv.style.backgroundImage = `url('${event.image}')`;
+        // Reset the section title
+        const eventsTitle = document.getElementById('eventsTitle');
+        if (eventsTitle) {
+            eventsTitle.textContent = 'Upcoming Races';
+        }
         
-        // Create details section
-        const eventDetailsDiv = document.createElement('div');
-        eventDetailsDiv.className = 'event-details';
+        const today = new Date();
         
-        // Format date and time
-        const eventDate = new Date(event.date);
-        const formattedDate = eventDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
+        upcomingEventsListElement.innerHTML = '';
+        
+        const upcomingEvents = eventData
+            .filter(event => event.date > today)
+            .sort((a, b) => a.date - b.date)
+            .slice(0, 5);
+        
+        if (upcomingEvents.length === 0) {
+            upcomingEventsListElement.innerHTML = '<div class="no-events">No upcoming events scheduled</div>';
+            return;
+        }
+        
+        const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
+        
+        upcomingEvents.forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.className = 'event-card fade-in active';
+            
+            const eventImgDiv = document.createElement('div');
+            eventImgDiv.className = 'event-img';
+            eventImgDiv.style.backgroundImage = `url('${event.image}')`;
+            
+            const eventDetailsDiv = document.createElement('div');
+            eventDetailsDiv.className = 'event-details';
+            
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            const formattedTime = eventDate.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const eventDateSpan = document.createElement('span');
+            eventDateSpan.className = 'event-date';
+            eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
+            
+            const eventTitle = document.createElement('h3');
+            eventTitle.textContent = event.title;
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.marginTop = 'auto';
+            
+            const eventLink = document.createElement('a');
+            eventLink.href = facebookEventsPage;
+            eventLink.target = '_blank';
+            eventLink.className = 'btn';
+            eventLink.textContent = 'VIEW DETAILS';
+            
+            buttonContainer.appendChild(eventLink);
+            
+            eventDetailsDiv.appendChild(eventDateSpan);
+            eventDetailsDiv.appendChild(eventTitle);
+            eventDetailsDiv.appendChild(buttonContainer);
+            
+            eventCard.appendChild(eventImgDiv);
+            eventCard.appendChild(eventDetailsDiv);
+            
+            upcomingEventsListElement.appendChild(eventCard);
         });
-        
-        const formattedTime = eventDate.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        // Create date display
-        const eventDateSpan = document.createElement('span');
-        eventDateSpan.className = 'event-date';
-        eventDateSpan.textContent = `${formattedDate} at ${formattedTime}`;
-        
-        // Create title display - ENSURE THIS IS VISIBLE
-        const eventTitle = document.createElement('h3');
-        eventTitle.textContent = event.title;
-        eventTitle.style.display = 'block'; // Force display
-        eventTitle.style.margin = '0 0 12px 0'; // Ensure spacing
-        
-        // Create link button
-        const eventLink = document.createElement('a');
-        eventLink.href = facebookEventsPage;
-        eventLink.target = '_blank';
-        eventLink.className = 'btn';
-        eventLink.textContent = 'VIEW DETAILS';
-        
-        // Build the DOM structure
-        eventDetailsDiv.appendChild(eventDateSpan);
-        eventDetailsDiv.appendChild(eventTitle);
-        eventDetailsDiv.appendChild(eventLink);
-        
-        eventCard.appendChild(eventImgDiv);
-        eventCard.appendChild(eventDetailsDiv);
-        
-        // Add the card to the events list
-        upcomingEventsListElement.appendChild(eventCard);
-    });
-}
+    }
+
     // Add this to your existing calendar day click handler
     function addDayClickHandlers() {
         const calendarDays = document.querySelectorAll('.calendar-day');
