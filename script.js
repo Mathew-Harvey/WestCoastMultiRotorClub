@@ -1,14 +1,28 @@
 // Pilot Profiles Section Functionality
 
+// Pilot Profiles Section Functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Get all pilot cards
     const pilotCards = document.querySelectorAll('.pilot-card');
     const carousel = document.querySelector('.pilot-carousel');
+    
+    // Get the audio element for DukeGod card
+    const dukegodFlipSound = document.getElementById('dukegod-flip-sound');
 
     // Toggle flip animation on click
-    pilotCards.forEach(card => {
+    pilotCards.forEach((card, index) => {
         card.addEventListener('click', function () {
+            const wasFlipped = this.classList.contains('flipped');
             this.classList.toggle('flipped');
+            
+            // Play sound for the first card (DukeGod) when flipping to back
+            if (index === 0 && !wasFlipped && dukegodFlipSound) {
+                // Reset audio to start and play
+                dukegodFlipSound.currentTime = 0;
+                dukegodFlipSound.play().catch(e => {
+                    console.warn('Failed to play sound:', e);
+                });
+            }
         });
     });
 
