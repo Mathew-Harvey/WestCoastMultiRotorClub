@@ -2031,7 +2031,7 @@ footer::after {
     }
 
     100% {
-        transform: translateX(-1800px);
+        transform: translateX(-3600px);
         /* Adjust based on your card width + gap */
     }
 }
@@ -2407,7 +2407,7 @@ footer::after {
 
 /* Animation Settings */
 .pilot-carousel {
-    animation: carouselScroll 12s linear infinite;
+    animation: carouselScroll 16s linear infinite;
 }
 
 /* Clone cards for seamless animation */
