@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Complete Pilot Carousel functionality with double-tap for mobile
+// Complete Pilot Carousel functionality with all fixes
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const pilotCarousel = document.querySelector('.pilot-carousel');
@@ -80,16 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let isFlipping = false; // Track if we're in card flip mode
     let dragDistance = 0; // Track total drag distance
     
-    // Double-tap detection variables
-    const tapTimeThreshold = 300; // milliseconds between taps to consider it a double-tap
-    const doubleTapStates = new Map(); // Store tap state for each card
-    
     // Initial setup - remove animation and transition
     pilotCarousel.style.animation = 'none';
     pilotCarousel.style.transition = 'none';
     
-    // Auto-scroll setup - INCREASED SPEED
-    let autoScrollSpeed = 1.5;  // pixels per frame (increased from 0.5)
+    // Auto-scroll setup with increased speed
+    let autoScrollSpeed = 1.5;  // INCREASED: pixels per frame for faster scrolling
     let autoScrollID = null;
     
     // Add necessary styles to carousel and cards
@@ -108,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // If we've scrolled too far, loop back
                 const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
-                // Add a buffer to ensure all cards are shown before resetting
-                const resetPoint = maxScroll - 300; // 300px buffer so all cards show
+                // Add buffer to ensure all cards are shown before resetting
+                const resetPoint = maxScroll - 300; // Adjusted with 300px buffer
                 if (currentTranslate < resetPoint) {
                     currentTranslate = 0;
                 }
@@ -153,7 +149,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function dragStart(e) {
         if (isFlipping) return;
         
-        e.preventDefault();
+        // Prevent default but allow touchstart for double tap detection
+        if (e.type !== 'touchstart') {
+            e.preventDefault();
+        }
         
         // Get start position based on mouse or touch
         startPosition = getPositionX(e);
@@ -234,86 +233,109 @@ document.addEventListener('DOMContentLoaded', function() {
         return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
     }
     
-    // Initialize double-tap state map for each card
-    pilotCards.forEach((card) => {
-        doubleTapStates.set(card, {
-            taps: 0,
-            timer: null
-        });
-    });
-    
-    // Function to handle card flip
-    function flipCard(card, index) {
-        isFlipping = true;
-        const wasFlipped = card.classList.contains('flipped');
-        card.classList.toggle('flipped');
-        
-        // Play sound for DukeGod card
-        if (index === 0 && !wasFlipped && dukegodFlipSound) {
-            dukegodFlipSound.currentTime = 0;
-            dukegodFlipSound.play().catch(e => {
-                console.warn('Failed to play sound:', e);
-            });
-        }
-        
-        // Reset flip state after animation completes
-        setTimeout(() => {
-            isFlipping = false;
-        }, 800); // Match this to your flip animation duration
-    }
-    
-    // Card click/tap handling with double-tap detection for mobile
+    // Card flip functionality with mobile double tap support
     pilotCards.forEach((card, index) => {
-        card.addEventListener('click', function(e) {
-            // If it was a significant drag, ignore the click
-            if (dragDistance >= 5) return;
-            
-            e.stopPropagation();
-            
-            // Check if it's a touch device
-            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            
-            if (isTouchDevice) {
-                // Double-tap handling for mobile
-                const state = doubleTapStates.get(card);
-                state.taps++;
+        // Variables for double tap detection
+        let lastTap = 0;
+        let tapTimeout;
+        
+        // Handle both click and touch events for card flipping
+        const handleCardFlip = function(e) {
+            // Only flip if it wasn't a significant drag
+            if (dragDistance < 5) {
+                isFlipping = true;
+                const wasFlipped = this.classList.contains('flipped');
+                this.classList.toggle('flipped');
                 
-                if (state.taps === 1) {
-                    // First tap - start timer
-                    if (state.timer) clearTimeout(state.timer);
-                    
-                    state.timer = setTimeout(() => {
-                        // Reset if no second tap
-                        state.taps = 0;
-                        state.timer = null;
-                    }, tapTimeThreshold);
-                } else if (state.taps === 2) {
-                    // Second tap - clear timer and flip
-                    clearTimeout(state.timer);
-                    state.taps = 0;
-                    state.timer = null;
-                    
-                    // Flip the card
-                    flipCard(card, index);
+                // Play sound for DukeGod card
+                if (index === 0 && !wasFlipped && dukegodFlipSound) {
+                    dukegodFlipSound.currentTime = 0;
+                    dukegodFlipSound.play().catch(e => {
+                        console.warn('Failed to play sound:', e);
+                    });
                 }
+                
+                // Reset flip state after animation completes
+                setTimeout(() => {
+                    isFlipping = false;
+                }, 800); // Match this to your flip animation duration
+                
+                e.stopPropagation();
+            }
+        };
+        
+        // Mouse click for desktop
+        card.addEventListener('click', handleCardFlip);
+        
+        // Mobile-specific touch handling for double tap
+        card.addEventListener('touchend', function(e) {
+            // Prevent default to avoid unintended behaviors
+            if (dragDistance < 5) {
+                e.preventDefault();
+            }
+            
+            // Return if we were dragging
+            if (dragDistance > 5) return;
+            
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            // Clear any existing tap timeout
+            clearTimeout(tapTimeout);
+            
+            // If tap happened within 300ms of last tap, treat as double tap
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected - flip the card
+                handleCardFlip.call(this, e);
+                
+                // Reset tracking variables
+                lastTap = 0;
             } else {
-                // For desktop, just flip on click
-                flipCard(card, index);
+                // Single tap - wait for possible second tap
+                lastTap = currentTime;
+                
+                // Set timeout to reset if no second tap occurs
+                tapTimeout = setTimeout(function() {
+                    lastTap = 0;
+                }, 300);
             }
         });
     });
     
-    // Add touchend handler specifically for double-tap detection
-    pilotCards.forEach((card, index) => {
-        card.addEventListener('touchend', function(e) {
-            // If it was a significant drag, ignore the tap
-            if (dragDistance >= 5) return;
-            
-            // Double-tap handling managed in the click handler which is also triggered by touchend
+    // Shine effect on cards
+    pilotCards.forEach(card => {
+        const shine = card.querySelector('.pilot-card-shine');
+        if (!shine) return;
+
+        card.addEventListener('mousemove', function(e) {
+            if (card.classList.contains('flipped')) return;
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Calculate positions as percentages
+            const xPercent = x / rect.width * 100;
+            const yPercent = y / rect.height * 100;
+
+            // Set dynamic gradient position
+            shine.style.opacity = '1';
+            shine.style.background = `
+                radial-gradient(
+                    circle at ${xPercent}% ${yPercent}%, 
+                    rgba(255, 255, 255, 0.3) 0%, 
+                    rgba(255, 255, 255, 0.1) 40%, 
+                    rgba(255, 255, 255, 0) 70%
+                )
+            `;
+        });
+
+        card.addEventListener('mouseleave', function() {
+            shine.style.opacity = '0';
         });
     });
     
-    // Dynamic card colors
+    // Dynamic card colors (keep existing functionality)
     function updateCardColors() {
         const positions = ['PRO', 'TECH', 'ROOKIE', 'VETERAN', 'MICRO', 'SPORT', 'JUNIOR', 'RACER BOY'];
         const colors = {
@@ -376,39 +398,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Shine effect on cards
-    pilotCards.forEach(card => {
-        const shine = card.querySelector('.pilot-card-shine');
-        if (!shine) return;
-
-        card.addEventListener('mousemove', function(e) {
-            if (card.classList.contains('flipped')) return;
-
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // Calculate positions as percentages
-            const xPercent = x / rect.width * 100;
-            const yPercent = y / rect.height * 100;
-
-            // Set dynamic gradient position
-            shine.style.opacity = '1';
-            shine.style.background = `
-                radial-gradient(
-                    circle at ${xPercent}% ${yPercent}%, 
-                    rgba(255, 255, 255, 0.3) 0%, 
-                    rgba(255, 255, 255, 0.1) 40%, 
-                    rgba(255, 255, 255, 0) 70%
-                )
-            `;
-        });
-
-        card.addEventListener('mouseleave', function() {
-            shine.style.opacity = '0';
-        });
-    });
-    
     // Update theme colors on theme switch
     const themeButtons = document.querySelectorAll('.theme-btn');
     themeButtons.forEach(button => {
@@ -419,6 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCardColors();
     startAutoScroll();
 });
+
 
 // Drone Animation Handler
 document.addEventListener('DOMContentLoaded', function() {
