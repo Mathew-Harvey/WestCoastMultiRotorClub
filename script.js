@@ -1,90 +1,329 @@
-// Pilot Profiles Section Functionality
+// Helper function to safely add CSS animations
+function safelyAddKeyframeAnimation(animationName, keyframes) {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        @keyframes ${animationName} {
+            ${keyframes}
+        }
+    `;
+    document.head.appendChild(styleElement);
+    return styleElement;
+}
 
-// Pilot Profiles Section Functionality
-document.addEventListener('DOMContentLoaded', function () {
-    // Get all pilot cards
-    const pilotCards = document.querySelectorAll('.pilot-card');
-    const carousel = document.querySelector('.pilot-carousel');
-    
-    // Get the audio element for DukeGod card
-    const dukegodFlipSound = document.getElementById('dukegod-flip-sound');
+// Mobile Navigation Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
 
-    // Toggle flip animation on click
-    pilotCards.forEach((card, index) => {
-        card.addEventListener('click', function () {
-            const wasFlipped = this.classList.contains('flipped');
-            this.classList.toggle('flipped');
-            
-            // Play sound for the first card (DukeGod) when flipping to back
-            if (index === 0 && !wasFlipped && dukegodFlipSound) {
-                // Reset audio to start and play
-                dukegodFlipSound.currentTime = 0;
-                dukegodFlipSound.play().catch(e => {
-                    console.warn('Failed to play sound:', e);
-                });
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.querySelector('i').classList.toggle('fa-bars');
+            hamburger.querySelector('i').classList.toggle('fa-times');
+        });
+    }
+});
+
+// Theme Switcher Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeSwitcher = document.getElementById('theme-switcher');
+
+    if (themeToggle && themeSwitcher) {
+        themeToggle.addEventListener('click', () => {
+            themeSwitcher.classList.toggle('active');
+        });
+    }
+});
+
+// Theme Switcher
+document.addEventListener('DOMContentLoaded', function() {
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const body = document.body;
+
+    themeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const theme = button.dataset.theme;
+            // Remove all theme classes
+            body.classList.remove('theme-cyberpunk', 'theme-minimalist');
+            // Add selected theme class if not default
+            if (theme !== 'default') {
+                body.classList.add(`theme-${theme}`);
+            }
+            // Update active button
+            themeButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            // Close theme switcher
+            const themeSwitcher = document.getElementById('theme-switcher');
+            if (themeSwitcher) {
+                themeSwitcher.classList.remove('active');
             }
         });
     });
+});
 
-    // Pause animation when hovering over carousel
-    carousel.addEventListener('mouseenter', function () {
-        this.style.animationPlayState = 'paused';
+// Complete overhaul of Pilot Carousel functionality - FIXED VERSION
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const pilotCarousel = document.querySelector('.pilot-carousel');
+    const pilotCards = document.querySelectorAll('.pilot-card');
+    const dukegodFlipSound = document.getElementById('dukegod-flip-sound');
+    
+    if (!pilotCarousel || pilotCards.length === 0) return;
+    
+    // State variables
+    let isDragging = false;
+    let startPosition = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let animationID = null;
+    let isFlipping = false; // Track if we're in card flip mode
+    let dragDistance = 0; // Track total drag distance
+    
+    // Initial setup - remove animation and transition
+    pilotCarousel.style.animation = 'none';
+    pilotCarousel.style.transition = 'none';
+    
+    // Auto-scroll setup
+    let autoScrollSpeed = 1.2;  // pixels per frame
+    let autoScrollID = null;
+    
+    // Add necessary styles to carousel and cards
+    pilotCarousel.style.position = 'relative';
+    pilotCarousel.style.userSelect = 'none';
+    pilotCarousel.style.cursor = 'grab';
+    
+    // Function to start auto-scrolling
+    function startAutoScroll() {
+        if (autoScrollID) cancelAnimationFrame(autoScrollID);
+        
+        function scroll() {
+            if (!isDragging) {
+                currentTranslate -= autoScrollSpeed;
+                setCarouselPosition();
+                
+                // If we've scrolled too far, loop back
+                const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
+                if (currentTranslate < maxScroll) {
+                    currentTranslate = 0;
+                }
+            }
+            autoScrollID = requestAnimationFrame(scroll);
+        }
+        
+        autoScrollID = requestAnimationFrame(scroll);
+    }
+    
+    function stopAutoScroll() {
+        if (autoScrollID) {
+            cancelAnimationFrame(autoScrollID);
+            autoScrollID = null;
+        }
+    }
+    
+    // Set the carousel position based on currentTranslate
+    function setCarouselPosition() {
+        pilotCarousel.style.transform = `translateX(${currentTranslate}px)`;
+    }
+    
+    // Mouse events
+    pilotCarousel.addEventListener('mousedown', dragStart);
+    pilotCarousel.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+    
+    // Touch events
+    pilotCarousel.addEventListener('touchstart', dragStart);
+    pilotCarousel.addEventListener('touchmove', drag);
+    pilotCarousel.addEventListener('touchend', dragEnd);
+    pilotCarousel.addEventListener('touchcancel', dragEnd);
+    
+    // Prevent context menu on long press
+    pilotCarousel.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     });
-
-    // Resume animation when mouse leaves carousel
-    carousel.addEventListener('mouseleave', function () {
-        this.style.animationPlayState = 'running';
-
-        // Also unflip all cards when mouse leaves carousel
-        pilotCards.forEach(card => {
-            card.classList.remove('flipped');
+    
+    function dragStart(e) {
+        if (isFlipping) return;
+        
+        e.preventDefault();
+        
+        // Get start position based on mouse or touch
+        startPosition = getPositionX(e);
+        isDragging = true;
+        dragDistance = 0;
+        
+        // Stop auto-scroll during manual drag
+        stopAutoScroll();
+        
+        // Capture current position
+        prevTranslate = currentTranslate;
+        
+        pilotCarousel.style.cursor = 'grabbing';
+        
+        // Start animation loop
+        if (animationID) {
+            cancelAnimationFrame(animationID);
+        }
+        animationID = requestAnimationFrame(animation);
+    }
+    
+    function drag(e) {
+        if (!isDragging) return;
+        
+        const currentPosition = getPositionX(e);
+        const moveDistance = currentPosition - startPosition;
+        dragDistance = Math.abs(moveDistance);
+        
+        // Update current translate based on the drag distance
+        currentTranslate = prevTranslate + moveDistance;
+        
+        // Prevent overscrolling with resistance
+        const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
+        if (currentTranslate > 50) {
+            currentTranslate = 50 + (currentTranslate - 50) * 0.2; // resistance when pulling right
+        } else if (currentTranslate < maxScroll - 50) {
+            currentTranslate = maxScroll - 50 + (currentTranslate - (maxScroll - 50)) * 0.2; // resistance when pulling left
+        }
+    }
+    
+    function dragEnd() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        pilotCarousel.style.cursor = 'grab';
+        
+        // Restore transition for momentum effect
+        pilotCarousel.style.transition = 'transform 0.3s ease-out';
+        
+        // Bounce back if pulled too far
+        const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
+        if (currentTranslate > 0) {
+            currentTranslate = 0;
+        } else if (currentTranslate < maxScroll) {
+            currentTranslate = maxScroll;
+        }
+        
+        setCarouselPosition();
+        
+        // Clear animation frame
+        cancelAnimationFrame(animationID);
+        
+        // After transition, remove it and restart auto-scroll
+        setTimeout(() => {
+            pilotCarousel.style.transition = 'none';
+            startAutoScroll();
+        }, 300);
+    }
+    
+    function animation() {
+        setCarouselPosition();
+        if (isDragging) {
+            animationID = requestAnimationFrame(animation);
+        }
+    }
+    
+    function getPositionX(e) {
+        return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+    }
+    
+    // Card flip functionality
+    pilotCards.forEach((card, index) => {
+        card.addEventListener('click', function(e) {
+            // Only flip if it wasn't a significant drag
+            if (dragDistance < 5) {
+                isFlipping = true;
+                const wasFlipped = this.classList.contains('flipped');
+                this.classList.toggle('flipped');
+                
+                // Play sound for DukeGod card
+                if (index === 0 && !wasFlipped && dukegodFlipSound) {
+                    dukegodFlipSound.currentTime = 0;
+                    dukegodFlipSound.play().catch(e => {
+                        console.warn('Failed to play sound:', e);
+                    });
+                }
+                
+                // Reset flip state after animation completes
+                setTimeout(() => {
+                    isFlipping = false;
+                }, 800); // Match this to your flip animation duration
+                
+                e.stopPropagation();
+            }
         });
     });
+    
+    // Dynamic card colors
+    function updateCardColors() {
+        const positions = ['PRO', 'TECH', 'ROOKIE', 'VETERAN', 'MICRO', 'SPORT', 'JUNIOR', 'RACER BOY'];
+        const colors = {
+            'PRO': '#29a7df',
+            'TECH': '#5d6b77',
+            'ROOKIE': '#4caf50',
+            'VETERAN': '#ff9800',
+            'MICRO': '#e91e63',
+            'SPORT': '#9c27b0',
+            'JUNIOR': '#2196f3',
+            'RACER BOY': '#f44336'
+        };
 
-    // Advanced touch controls for mobile
-    let startX;
-    let isDragging = false;
-    let initialOffset = 0;
-    let currentTranslate = 0;
+        const cyberpunkColors = {
+            'PRO': '#ff00ff',
+            'TECH': '#00ffff',
+            'ROOKIE': '#ffff00',
+            'VETERAN': '#ff8800',
+            'MICRO': '#00ff88',
+            'SPORT': '#ff3366',
+            'JUNIOR': '#00ff99',
+            'RACER BOY': '#66ffff'
+        };
 
-    carousel.addEventListener('touchstart', function (e) {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-        initialOffset = getCurrentTranslate();
+        pilotCards.forEach(card => {
+            const position = card.querySelector('.pilot-card-position')?.textContent;
+            const banner = card.querySelector('.pilot-card-banner');
+            const image = card.querySelector('.pilot-card-image');
 
-        // Pause the animation while dragging
-        carousel.style.animationPlayState = 'paused';
-    });
+            if (position && banner && image) {
+                // Default color if position not in our map
+                let color = '#29a7df';
+                
+                // Find color for this position
+                for (const key in colors) {
+                    if (position.includes(key)) {
+                        color = colors[key];
+                        break;
+                    }
+                }
+                
+                image.style.borderBottomColor = color;
+                banner.style.background = `linear-gradient(135deg, ${color}80 0%, ${color}00 60%)`;
 
-    carousel.addEventListener('touchmove', function (e) {
-        if (!isDragging) return;
-        const currentX = e.touches[0].clientX;
-        const diff = currentX - startX;
-        currentTranslate = initialOffset + diff;
-        carousel.style.transform = `translateX(${currentTranslate}px)`;
-    });
-
-    carousel.addEventListener('touchend', function () {
-        isDragging = false;
-        // Resume the animation after a brief pause
-        setTimeout(() => {
-            carousel.style.transform = '';
-            carousel.style.animationPlayState = 'running';
-        }, 1000);
-    });
-
-    // Helper function to get current translate value
-    function getCurrentTranslate() {
-        const style = window.getComputedStyle(carousel);
-        const matrix = new WebKitCSSMatrix(style.transform);
-        return matrix.m41;
+                if (document.body.classList.contains('theme-cyberpunk')) {
+                    // Find cyberpunk color for this position
+                    let cyberpunkColor = '#ff00ff';
+                    for (const key in cyberpunkColors) {
+                        if (position.includes(key)) {
+                            cyberpunkColor = cyberpunkColors[key];
+                            break;
+                        }
+                    }
+                    
+                    image.style.borderBottomColor = cyberpunkColor;
+                    image.style.boxShadow = `0 0 15px ${cyberpunkColor}`;
+                    banner.style.background = `linear-gradient(135deg, ${cyberpunkColor}80 0%, ${cyberpunkColor}00 60%)`;
+                }
+            }
+        });
     }
-
-    // Add dynamic shine effect on mousemove
+    
+    // Shine effect on cards (keep existing functionality)
     pilotCards.forEach(card => {
         const shine = card.querySelector('.pilot-card-shine');
+        if (!shine) return;
 
-        card.addEventListener('mousemove', function (e) {
+        card.addEventListener('mousemove', function(e) {
             if (card.classList.contains('flipped')) return;
 
             const rect = card.getBoundingClientRect();
@@ -98,109 +337,32 @@ document.addEventListener('DOMContentLoaded', function () {
             // Set dynamic gradient position
             shine.style.opacity = '1';
             shine.style.background = `
-          radial-gradient(
-            circle at ${xPercent}% ${yPercent}%, 
-            rgba(255, 255, 255, 0.3) 0%, 
-            rgba(255, 255, 255, 0.1) 40%, 
-            rgba(255, 255, 255, 0) 70%
-          )
-        `;
+                radial-gradient(
+                    circle at ${xPercent}% ${yPercent}%, 
+                    rgba(255, 255, 255, 0.3) 0%, 
+                    rgba(255, 255, 255, 0.1) 40%, 
+                    rgba(255, 255, 255, 0) 70%
+                )
+            `;
         });
 
-        card.addEventListener('mouseleave', function () {
+        card.addEventListener('mouseleave', function() {
             shine.style.opacity = '0';
         });
     });
-
-    // Dynamic card colors based on position in the carousel
-    function updateCardColors() {
-        const positions = ['PRO', 'TECH', 'ROOKIE', 'VETERAN', 'MICRO'];
-        const colors = {
-            'PRO': '#29a7df',
-            'TECH': '#5d6b77',
-            'ROOKIE': '#4caf50',
-            'VETERAN': '#ff9800',
-            'MICRO': '#e91e63'
-        };
-
-        const cyberpunkColors = {
-            'PRO': '#ff00ff',
-            'TECH': '#00ffff',
-            'ROOKIE': '#ffff00',
-            'VETERAN': '#ff8800',
-            'MICRO': '#00ff88'
-        };
-
-        pilotCards.forEach(card => {
-            const position = card.querySelector('.pilot-card-position').textContent;
-            const banner = card.querySelector('.pilot-card-banner');
-            const image = card.querySelector('.pilot-card-image');
-
-            // Base theme
-            if (position in colors) {
-                image.style.borderBottomColor = colors[position];
-                banner.style.background = `linear-gradient(135deg, ${colors[position]}80 0%, ${colors[position]}00 60%)`;
-
-                // Special style for cyberpunk theme
-                if (document.body.classList.contains('theme-cyberpunk')) {
-                    image.style.borderBottomColor = cyberpunkColors[position];
-                    image.style.boxShadow = `0 0 15px ${cyberpunkColors[position]}`;
-                    banner.style.background = `linear-gradient(135deg, ${cyberpunkColors[position]}80 0%, ${cyberpunkColors[position]}00 60%)`;
-                }
-            }
-        });
-    }
-
-    // Update colors on theme change
+    
+    // Update theme colors on theme switch
     const themeButtons = document.querySelectorAll('.theme-btn');
     themeButtons.forEach(button => {
         button.addEventListener('click', updateCardColors);
     });
-
-    // Initial color update
+    
+    // Initialize
     updateCardColors();
+    startAutoScroll();
 });
 
-
-// Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
-
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburger.querySelector('i').classList.toggle('fa-bars');
-    hamburger.querySelector('i').classList.toggle('fa-times');
-});
-
-// Theme Switcher Toggle
-const themeToggle = document.querySelector('.theme-toggle');
-const themeSwitcher = document.getElementById('theme-switcher');
-
-themeToggle.addEventListener('click', () => {
-    themeSwitcher.classList.toggle('active');
-});
-
-// Theme Switcher
-const themeButtons = document.querySelectorAll('.theme-btn');
-
-themeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const theme = button.dataset.theme;
-        // Remove all theme classes
-        document.body.classList.remove('theme-cyberpunk', 'theme-minimalist');
-        // Add selected theme class if not default
-        if (theme !== 'default') {
-            document.body.classList.add(`theme-${theme}`);
-        }
-        // Update active button
-        themeButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        // Close theme switcher
-        themeSwitcher.classList.remove('active');
-    });
-});
-
-// Drone Animation Handler - FIXED VERSION
+// Drone Animation Handler
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const heroLogoContainer = document.querySelector('.hero-logo-container');
@@ -363,71 +525,75 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Ultra-simplified cursor for maximum performance
-const cursor = document.querySelector('.cursor');
+document.addEventListener('DOMContentLoaded', function() {
+    const cursor = document.querySelector('.cursor');
+    if (!cursor) return;
 
-// Remove existing circles if any
-cursor.innerHTML = '';
+    // Remove existing circles if any
+    cursor.innerHTML = '';
 
-// Create just one center circle and one outer circle (for hover effect only)
-const centerCircle = document.createElement('div');
-centerCircle.className = 'circle center-circle';
-cursor.appendChild(centerCircle);
+    // Create just one center circle
+    const centerCircle = document.createElement('div');
+    centerCircle.className = 'circle center-circle';
+    cursor.appendChild(centerCircle);
 
-// Add option to disable custom cursor
-const cursorToggle = document.createElement('div');
-cursorToggle.className = 'cursor-toggle';
-cursorToggle.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
-cursorToggle.title = "Toggle custom cursor";
-document.body.appendChild(cursorToggle);
+    // Add option to disable custom cursor
+    const cursorToggle = document.createElement('div');
+    cursorToggle.className = 'cursor-toggle';
+    cursorToggle.innerHTML = '<i class="fas fa-mouse-pointer"></i>';
+    cursorToggle.title = "Toggle custom cursor";
+    document.body.appendChild(cursorToggle);
 
-let cursorEnabled = true;
+    let cursorEnabled = true;
 
-cursorToggle.addEventListener('click', () => {
-    cursorEnabled = !cursorEnabled;
-    if (cursorEnabled) {
-        document.body.style.cursor = 'none';
-        cursor.style.display = 'block';
-    } else {
-        document.body.style.cursor = 'auto';
-        cursor.style.display = 'none';
-    }
-    cursorToggle.classList.toggle('cursor-disabled');
-});
-
-if (window.matchMedia('(hover: hover)').matches) {
-    document.body.style.cursor = 'none';
-    
-    // Use requestAnimationFrame for optimal performance
-    let mouseX = 0;
-    let mouseY = 0;
-    
-    document.addEventListener('mousemove', e => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    // Separate the render from the event for better performance
-    function updateCursor() {
+    cursorToggle.addEventListener('click', () => {
+        cursorEnabled = !cursorEnabled;
         if (cursorEnabled) {
-            cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+            document.body.style.cursor = 'none';
+            cursor.style.display = 'block';
+        } else {
+            document.body.style.cursor = 'auto';
+            cursor.style.display = 'none';
         }
-        requestAnimationFrame(updateCursor);
-    }
-    requestAnimationFrame(updateCursor);
-    
-    // Interactive elements hover state - simplified
-    const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            if (cursorEnabled) centerCircle.classList.add('active');
+        cursorToggle.classList.toggle('cursor-disabled');
+    });
+
+    if (window.matchMedia('(hover: hover)').matches) {
+        document.body.style.cursor = 'none';
+        
+        // Use requestAnimationFrame for optimal performance
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
         
-        el.addEventListener('mouseleave', () => {
-            if (cursorEnabled) centerCircle.classList.remove('active');
+        // Separate the render from the event for better performance
+        function updateCursor() {
+            if (cursorEnabled) {
+                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+            }
+            requestAnimationFrame(updateCursor);
+        }
+        requestAnimationFrame(updateCursor);
+        
+        // Interactive elements hover state - simplified
+        const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (cursorEnabled) centerCircle.classList.add('active');
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                if (cursorEnabled) centerCircle.classList.remove('active');
+            });
         });
-    });
-}
-// Smooth Scroll for Navigation Links - FIXED VERSION
+    }
+});
+
+// Smooth Scroll for Navigation Links
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     
@@ -463,103 +629,123 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Scroll Animation for fade-in elements
-const fadeElements = document.querySelectorAll('.fade-in');
-const fadeInOnScroll = () => {
-    const triggerBottom = window.innerHeight * 0.85;
-    fadeElements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        if (elementTop < triggerBottom) {
-            element.classList.add('active');
-        }
-    });
-};
-
-// Back to top button
-const backToTopButton = document.querySelector('.back-to-top');
-const toggleBackToTopButton = () => {
-    if (window.scrollY > 300) {
-        backToTopButton.classList.add('active');
-    } else {
-        backToTopButton.classList.remove('active');
-    }
-};
-
-backToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const fadeElements = document.querySelectorAll('.fade-in');
+    
+    const fadeInOnScroll = () => {
+        const triggerBottom = window.innerHeight * 0.85;
+        fadeElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            if (elementTop < triggerBottom) {
+                element.classList.add('active');
+            }
+        });
+    };
+    
+    window.addEventListener('scroll', fadeInOnScroll);
+    // Initial check
+    fadeInOnScroll();
 });
 
-window.addEventListener('scroll', fadeInOnScroll);
-window.addEventListener('scroll', toggleBackToTopButton);
-fadeInOnScroll();
-toggleBackToTopButton();
-
-// Sponsors Carousel Initialization
+// Back to top button
 document.addEventListener('DOMContentLoaded', function() {
+    const backToTopButton = document.querySelector('.back-to-top');
+    if (!backToTopButton) return;
+    
+    const toggleBackToTopButton = () => {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add('active');
+        } else {
+            backToTopButton.classList.remove('active');
+        }
+    };
+    
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    window.addEventListener('scroll', toggleBackToTopButton);
+    // Initial check
+    toggleBackToTopButton();
+});
+
+// Fixed Sponsors Carousel Initialization
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Initializing Sponsors Carousel");
     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
     
     if (sponsorsCarousel) {
-      // Get all original sponsor items (non-clones)
-      const sponsorItems = Array.from(sponsorsCarousel.querySelectorAll('.sponsor-item:not(.clone)'));
-      
-      // Clear existing clones
-      const existingClones = sponsorsCarousel.querySelectorAll('.sponsor-item.clone');
-      existingClones.forEach(clone => clone.remove());
-      
-      // Create clones for seamless looping
-      sponsorItems.forEach(item => {
-        const clone = item.cloneNode(true);
-        clone.classList.add('clone');
-        sponsorsCarousel.appendChild(clone);
-      });
-      
-      // Calculate animation duration based on number of sponsors
-      const scrollDuration = Math.max(30, sponsorItems.length * 5); // Min 30s, 5s per sponsor
-      sponsorsCarousel.style.animationDuration = `${scrollDuration}s`;
-      
-      // Adjust the animation end position based on the content width
-      const totalWidth = sponsorItems.reduce((width, item) => {
-        const itemWidth = item.offsetWidth;
-        const itemStyle = window.getComputedStyle(item);
-        const itemMargin = parseInt(itemStyle.marginLeft) + parseInt(itemStyle.marginRight);
-        return width + itemWidth + itemMargin;
-      }, 0);
-      
-      // Update the keyframes for the animation
-      document.styleSheets[0].insertRule(
-        `@keyframes sponsorsScroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-${totalWidth}px); }
-        }`,
-        document.styleSheets[0].cssRules.length
-      );
+        // Get all original sponsor items (non-clones)
+        const sponsorItems = Array.from(sponsorsCarousel.querySelectorAll('.sponsor-item:not(.clone)'));
+        console.log(`Found ${sponsorItems.length} sponsor items`);
+        
+        // Clear existing clones
+        const existingClones = sponsorsCarousel.querySelectorAll('.sponsor-item.clone');
+        existingClones.forEach(clone => clone.remove());
+        console.log(`Removed ${existingClones.length} existing clones`);
+        
+        // Create clones for seamless looping
+        sponsorItems.forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.classList.add('clone');
+            sponsorsCarousel.appendChild(clone);
+        });
+        console.log(`Added ${sponsorItems.length} new clones`);
+        
+        // Calculate animation duration based on number of sponsors
+        const scrollDuration = Math.max(30, sponsorItems.length * 5); // Min 30s, 5s per sponsor
+        sponsorsCarousel.style.animationDuration = `${scrollDuration}s`;
+        console.log(`Set animation duration to ${scrollDuration}s`);
+        
+        // Calculate the total width
+        const totalWidth = sponsorItems.reduce((width, item) => {
+            const itemWidth = item.offsetWidth;
+            const itemStyle = window.getComputedStyle(item);
+            const itemMargin = parseInt(itemStyle.marginLeft) + parseInt(itemStyle.marginRight);
+            return width + itemWidth + itemMargin;
+        }, 0);
+        console.log(`Calculated total sponsor items width: ${totalWidth}px`);
+        
+        // Add animation via style element instead of modifying stylesheet directly
+        safelyAddKeyframeAnimation('sponsorsScroll', `
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-${totalWidth}px); }
+        `);
+    } else {
+        console.warn("Sponsors carousel element not found");
     }
     
     // Add hover effect to sponsor tier logos
     const sponsorTierLogos = document.querySelectorAll('.sponsor-tier-logo');
-    sponsorTierLogos.forEach(logo => {
-      logo.addEventListener('mouseenter', function() {
-        const img = this.querySelector('img');
-        if (img) {
-          img.style.filter = 'grayscale(0%)';
-          img.style.opacity = '1';
-        }
-      });
-      
-      logo.addEventListener('mouseleave', function() {
-        const img = this.querySelector('img');
-        if (img) {
-          img.style.filter = 'grayscale(100%)';
-          img.style.opacity = '0.8';
-        }
-      });
-    });
-  });
+    if (sponsorTierLogos.length > 0) {
+        console.log(`Found ${sponsorTierLogos.length} sponsor tier logos`);
+        sponsorTierLogos.forEach(logo => {
+            logo.addEventListener('mouseenter', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.filter = 'grayscale(0%)';
+                    img.style.opacity = '1';
+                }
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.filter = 'grayscale(100%)';
+                    img.style.opacity = '0.8';
+                }
+            });
+        });
+    }
+});
 
 // Event Calendar Functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("Initializing Event Calendar");
+    
     // Define event data (make sure this is at the top level of your events code)
     const eventData = [
         {
@@ -648,6 +834,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image: "./assets/drone6.jpg"
         }
     ];
+    console.log(`Loaded ${eventData.length} events`);
 
     // Calendar elements
     const prevMonthBtn = document.getElementById('prevMonth');
@@ -655,32 +842,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentMonthYearElement = document.getElementById('currentMonthYear');
     const calendarDaysElement = document.getElementById('calendarDays');
     const upcomingEventsListElement = document.getElementById('upcomingEventsList');
+    
+    if (!calendarDaysElement) {
+        console.warn("Calendar days element not found");
+        return;
+    }
 
     // Current date tracking
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
+    console.log(`Initial calendar month/year: ${currentMonth + 1}/${currentYear}`);
 
     // Month navigation
-    prevMonthBtn.addEventListener('click', () => {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
-    });
+    if (prevMonthBtn) {
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            console.log(`Calendar navigated to: ${currentMonth + 1}/${currentYear}`);
+            renderCalendar();
+        });
+    }
 
-    nextMonthBtn.addEventListener('click', () => {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar();
-    });
+    if (nextMonthBtn) {
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            console.log(`Calendar navigated to: ${currentMonth + 1}/${currentYear}`);
+            renderCalendar();
+        });
+    }
 
     function renderCalendar() {
+        if (!calendarDaysElement || !currentMonthYearElement) {
+            console.warn("Required calendar elements not found");
+            return;
+        }
+        
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                           'July', 'August', 'September', 'October', 'November', 'December'];
         
@@ -693,6 +897,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate first day and days in month
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        console.log(`Rendering calendar: ${monthNames[currentMonth]} ${currentYear}, first day ${firstDay}, days in month ${daysInMonth}`);
         
         // Add empty cells for days before first of month
         for (let i = 0; i < firstDay; i++) {
@@ -724,6 +929,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add event indicators and handlers
             if (dayEvents.length > 0) {
                 dayElement.classList.add('has-events');
+                console.log(`Day ${day} has ${dayEvents.length} events`);
                 
                 // Create tooltip
                 const tooltip = document.createElement('div');
@@ -741,6 +947,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Add click handler
                 dayElement.addEventListener('click', () => {
+                    console.log(`Clicked on day ${day} with events`);
                     showEventsForDate(checkDate);
                 });
             }
@@ -751,6 +958,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentMonth === today.getMonth() && 
                 currentYear === today.getFullYear()) {
                 dayElement.classList.add('today');
+                console.log(`Marked day ${day} as today`);
             }
             
             calendarDaysElement.appendChild(dayElement);
@@ -763,8 +971,15 @@ document.addEventListener('DOMContentLoaded', function() {
         showUpcomingEvents();
     }
 
-    // This is the updated showEventsForDate function
+    // Function to show events for a specific date
     function showEventsForDate(date) {
+        if (!upcomingEventsListElement) {
+            console.warn("Upcoming events list element not found");
+            return;
+        }
+        
+        console.log(`Showing events for date: ${date.toDateString()}`);
+        
         const dayEvents = eventData.filter(event => {
             const eventDate = new Date(event.date);
             return eventDate.getDate() === date.getDate() && 
@@ -772,7 +987,6 @@ document.addEventListener('DOMContentLoaded', function() {
                    eventDate.getFullYear() === date.getFullYear();
         });
         
-        const upcomingEventsListElement = document.getElementById('upcomingEventsList');
         upcomingEventsListElement.innerHTML = '';
         
         // Update the section title to show selected date
@@ -787,10 +1001,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (dayEvents.length === 0) {
+            console.log(`No events found for ${date.toDateString()}`);
             upcomingEventsListElement.innerHTML = '<div class="no-events">No events scheduled for this date</div>';
             return;
         }
         
+        console.log(`Found ${dayEvents.length} events for ${date.toDateString()}`);
         const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         
         dayEvents.forEach(event => {
@@ -845,13 +1061,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // This is the updated showUpcomingEvents function
+    // Function to show upcoming events
     function showUpcomingEvents() {
-        const upcomingEventsListElement = document.getElementById('upcomingEventsList');
         if (!upcomingEventsListElement) {
-            console.error('Could not find upcomingEventsList element');
+            console.warn("Upcoming events list element not found");
             return;
         }
+        
+        console.log("Showing upcoming events");
         
         // Reset the section title
         const eventsTitle = document.getElementById('eventsTitle');
@@ -860,7 +1077,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const today = new Date();
-        
         upcomingEventsListElement.innerHTML = '';
         
         const upcomingEvents = eventData
@@ -869,10 +1085,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .slice(0, 5);
         
         if (upcomingEvents.length === 0) {
+            console.log("No upcoming events found");
             upcomingEventsListElement.innerHTML = '<div class="no-events">No upcoming events scheduled</div>';
             return;
         }
         
+        console.log(`Found ${upcomingEvents.length} upcoming events`);
         const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         
         upcomingEvents.forEach(event => {
@@ -927,7 +1145,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add this to your existing calendar day click handler
+    // This is the function to add day click handlers
     function addDayClickHandlers() {
         const calendarDays = document.querySelectorAll('.calendar-day');
         calendarDays.forEach(day => {
@@ -946,8 +1164,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewAllEventsBtn) {
         viewAllEventsBtn.href = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         viewAllEventsBtn.target = "_blank";
+        console.log("Updated VIEW ALL EVENTS button link");
     }
 
     // Initialize calendar when the page loads
-    renderCalendar();
+    if (calendarDaysElement) {
+        console.log("Initializing calendar");
+        renderCalendar();
+    }
 });
