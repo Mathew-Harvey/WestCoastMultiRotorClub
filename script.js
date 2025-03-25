@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Complete overhaul of Pilot Carousel functionality - FIXED VERSION
+// Complete Pilot Carousel functionality with double-tap for mobile
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const pilotCarousel = document.querySelector('.pilot-carousel');
@@ -80,12 +80,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let isFlipping = false; // Track if we're in card flip mode
     let dragDistance = 0; // Track total drag distance
     
+    // Double-tap detection variables
+    const tapTimeThreshold = 300; // milliseconds between taps to consider it a double-tap
+    const doubleTapStates = new Map(); // Store tap state for each card
+    
     // Initial setup - remove animation and transition
     pilotCarousel.style.animation = 'none';
     pilotCarousel.style.transition = 'none';
     
-    // Auto-scroll setup
-    let autoScrollSpeed = 1.2;  // pixels per frame
+    // Auto-scroll setup - INCREASED SPEED
+    let autoScrollSpeed = 1.5;  // pixels per frame (increased from 0.5)
     let autoScrollID = null;
     
     // Add necessary styles to carousel and cards
@@ -104,7 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // If we've scrolled too far, loop back
                 const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
-                if (currentTranslate < maxScroll) {
+                // Add a buffer to ensure all cards are shown before resetting
+                const resetPoint = maxScroll - 300; // 300px buffer so all cards show
+                if (currentTranslate < resetPoint) {
                     currentTranslate = 0;
                 }
             }
@@ -228,30 +234,82 @@ document.addEventListener('DOMContentLoaded', function() {
         return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
     }
     
-    // Card flip functionality
+    // Initialize double-tap state map for each card
+    pilotCards.forEach((card) => {
+        doubleTapStates.set(card, {
+            taps: 0,
+            timer: null
+        });
+    });
+    
+    // Function to handle card flip
+    function flipCard(card, index) {
+        isFlipping = true;
+        const wasFlipped = card.classList.contains('flipped');
+        card.classList.toggle('flipped');
+        
+        // Play sound for DukeGod card
+        if (index === 0 && !wasFlipped && dukegodFlipSound) {
+            dukegodFlipSound.currentTime = 0;
+            dukegodFlipSound.play().catch(e => {
+                console.warn('Failed to play sound:', e);
+            });
+        }
+        
+        // Reset flip state after animation completes
+        setTimeout(() => {
+            isFlipping = false;
+        }, 800); // Match this to your flip animation duration
+    }
+    
+    // Card click/tap handling with double-tap detection for mobile
     pilotCards.forEach((card, index) => {
         card.addEventListener('click', function(e) {
-            // Only flip if it wasn't a significant drag
-            if (dragDistance < 5) {
-                isFlipping = true;
-                const wasFlipped = this.classList.contains('flipped');
-                this.classList.toggle('flipped');
+            // If it was a significant drag, ignore the click
+            if (dragDistance >= 5) return;
+            
+            e.stopPropagation();
+            
+            // Check if it's a touch device
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            if (isTouchDevice) {
+                // Double-tap handling for mobile
+                const state = doubleTapStates.get(card);
+                state.taps++;
                 
-                // Play sound for DukeGod card
-                if (index === 0 && !wasFlipped && dukegodFlipSound) {
-                    dukegodFlipSound.currentTime = 0;
-                    dukegodFlipSound.play().catch(e => {
-                        console.warn('Failed to play sound:', e);
-                    });
+                if (state.taps === 1) {
+                    // First tap - start timer
+                    if (state.timer) clearTimeout(state.timer);
+                    
+                    state.timer = setTimeout(() => {
+                        // Reset if no second tap
+                        state.taps = 0;
+                        state.timer = null;
+                    }, tapTimeThreshold);
+                } else if (state.taps === 2) {
+                    // Second tap - clear timer and flip
+                    clearTimeout(state.timer);
+                    state.taps = 0;
+                    state.timer = null;
+                    
+                    // Flip the card
+                    flipCard(card, index);
                 }
-                
-                // Reset flip state after animation completes
-                setTimeout(() => {
-                    isFlipping = false;
-                }, 800); // Match this to your flip animation duration
-                
-                e.stopPropagation();
+            } else {
+                // For desktop, just flip on click
+                flipCard(card, index);
             }
+        });
+    });
+    
+    // Add touchend handler specifically for double-tap detection
+    pilotCards.forEach((card, index) => {
+        card.addEventListener('touchend', function(e) {
+            // If it was a significant drag, ignore the tap
+            if (dragDistance >= 5) return;
+            
+            // Double-tap handling managed in the click handler which is also triggered by touchend
         });
     });
     
@@ -318,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Shine effect on cards (keep existing functionality)
+    // Shine effect on cards
     pilotCards.forEach(card => {
         const shine = card.querySelector('.pilot-card-shine');
         if (!shine) return;
