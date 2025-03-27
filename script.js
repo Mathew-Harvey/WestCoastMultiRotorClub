@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     pilotCarousel.style.transition = 'none';
     
     // Auto-scroll setup (lower = slower)
-    let autoScrollSpeed = 0.8;
+    let autoScrollSpeed = 1.5;
     let autoScrollID = null;
     
     // Add necessary styles to carousel and cards
@@ -93,14 +93,38 @@ document.addEventListener('DOMContentLoaded', function() {
     pilotCarousel.style.userSelect = 'none';
     pilotCarousel.style.cursor = 'grab';
     
-    // Get container and calculate dimensions
-    const pilotCarouselContainer = document.querySelector('.pilot-carousel-container');
-    const containerWidth = pilotCarouselContainer.clientWidth;
+    // Function to ensure the carousel has enough clones
+    function ensureEnoughClones() {
+        // Get original and clone cards
+        const originalCards = Array.from(pilotCards).filter(card => !card.classList.contains('clone'));
+        const cloneCards = Array.from(pilotCards).filter(card => card.classList.contains('clone'));
+        
+        // For each original card, ensure at least one clone exists
+        originalCards.forEach((card, index) => {
+            const clone = card.cloneNode(true);
+            clone.classList.add('clone');
+            pilotCarousel.appendChild(clone);
+        });
+        
+        // Add extra clones to ensure smooth looping
+        originalCards.forEach((card, index) => {
+            if (index < 5) { // Add a few more clones for good measure
+                const extraClone = card.cloneNode(true);
+                extraClone.classList.add('clone');
+                extraClone.classList.add('extra-clone');
+                pilotCarousel.appendChild(extraClone);
+            }
+        });
+        
+        console.log(`Carousel setup: ${originalCards.length} original cards, ${document.querySelectorAll('.pilot-card.clone').length} total clones`);
+    }
     
-    // Remove any existing padding to avoid visual gaps
-    pilotCarousel.style.padding = '0';
+    // Call this before making other adjustments
+    ensureEnoughClones();
     
-    // Calculate scrollable width based on actual total card width
+    // Get updated carousel measurements
+    const cardWidth = pilotCards[0].offsetWidth;
+    const cardGap = 30; // From CSS gap property
     const carouselWidth = pilotCarousel.scrollWidth;
     const windowWidth = window.innerWidth;
     
@@ -113,14 +137,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Decrement the position based on speed
                 currentTranslate -= autoScrollSpeed;
                 
-                // Calculate maximum scroll point with additional buffer
-                // to ensure the last cards are fully visible before reset
-                const maxScroll = -(pilotCarousel.scrollWidth - windowWidth);
-                // Add significant buffer to ensure ALL cards are shown (including clones)
-                const resetPoint = maxScroll - 1000; // Big buffer to ensure all cards are visible
+                // Calculate the necessary values for complete carousel looping
+                const carouselFullWidth = pilotCarousel.scrollWidth;
+                const viewportWidth = window.innerWidth;
                 
-                // Reset when we've scrolled past all the original cards
+                // Get the number of original cards (non-clones)
+                const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
+                const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
+                
+                // Determine reset point - this ensures ALL original cards are shown
+                // before resetting, including the last 3 pilots
+                const resetPoint = -(originalCardsWidth + cardWidth * 10); // Add extra space for the last 3 cards
+                
+                // Reset when we've scrolled far enough to see all original cards
                 if (currentTranslate < resetPoint) {
+                    console.log("Carousel reset - all cards have been shown");
                     // Reset to starting position
                     currentTranslate = 0;
                 }
@@ -201,11 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update current translate based on the drag distance
         currentTranslate = prevTranslate + moveDistance;
         
-        // Get the actual width of the carousel content
-        const carouselScrollWidth = pilotCarousel.scrollWidth;
-        
-        // **IMPORTANT**: Allow free scrolling without resistance during drag
-        // This ensures smooth manual scrolling without the rubber-band effect
+        // Allow completely free scrolling without resistance for a better experience
     }
     
     function dragEnd() {
@@ -217,20 +244,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Restore transition for smooth end effect
         pilotCarousel.style.transition = 'transform 0.3s ease-out';
         
-        // Calculate visible width and scrollable width
-        const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
-        
-        // Instead of bouncing back, allow free scrolling past limits
-        // This is the key fix for the rubber-banding issue
+        // Get original cards
+        const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
+        const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
         
         // When scrolling past the start (right edge)
-        if (currentTranslate > window.innerWidth / 2) {
-            // Jump to the end of the carousel
-            currentTranslate = maxScroll;
+        if (currentTranslate > cardWidth) {
+            // Jump to the end of the carousel minus one viewport width
+            // This creates a smooth circular scrolling effect
+            currentTranslate = -originalCardsWidth + window.innerWidth/2;
         }
         // When scrolling past the end (left edge)
-        else if (currentTranslate < maxScroll - window.innerWidth / 2) {
-            // Jump to the start of the carousel
+        else if (currentTranslate < -originalCardsWidth - cardWidth) {
+            // Jump to near the start of the carousel
             currentTranslate = 0;
         }
         
@@ -428,31 +454,6 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', updateCardColors);
     });
     
-    // Function to ensure the carousel has enough clones
-    function ensureEnoughClones() {
-        // Get original and clone cards
-        const originalCards = Array.from(pilotCards).filter(card => !card.classList.contains('clone'));
-        const cloneCards = Array.from(pilotCards).filter(card => card.classList.contains('clone'));
-        
-        // If we don't have enough clones, add more
-        if (cloneCards.length < originalCards.length) {
-            console.log("Adding more clones to ensure full carousel");
-            
-            // Delete existing clones first to avoid duplication
-            cloneCards.forEach(clone => clone.remove());
-            
-            // Add new clones
-            originalCards.forEach(card => {
-                const clone = card.cloneNode(true);
-                clone.classList.add('clone');
-                pilotCarousel.appendChild(clone);
-            });
-        }
-    }
-    
-    // Ensure we have enough clones
-    ensureEnoughClones();
-    
     // Add CSS fix for the carousel
     const styleElement = document.createElement('style');
     styleElement.textContent = `
@@ -461,18 +462,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         .pilot-carousel {
             gap: 30px;
-            padding: 0 15px;
+            padding: 0 30px;
         }
     `;
     document.head.appendChild(styleElement);
     
     // Handle window resize
     window.addEventListener('resize', function() {
-        // Recalculate dimensions
-        const maxScroll = -(pilotCarousel.scrollWidth - window.innerWidth);
+        // Recalculate dimensions on window resize
+        const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
+        const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
         
         // If we're scrolled too far, reset
-        if (currentTranslate < maxScroll) {
+        if (currentTranslate < -originalCardsWidth - cardWidth) {
             currentTranslate = 0;
             setCarouselPosition();
         }
