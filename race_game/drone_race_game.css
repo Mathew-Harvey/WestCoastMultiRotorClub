@@ -1,0 +1,163 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a, #333);
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1, h2 {
+    color: #fff;
+  }
+  
+  p {
+    color: #ccc;
+    text-align: center;
+  }
+  
+  /* Game UI Container */
+  .game-ui {
+    display: flex;
+    justify-content: space-around;
+    width: 800px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  
+  .game-ui div {
+    flex: 1;
+    text-align: center;
+  }
+  
+  /* Game Container & Canvas */
+  #game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin-bottom: 20px;
+    border: 2px solid #444;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+  
+  #gameCanvas {
+    display: block;
+    background: #0d0d0d;
+  }
+  
+  /* Overlays (Start, Pause, Message) */
+  .overlay, #message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 800px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: opacity 0.5s ease;
+    z-index: 20;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.85);
+  }
+  
+  .overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .overlay:not(.visible) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  #message-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  #message-overlay.visible {
+    opacity: 1;
+  }
+  
+  /* Button Styles */
+  button {
+    background: #00bcd4;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+  
+  /* Lap Times Display */
+  .lap-times-container {
+    width: 800px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+  
+  .lap-times-container h2 {
+    margin: 0 0 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+  }
+  
+  #lap-times-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  
+  #lap-times-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #444;
+    font-size: 1em;
+    color: #ddd;
+  }
+  
+  #lap-times-list li:last-child {
+    border-bottom: none;
+  }
+  
+  #lap-times-list .lap-number {
+    display: inline-block;
+    width: 80px;
+    font-weight: 500;
+    color: #00bcd4;
+  }
+  
+  /* UI Specifics */
+  #target-gate-indicator {
+    font-weight: bold;
+    color: #ff4081;
+  }
+  
