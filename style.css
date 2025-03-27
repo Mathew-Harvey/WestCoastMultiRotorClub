@@ -2407,7 +2407,7 @@ footer::after {
 
 /* Animation Settings */
 .pilot-carousel {
-    animation: carouselScroll 16s linear infinite;
+    animation: carouselScroll 50s linear infinite;
 }
 
 /* Clone cards for seamless animation */
