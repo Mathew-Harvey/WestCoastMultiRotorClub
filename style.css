@@ -2410,6 +2410,15 @@ footer::after {
     animation: carouselScroll 50s linear infinite;
 }
 
+/* Add a utility class that disables all animations for JavaScript-controlled carousels */
+.js-controlled {
+    animation: none !important;
+    -webkit-animation: none !important;
+    animation-play-state: paused !important;
+    -webkit-animation-play-state: paused !important;
+    transition: transform 0.3s ease-out;
+}
+
 /* Clone cards for seamless animation */
 .pilot-card.clone {
     opacity: 0.999;

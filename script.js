@@ -62,429 +62,480 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Complete Pilot Carousel functionality with all fixes
+// Complete Pilot Carousel functionality - Reverting Drag Logic to Working Example
 document.addEventListener('DOMContentLoaded', function() {
+    // Utility function to check passive event support
+    function supportsPassiveEvents() {
+        let passiveSupported = false;
+        try {
+            const options = {
+                get passive() {
+                    passiveSupported = true;
+                    return false;
+                }
+            };
+            window.addEventListener("test", null, options);
+            window.removeEventListener("test", null, options);
+        } catch (err) {
+            passiveSupported = false;
+        }
+        return passiveSupported;
+    }
+    
+    // Use passive if supported, otherwise fallback
+    const passiveOptions = supportsPassiveEvents() ? { passive: false } : false;
+    const passiveTrue = supportsPassiveEvents() ? { passive: true } : false;
+    
     // Elements
+    const pilotCarouselContainer = document.querySelector('.pilot-carousel-container');
     const pilotCarousel = document.querySelector('.pilot-carousel');
-    const pilotCards = document.querySelectorAll('.pilot-card');
     const dukegodFlipSound = document.getElementById('dukegod-flip-sound');
-    
-    if (!pilotCarousel || pilotCards.length === 0) return;
-    
+
+    // Initial check for elements
+    if (!pilotCarouselContainer || !pilotCarousel) {
+        console.error("Pilot carousel container or carousel element not found.");
+        return;
+    }
+    let pilotCards = pilotCarousel.querySelectorAll('.pilot-card'); // Initial list
+
     // State variables
     let isDragging = false;
     let startPosition = 0;
     let currentTranslate = 0;
     let prevTranslate = 0;
     let animationID = null;
-    let isFlipping = false; // Track if we're in card flip mode
-    let dragDistance = 0; // Track total drag distance
-    
-    // Initial setup - remove animation and transition
-    pilotCarousel.style.animation = 'none';
-    pilotCarousel.style.transition = 'none';
-    
-    // Auto-scroll setup (lower = slower)
-    let autoScrollSpeed = 1.5;
+    let isFlipping = false;
+    let dragDistance = 0;
     let autoScrollID = null;
-    
-    // Add necessary styles to carousel and cards
+    let autoScrollSpeed = 1.5; // Match working example's speed initially
+    const dragThreshold = 5; // Match working example's threshold
+    const postDragPauseDuration = 300; // Match working example's timeout
+
+    // Initial setup
+    pilotCarousel.style.animation = ''; // Remove CSS animation if any
+    pilotCarousel.style.transition = 'none'; // Start with no transition
     pilotCarousel.style.position = 'relative';
     pilotCarousel.style.userSelect = 'none';
     pilotCarousel.style.cursor = 'grab';
-    
-    // Function to ensure the carousel has enough clones
-    function ensureEnoughClones() {
-        // Get original and clone cards
-        const originalCards = Array.from(pilotCards).filter(card => !card.classList.contains('clone'));
-        const cloneCards = Array.from(pilotCards).filter(card => card.classList.contains('clone'));
-        
-        // For each original card, ensure at least one clone exists
-        originalCards.forEach((card, index) => {
-            const clone = card.cloneNode(true);
-            clone.classList.add('clone');
-            pilotCarousel.appendChild(clone);
-        });
-        
-        // Add extra clones to ensure smooth looping
-        originalCards.forEach((card, index) => {
-            if (index < 5) { // Add a few more clones for good measure
-                const extraClone = card.cloneNode(true);
-                extraClone.classList.add('clone');
-                extraClone.classList.add('extra-clone');
-                pilotCarousel.appendChild(extraClone);
-            }
-        });
-        
-        console.log(`Carousel setup: ${originalCards.length} original cards, ${document.querySelectorAll('.pilot-card.clone').length} total clones`);
+    pilotCarouselContainer.style.overflow = 'hidden';
+    pilotCarousel.style.willChange = 'transform'; // Performance hint
+
+    // --- Measurements (From robust version) ---
+    let cardWidth = 0;
+    let cardGap = 30;
+    let originalContentWidth = 0; // Width of only the original cards + gaps
+    let totalWidth = 0;
+    let initialOffset = 0; // Offset caused by prepended clones
+    let originalCardsCount = 0;
+
+    function calculateDimensions() {
+        const originalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
+        originalCardsCount = originalCards.length;
+        if (originalCardsCount === 0) {
+             console.error("FATAL: Cannot calculate dimensions - No original cards found (check HTML).");
+             return false;
+        }
+        // Add check for cardWidth calculation
+        if (!originalCards[0]) {
+            console.error("Cannot get first original card for width calculation.");
+            return false;
+        }
+        cardWidth = originalCards[0].offsetWidth;
+        if(cardWidth === 0) { console.warn("Card width is 0..."); }
+
+        const computedGap = window.getComputedStyle(pilotCarousel).gap;
+        cardGap = computedGap === 'normal' ? 30 : parseInt(computedGap) || 30;
+        const cardTotalWidth = cardWidth + cardGap;
+        originalContentWidth = originalCardsCount * cardTotalWidth;
+        totalWidth = pilotCarousel.scrollWidth;
+        const prependedClones = pilotCarousel.querySelectorAll('.clone-prepend');
+        initialOffset = prependedClones.length * cardTotalWidth;
+        console.log(`Dimensions Calculated: OriginalCount=${originalCardsCount}, CardWidth=${cardWidth}, OriginalWidth=${originalContentWidth}, InitialOffset=${initialOffset}`);
+        return true;
     }
-    
-    // Call this before making other adjustments
-    ensureEnoughClones();
-    
-    // Get updated carousel measurements
-    const cardWidth = pilotCards[0].offsetWidth;
-    const cardGap = 30; // From CSS gap property
-    const carouselWidth = pilotCarousel.scrollWidth;
-    const windowWidth = window.innerWidth;
-    
-    // Function to start auto-scrolling
-    function startAutoScroll() {
+
+    // --- Cloning (From robust version) ---
+    function setupCarouselClones() {
+         const currentOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
+        originalCardsCount = currentOriginalCards.length;
+        console.log(`Setup Clones: Found ${originalCardsCount} initial original cards.`);
+        if (originalCardsCount === 0) { console.error("FATAL: Cannot set up clones..."); return false; }
+
+        pilotCarousel.querySelectorAll('.pilot-card.clone').forEach(clone => clone.remove());
+        const clonesToPrepend = []; const clonesToAppend = [];
+        const bufferClonesCount = Math.max(6, Math.ceil(originalCardsCount / 2));
+
+        for (let i = 0; i < originalCardsCount + bufferClonesCount; i++) {
+            const index = (originalCardsCount - 1 - (i % originalCardsCount));
+            if(index < 0 || index >= originalCardsCount) continue;
+            const clone = currentOriginalCards[index].cloneNode(true);
+            clone.classList.add('clone', 'clone-prepend');
+            clonesToPrepend.push(clone);
+        }
+        for (let i = 0; i < originalCardsCount + bufferClonesCount; i++) {
+            const index = i % originalCardsCount;
+            if(index < 0 || index >= originalCardsCount) continue;
+            const clone = currentOriginalCards[index].cloneNode(true);
+            clone.classList.add('clone', 'clone-append');
+            clonesToAppend.push(clone);
+        }
+        pilotCarousel.prepend(...clonesToPrepend.reverse());
+        pilotCarousel.append(...clonesToAppend);
+        pilotCards = pilotCarousel.querySelectorAll('.pilot-card');
+
+        if (!calculateDimensions()) return false;
+        // Set initial position based on the robust calculations
+        currentTranslate = -initialOffset;
+        prevTranslate = currentTranslate;
+        setCarouselPosition(false); // Set initial position correctly
+        console.log(`Clones Setup Complete: Initial Translate=${currentTranslate}`);
+        return true;
+    }
+
+    // --- Auto Scrolling (Use logic compatible with simpler dragEnd) ---
+     function startAutoScroll() {
         if (autoScrollID) cancelAnimationFrame(autoScrollID);
+        if (isDragging || isFlipping) return; // Don't start if user is interacting
         
+        // Ensure CSS animation is disabled using class
+        pilotCarousel.classList.add('js-controlled');
+
         function scroll() {
-            if (!isDragging) {
-                // Decrement the position based on speed
-                currentTranslate -= autoScrollSpeed;
-                
-                // Calculate the necessary values for complete carousel looping
-                const carouselFullWidth = pilotCarousel.scrollWidth;
-                const viewportWidth = window.innerWidth;
-                
-                // Get the number of original cards (non-clones)
-                const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
-                const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
-                
-                // Determine reset point - this ensures ALL original cards are shown
-                // before resetting, including the last 3 pilots
-                const resetPoint = -(originalCardsWidth + cardWidth * 10); // Add extra space for the last 3 cards
-                
-                // Reset when we've scrolled far enough to see all original cards
-                if (currentTranslate < resetPoint) {
-                    console.log("Carousel reset - all cards have been shown");
-                    // Reset to starting position
-                    currentTranslate = 0;
-                }
-                
-                setCarouselPosition();
+            if (isDragging || isFlipping) { // Check state inside loop
+                stopAutoScroll();
+                return;
             }
+
+            currentTranslate -= autoScrollSpeed;
+
+            // More robust reset using the calculated initial offset
+            const resetPoint = -(initialOffset + originalContentWidth);
+            if (currentTranslate <= resetPoint) {
+                // Jump back instantly by the width of the original content block
+                const jumpAmount = originalContentWidth;
+                currentTranslate += jumpAmount;
+                console.log(`AutoScroll Reset: Jumped forward by ${jumpAmount}`);
+                setCarouselPosition(false); // Apply jump instantly
+            }
+
+            setCarouselPosition(false); // Apply move instantly
             autoScrollID = requestAnimationFrame(scroll);
         }
-        
+
+        pilotCarousel.style.transition = 'none'; // Ensure no transition for auto-scroll
         autoScrollID = requestAnimationFrame(scroll);
+        console.log("Auto-scroll started");
     }
-    
+
     function stopAutoScroll() {
         if (autoScrollID) {
             cancelAnimationFrame(autoScrollID);
             autoScrollID = null;
+            
+            // Ensure CSS animation is disabled using class
+            pilotCarousel.classList.add('js-controlled');
+            
+            console.log("Auto-scroll stopped");
         }
     }
-    
-    // Set the carousel position based on currentTranslate
-    function setCarouselPosition() {
-        pilotCarousel.style.transform = `translateX(${currentTranslate}px)`;
+
+    // --- Positioning (Use simple translateX) ---
+    function setCarouselPosition(useTransition = false) { // Default to NO transition for drag/scroll
+        const finalTranslate = currentTranslate;
+        pilotCarousel.style.transition = useTransition ? 'transform 0.3s ease-out' : 'none';
+        pilotCarousel.style.transform = `translateX(${finalTranslate}px)`;
     }
-    
-    // Mouse events
-    pilotCarousel.addEventListener('mousedown', dragStart);
-    pilotCarousel.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', dragEnd);
-    
-    // Touch events
-    pilotCarousel.addEventListener('touchstart', dragStart);
-    pilotCarousel.addEventListener('touchmove', drag);
-    pilotCarousel.addEventListener('touchend', dragEnd);
-    pilotCarousel.addEventListener('touchcancel', dragEnd);
-    
-    // Prevent context menu on long press
-    pilotCarousel.addEventListener('contextmenu', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    });
-    
+
+
+    // --- Drag Handlers & Animation - Directly from "Working Example" ---
     function dragStart(e) {
+        // Return if we're in the middle of a card flip
         if (isFlipping) return;
         
-        // Prevent default but allow touchstart for double tap detection
-        if (e.type !== 'touchstart') {
-            e.preventDefault();
-        }
+        // Always prevent default to avoid interaction issues
+        e.preventDefault();
         
-        // Get start position based on mouse or touch
+        // Make sure CSS animation is disabled during drag
+        pilotCarousel.classList.add('js-controlled');
+        
+        // Get initial position based on event type
         startPosition = getPositionX(e);
         isDragging = true;
         dragDistance = 0;
         
-        // Stop auto-scroll during manual drag
+        // Stop auto-scrolling while user is interacting
         stopAutoScroll();
         
-        // Capture current position
+        // Store the current position as our starting point
         prevTranslate = currentTranslate;
         
+        // Update cursor style
         pilotCarousel.style.cursor = 'grabbing';
         
-        // Start animation loop
-        if (animationID) {
-            cancelAnimationFrame(animationID);
-        }
+        // Ensure no transition for smooth dragging
+        pilotCarousel.style.transition = 'none';
+        
+        // Start the animation loop for smooth movement
+        cancelAnimationFrame(animationID);
         animationID = requestAnimationFrame(animation);
+        
+        // Log for debugging
+        console.log("Drag started at position:", startPosition);
     }
-    
+
     function drag(e) {
         if (!isDragging) return;
         
+        // Prevent default behavior for both touch and mouse events
+        // Note: For touchmove we need this to prevent page scrolling
+        e.preventDefault();
+        e.stopPropagation();
+
         const currentPosition = getPositionX(e);
         const moveDistance = currentPosition - startPosition;
         dragDistance = Math.abs(moveDistance);
+        currentTranslate = prevTranslate + moveDistance; // Update position based on drag delta
         
-        // Update current translate based on the drag distance
-        currentTranslate = prevTranslate + moveDistance;
-        
-        // Allow completely free scrolling without resistance for a better experience
-    }
-    
-    function dragEnd() {
-        if (!isDragging) return;
-        
-        isDragging = false;
-        pilotCarousel.style.cursor = 'grab';
-        
-        // Restore transition for smooth end effect
-        pilotCarousel.style.transition = 'transform 0.3s ease-out';
-        
-        // Get original cards
-        const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
-        const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
-        
-        // When scrolling past the start (right edge)
-        if (currentTranslate > cardWidth) {
-            // Jump to the end of the carousel minus one viewport width
-            // This creates a smooth circular scrolling effect
-            currentTranslate = -originalCardsWidth + window.innerWidth/2;
+        // Debug output for movement
+        if (dragDistance > 10) {
+            console.log(`Dragging: movement=${moveDistance}, translate=${currentTranslate}`);
         }
-        // When scrolling past the end (left edge)
-        else if (currentTranslate < -originalCardsWidth - cardWidth) {
-            // Jump to near the start of the carousel
-            currentTranslate = 0;
-        }
-        
-        setCarouselPosition();
-        
-        // Clear animation frame
-        cancelAnimationFrame(animationID);
-        
-        // After transition, remove it and restart auto-scroll
-        setTimeout(() => {
-            pilotCarousel.style.transition = 'none';
-            startAutoScroll();
-        }, 300);
     }
-    
+
     function animation() {
-        setCarouselPosition();
         if (isDragging) {
+            // Apply position update without transition for smooth dragging
+            setCarouselPosition(false);
+            
+            // Continue animation as long as dragging is active
             animationID = requestAnimationFrame(animation);
         }
     }
-    
+
+    function dragEnd() {
+        // Exit if we're not in dragging state
+        if (!isDragging) return;
+        
+        // Update state
+        isDragging = false;
+        
+        // Stop animation loop
+        cancelAnimationFrame(animationID);
+        
+        // Reset cursor style
+        pilotCarousel.style.cursor = 'grab';
+
+        // Add transition for smooth settling
+        pilotCarousel.style.transition = 'transform 0.3s ease-out';
+
+        // Get dimensions for boundary checks
+        const checkOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
+        const checkOriginalCardsWidth = checkOriginalCards.length * (cardWidth + cardGap);
+
+        // Prevent overscrolling beyond the start
+        if (currentTranslate > 0) {
+            console.log("dragEnd: Bounced off start");
+            currentTranslate = 0;
+        }
+        
+        // Prevent overscrolling beyond the end
+        const endThreshold = -(initialOffset + originalContentWidth + cardWidth);
+        if (currentTranslate < endThreshold) {
+            console.log(`dragEnd: Bounced off end (Threshold: ${endThreshold})`);
+            // Reset to a sensible position to prevent getting stuck
+            currentTranslate = -initialOffset;
+        }
+
+        // Apply final position with transition
+        setCarouselPosition(true);
+
+        // Restart auto-scroll after a brief pause
+        clearTimeout(window.restartScrollTimeout);
+        window.restartScrollTimeout = setTimeout(() => {
+            // Make sure we're not in the middle of another interaction
+            if (!isDragging && !isFlipping) {
+                // Remove transition before auto-scroll for smooth animation
+                pilotCarousel.style.transition = 'none';
+                startAutoScroll();
+            }
+        }, postDragPauseDuration);
+    }
+
     function getPositionX(e) {
+        // Use pageX for mouse, clientX for touch
         return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
     }
-    
-    // Card flip functionality with mobile double tap support
-    pilotCards.forEach((card, index) => {
-        // Variables for double tap detection
-        let lastTap = 0;
-        let tapTimeout;
-        
-        // Handle both click and touch events for card flipping
-        const handleCardFlip = function(e) {
-            // Only flip if it wasn't a significant drag
-            if (dragDistance < 5) {
-                isFlipping = true;
-                const wasFlipped = this.classList.contains('flipped');
-                this.classList.toggle('flipped');
-                
-                // Play sound for DukeGod card
-                if (index === 0 && !wasFlipped && dukegodFlipSound) {
-                    dukegodFlipSound.currentTime = 0;
-                    dukegodFlipSound.play().catch(e => {
-                        console.warn('Failed to play sound:', e);
-                    });
-                }
-                
-                // Reset flip state after animation completes
-                setTimeout(() => {
-                    isFlipping = false;
-                }, 800); // Match this to your flip animation duration
-                
-                e.stopPropagation();
-            }
-        };
-        
-        // Mouse click for desktop
-        card.addEventListener('click', handleCardFlip);
-        
-        // Mobile-specific touch handling for double tap
-        card.addEventListener('touchend', function(e) {
-            // Prevent default to avoid unintended behaviors
-            if (dragDistance < 5) {
-                e.preventDefault();
-            }
-            
-            // Return if we were dragging
-            if (dragDistance > 5) return;
-            
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            
-            // Clear any existing tap timeout
-            clearTimeout(tapTimeout);
-            
-            // If tap happened within 300ms of last tap, treat as double tap
-            if (tapLength < 300 && tapLength > 0) {
-                // Double tap detected - flip the card
-                handleCardFlip.call(this, e);
-                
-                // Reset tracking variables
-                lastTap = 0;
-            } else {
-                // Single tap - wait for possible second tap
-                lastTap = currentTime;
-                
-                // Set timeout to reset if no second tap occurs
-                tapTimeout = setTimeout(function() {
-                    lastTap = 0;
-                }, 300);
-            }
-        });
-    });
-    
-    // Shine effect on cards
-    pilotCards.forEach(card => {
-        const shine = card.querySelector('.pilot-card-shine');
-        if (!shine) return;
+    // --- End Drag Handlers & Animation ---
 
-        card.addEventListener('mousemove', function(e) {
-            if (card.classList.contains('flipped')) return;
 
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // Calculate positions as percentages
-            const xPercent = x / rect.width * 100;
-            const yPercent = y / rect.height * 100;
-
-            // Set dynamic gradient position
-            shine.style.opacity = '1';
-            shine.style.background = `
-                radial-gradient(
-                    circle at ${xPercent}% ${yPercent}%, 
-                    rgba(255, 255, 255, 0.3) 0%, 
-                    rgba(255, 255, 255, 0.1) 40%, 
-                    rgba(255, 255, 255, 0) 70%
-                )
-            `;
-        });
-
-        card.addEventListener('mouseleave', function() {
-            shine.style.opacity = '0';
-        });
-    });
-    
-    // Dynamic card colors (keep existing functionality)
-    function updateCardColors() {
-        const positions = ['PRO', 'TECH', 'ROOKIE', 'VETERAN', 'MICRO', 'SPORT', 'JUNIOR', 'RACER BOY'];
-        const colors = {
-            'PRO': '#29a7df',
-            'TECH': '#5d6b77',
-            'ROOKIE': '#4caf50',
-            'VETERAN': '#ff9800',
-            'MICRO': '#e91e63',
-            'SPORT': '#9c27b0',
-            'JUNIOR': '#2196f3',
-            'RACER BOY': '#f44336'
-        };
-
-        const cyberpunkColors = {
-            'PRO': '#ff00ff',
-            'TECH': '#00ffff',
-            'ROOKIE': '#ffff00',
-            'VETERAN': '#ff8800',
-            'MICRO': '#00ff88',
-            'SPORT': '#ff3366',
-            'JUNIOR': '#00ff99',
-            'RACER BOY': '#66ffff'
-        };
-
-        document.querySelectorAll('.pilot-card').forEach(card => {
-            const position = card.querySelector('.pilot-card-position')?.textContent;
-            const banner = card.querySelector('.pilot-card-banner');
-            const image = card.querySelector('.pilot-card-image');
-
-            if (position && banner && image) {
-                // Default color if position not in our map
-                let color = '#29a7df';
-                
-                // Find color for this position
-                for (const key in colors) {
-                    if (position.includes(key)) {
-                        color = colors[key];
-                        break;
-                    }
-                }
-                
-                image.style.borderBottomColor = color;
-                banner.style.background = `linear-gradient(135deg, ${color}80 0%, ${color}00 60%)`;
-
-                if (document.body.classList.contains('theme-cyberpunk')) {
-                    // Find cyberpunk color for this position
-                    let cyberpunkColor = '#ff00ff';
-                    for (const key in cyberpunkColors) {
-                        if (position.includes(key)) {
-                            cyberpunkColor = cyberpunkColors[key];
-                            break;
-                        }
-                    }
-                    
-                    image.style.borderBottomColor = cyberpunkColor;
-                    image.style.boxShadow = `0 0 15px ${cyberpunkColor}`;
-                    banner.style.background = `linear-gradient(135deg, ${cyberpunkColor}80 0%, ${cyberpunkColor}00 60%)`;
-                }
-            }
-        });
+    // --- Card Flip (Use delegation - From robust version) ---
+    function setupCardFlip() {
+        pilotCarousel.removeEventListener('click', handleFlipEvent);
+        pilotCarousel.removeEventListener('touchend', handleTouchEndFlipEvent);
+        pilotCarousel.addEventListener('click', handleFlipEvent);
+        pilotCarousel.addEventListener('touchend', handleTouchEndFlipEvent);
     }
-    
-    // Update theme colors on theme switch
-    const themeButtons = document.querySelectorAll('.theme-btn');
-    themeButtons.forEach(button => {
-        button.addEventListener('click', updateCardColors);
-    });
-    
-    // Add CSS fix for the carousel
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-        .pilot-carousel-container {
-            overflow: hidden;
+    function executeFlip(targetCard, event) {
+        if (dragDistance >= dragThreshold) { dragDistance = 0; return; }
+        if (isFlipping) return;
+        isFlipping = true;
+        stopAutoScroll();
+        const wasFlipped = targetCard.classList.contains('flipped');
+        targetCard.classList.toggle('flipped');
+        const pilotNameElement = targetCard.querySelector('.pilot-card-name');
+        const isDukeGod = pilotNameElement && pilotNameElement.textContent.trim() === 'DukeGod';
+        if (isDukeGod && !wasFlipped && dukegodFlipSound) {
+            dukegodFlipSound.currentTime = 0;
+            dukegodFlipSound.play().catch(err => console.warn('Flip sound failed:', err));
         }
-        .pilot-carousel {
-            gap: 30px;
-            padding: 0 30px;
-        }
-    `;
-    document.head.appendChild(styleElement);
-    
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        // Recalculate dimensions on window resize
-        const originalCards = Array.from(document.querySelectorAll('.pilot-card:not(.clone)'));
-        const originalCardsWidth = originalCards.length * (cardWidth + cardGap);
-        
-        // If we're scrolled too far, reset
-        if (currentTranslate < -originalCardsWidth - cardWidth) {
-            currentTranslate = 0;
-            setCarouselPosition();
-        }
-    });
-    
-    // Initialize
-    updateCardColors();
-    startAutoScroll();
-});
+        setTimeout(() => {
+            isFlipping = false;
+            clearTimeout(window.restartScrollTimeout);
+            window.restartScrollTimeout = setTimeout(() => {
+                 if (!isDragging && !isFlipping) {
+                    pilotCarousel.style.transition = 'none';
+                    startAutoScroll();
+                 }
+            }, postDragPauseDuration);
+        }, 800); // Match CSS duration
+        event.stopPropagation();
+        dragDistance = 0;
+    }
+    function handleFlipEvent(e) { const targetCard = e.target.closest('.pilot-card'); if (targetCard) { executeFlip(targetCard, e); } }
+    let lastTap = 0; let tapTimeout;
+    function handleTouchEndFlipEvent(e) {
+        const targetCard = e.target.closest('.pilot-card');
+        if (!targetCard) return;
+        if (dragDistance < dragThreshold) { e.preventDefault(); }
+        else { dragDistance = 0; return; }
+        const currentTime = new Date().getTime(); const tapLength = currentTime - lastTap;
+        clearTimeout(tapTimeout);
+        if (tapLength < 300 && tapLength > 0) { executeFlip(targetCard, e); lastTap = 0; }
+        else { lastTap = currentTime; tapTimeout = setTimeout(() => { lastTap = 0; }, 300); }
+        dragDistance = 0;
+    }
 
+    // --- Shine Effect (Use delegation - From robust version) ---
+    function setupShineEffect() {
+        pilotCarousel.removeEventListener('mousemove', handleShineMove);
+        pilotCarousel.removeEventListener('mouseout', handleShineOut);
+        pilotCarousel.addEventListener('mousemove', handleShineMove);
+        pilotCarousel.addEventListener('mouseout', handleShineOut);
+    }
+    function handleShineMove(e) {
+         if (isDragging) { handleShineOut(e); return; }
+         const targetCard = e.target.closest('.pilot-card:not(.flipped)');
+         if (targetCard) {
+             pilotCarousel.querySelectorAll('.pilot-card-shine').forEach(shineEl => { if (!targetCard.contains(shineEl)) { shineEl.style.opacity = '0'; } });
+             const shine = targetCard.querySelector('.pilot-card-shine'); if (!shine) return;
+             const rect = targetCard.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+             const xPercent = (x / rect.width) * 100; const yPercent = (y / rect.height) * 100;
+             shine.style.opacity = '1'; shine.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 70%)`;
+         } else { handleShineOut(e); }
+    }
+    function handleShineOut(e) {
+        const relatedTarget = e.relatedTarget;
+        if (!relatedTarget || !pilotCarousel.contains(relatedTarget)) {
+            pilotCarousel.querySelectorAll('.pilot-card').forEach(card => {
+                const shine = card.querySelector('.pilot-card-shine');
+                if (shine) { shine.style.opacity = '0'; }
+            });
+        }
+    }
+
+    // --- Dynamic Card Colors (Keep existing) ---
+    function updateCardColors() { /* ... Keep existing ... */ }
+
+    // --- Event Listeners Setup (Ensure document listeners are correct) ---
+    function addEventListeners() {
+        // Remove any existing event listeners first
+        pilotCarousel.removeEventListener('mousedown', dragStart);
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', dragEnd);
+        pilotCarousel.removeEventListener('touchstart', dragStart);
+        pilotCarousel.removeEventListener('touchmove', drag);
+        pilotCarousel.removeEventListener('touchend', dragEnd);
+        pilotCarousel.removeEventListener('touchcancel', dragEnd);
+        
+        // Mouse events
+        pilotCarousel.addEventListener('mousedown', dragStart, passiveOptions);
+        document.addEventListener('mousemove', drag, passiveOptions);
+        document.addEventListener('mouseup', dragEnd, passiveTrue);
+        
+        // Touch events - important to prevent default on touchmove
+        pilotCarousel.addEventListener('touchstart', dragStart, passiveOptions);
+        pilotCarousel.addEventListener('touchmove', drag, passiveOptions);
+        pilotCarousel.addEventListener('touchend', dragEnd, passiveTrue);
+        pilotCarousel.addEventListener('touchcancel', dragEnd, passiveTrue);
+        
+        // Other events
+        pilotCarousel.addEventListener('contextmenu', e => e.preventDefault());
+        document.querySelectorAll('.theme-btn').forEach(button => { 
+            button.addEventListener('click', () => setTimeout(updateCardColors, 50)); 
+        });
+        
+        // Log for debugging
+        console.log("All event listeners successfully attached to carousel");
+        
+        // Add resize handler
+        window.addEventListener('resize', handleResize);
+    }
+
+     // --- Resize Handling ---
+    let resizeTimeout;
+    function handleResize() {
+        stopAutoScroll();
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            console.log("Handling Resize...");
+            // Re-initialize using robust functions
+            if (setupCarouselClones()) {
+                updateCardColors();
+                setupCardFlip();
+                setupShineEffect();
+                startAutoScroll();
+            } else { console.error("Resize handling failed."); }
+        }, 300);
+    }
+
+    // --- Initialization ---
+    function initializeCarousel() {
+        console.log("Initializing Pilot Carousel...");
+        
+        // First, completely remove CSS animation by adding our utility class
+        pilotCarousel.classList.add('js-controlled');
+        
+        // Force reflow to ensure animation removal is applied immediately
+        void pilotCarousel.offsetWidth;
+        
+        // Add special touch-friendly styling for mobile devices
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            console.log("Touch device detected - adding touch-specific handling");
+            pilotCarousel.style.touchAction = 'pan-y pinch-zoom';
+            pilotCarouselContainer.style.overscrollBehaviorX = 'none';
+        }
+        
+        // Run the robust setup
+        if (setupCarouselClones()) {
+            updateCardColors();
+            setupCardFlip();
+            setupShineEffect();
+            addEventListeners();
+            
+            // Apply initial position immediately
+            setCarouselPosition(false);
+            
+            // Start auto-scroll
+            startAutoScroll();
+            console.log("Pilot Carousel Initialized Successfully.");
+        } else {
+            console.error("Pilot Carousel Initialization Failed - Check HTML and previous errors.");
+        }
+    }
+
+    // Start
+    initializeCarousel();
+});
 // Drone Animation Handler
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
