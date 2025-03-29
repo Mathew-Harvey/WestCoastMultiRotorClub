@@ -1,13 +1,48 @@
 // Helper function to safely add CSS animations
 function safelyAddKeyframeAnimation(animationName, keyframes) {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-        @keyframes ${animationName} {
-            ${keyframes}
+    try {
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            @keyframes ${animationName} {
+                ${keyframes}
+            }
+        `;
+        document.head.appendChild(styleElement);
+        return styleElement;
+    } catch (error) {
+        console.warn(`Failed to add keyframe animation ${animationName}:`, error);
+        return null;
+    }
+}
+
+// Global error handler for unexpected errors
+window.addEventListener('error', function(event) {
+    console.warn('Global error caught:', event.error);
+    // Prevent the error from crashing the page
+    event.preventDefault();
+    
+    // Try to recover key animations if needed
+    try {
+        // Check if drone animation needs recovery
+        const heroDrone = document.getElementById('heroDrone');
+        if (heroDrone && heroDrone.style.transform.includes('NaN')) {
+            // Reset drone position
+            heroDrone.style.transform = 'translate(-50%, -50%)';
         }
-    `;
-    document.head.appendChild(styleElement);
-    return styleElement;
+    } catch (recoveryError) {
+        console.warn('Recovery attempt failed:', recoveryError);
+    }
+    
+    return true;
+}, { passive: true });
+
+// Mobile detected flag for optimizations
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// Set a flag for optimized performance on mobile
+if (isMobileDevice) {
+    document.body.classList.add('mobile-device');
+    console.log('Mobile device detected - applying performance optimizations');
 }
 
 // Mobile Navigation Toggle
@@ -723,9 +758,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Get parent container's position for coordinate conversion
-            const parentRect = heroLogoContainer.getBoundingClientRect();
-            const parentLeft = parentRect.left + window.scrollX;
-            const parentTop = parentRect.top + window.scrollY;
+            // Wrap position calculations in try-catch to handle fast scrolling issues
+            let parentRect;
+            let parentLeft = 0;
+            let parentTop = 0;
+            
+            try {
+                parentRect = heroLogoContainer.getBoundingClientRect();
+                if (parentRect) {
+                    parentLeft = parentRect.left + window.scrollX;
+                    parentTop = parentRect.top + window.scrollY;
+                }
+            } catch (rectError) {
+                console.warn('Error getting container rect:', rectError);
+                // Continue with default values
+            }
 
             // Convert mouse position to parent coordinates
             const mouseLeft = mouseX - parentLeft;
@@ -762,7 +809,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     droneTop = homeTop;
                     
                     // Restore original state when drone returns home
-                    if (heroDrone.style.opacity !== '0') {
+                    // Check if elements exist before accessing
+                    if (heroDrone && heroDrone.style && heroLogoNoDrone && heroLogoWithDrone) {
                         heroDrone.style.opacity = '0';
                         heroLogoNoDrone.style.opacity = '0';
                         heroLogoWithDrone.style.opacity = '1';
@@ -774,17 +822,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Apply position and rotation, with hover in transform
-            const hover = Math.sin(Date.now() / 300) * 2;
-            heroDrone.style.left = `${droneLeft}px`;
-            heroDrone.style.top = `${droneTop}px`;
-            heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+            // Apply position and rotation with error handling
+            if (heroDrone && heroDrone.style) {
+                // Apply position and rotation, with hover in transform
+                const hover = Math.sin(Date.now() / 300) * 2;
+                heroDrone.style.left = `${droneLeft}px`;
+                heroDrone.style.top = `${droneTop}px`;
+                heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+            }
         } catch (error) {
             console.warn('Error in drone animation:', error);
+            // Don't stop animation loop on error, just continue
         }
         
-        // Continue animation regardless of errors
-        requestAnimationFrame(animateDrone);
+        // Continue animation regardless of errors - use setTimeout to limit 
+        // animation updates during fast scrolling on mobile devices
+        if (window.navigator.userAgent.includes('Mobile')) {
+            setTimeout(() => requestAnimationFrame(animateDrone), 16); // Limit to ~60fps on mobile
+        } else {
+            requestAnimationFrame(animateDrone);
+        }
     }
 
     // Start the animation
@@ -904,37 +961,66 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const fadeElements = document.querySelectorAll('.fade-in');
     let ticking = false;
+    let lastFadeScrollTime = 0;
+    const fadeScrollThrottle = 150; // Increased throttle time for mobile
     
     const fadeInOnScroll = () => {
         try {
+            const now = Date.now();
+            // Add additional throttling for better performance on mobile
+            if (now - lastFadeScrollTime < fadeScrollThrottle) {
+                ticking = false;
+                return;
+            }
+            
+            lastFadeScrollTime = now;
             const triggerBottom = window.innerHeight * 0.85;
-            fadeElements.forEach(element => {
-                if (!element) return;
-                try {
-                    const elementTop = element.getBoundingClientRect().top;
-                    if (elementTop < triggerBottom) {
-                        element.classList.add('active');
+            
+            // Process elements in batches for better performance
+            let i = 0;
+            const processNextBatch = () => {
+                const endIndex = Math.min(i + 10, fadeElements.length);
+                for (; i < endIndex; i++) {
+                    const element = fadeElements[i];
+                    if (!element) continue;
+                    
+                    try {
+                        const elementTop = element.getBoundingClientRect().top;
+                        if (elementTop < triggerBottom) {
+                            element.classList.add('active');
+                        }
+                    } catch (rectError) {
+                        console.warn('Error getting element position:', rectError);
                     }
-                } catch (rectError) {
-                    console.warn('Error getting element position:', rectError);
                 }
-            });
-            ticking = false;
+                
+                if (i < fadeElements.length) {
+                    // Process next batch in next frame for smoother scrolling
+                    setTimeout(processNextBatch, 0);
+                } else {
+                    ticking = false;
+                }
+            };
+            
+            processNextBatch();
         } catch (error) {
             console.warn('Error in fade animation:', error);
             ticking = false;
         }
     };
     
+    // Use passive event listener with throttling for better performance
     window.addEventListener('scroll', function() {
         if (!ticking) {
-            window.requestAnimationFrame(fadeInOnScroll);
             ticking = true;
+            window.requestAnimationFrame(fadeInOnScroll);
         }
     }, { passive: true });
     
-    // Initial check
-    window.requestAnimationFrame(fadeInOnScroll);
+    // Initial check with delay to allow page to settle
+    setTimeout(() => {
+        window.requestAnimationFrame(fadeInOnScroll);
+    }, 100);
 });
 
 // Back to top button
@@ -943,9 +1029,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!backToTopButton) return;
     
     let isScrolling = false;
+    let lastBackToTopScrollTime = 0;
+    const backToTopThrottle = 150; // Throttle time for better performance
     
     const toggleBackToTopButton = () => {
         try {
+            const now = Date.now();
+            // Add throttling for better performance
+            if (now - lastBackToTopScrollTime < backToTopThrottle) {
+                isScrolling = false;
+                return;
+            }
+            
+            lastBackToTopScrollTime = now;
+            
             if (window.scrollY > 300) {
                 backToTopButton.classList.add('active');
             } else {
@@ -970,10 +1067,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Use passive listener for better performance
     window.addEventListener('scroll', function() {
         if (!isScrolling) {
-            window.requestAnimationFrame(toggleBackToTopButton);
             isScrolling = true;
+            window.requestAnimationFrame(toggleBackToTopButton);
         }
     }, { passive: true });
     
@@ -1488,6 +1586,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const videoOverlay = document.getElementById('videoOverlay');
     const showcaseVideo = document.getElementById('showcaseVideo');
+    
+    // Exit early if essential elements are not found
+    if (!videoOverlay || !showcaseVideo) {
+        console.warn('Video elements not found, skipping video initialization');
+        return;
+    }
+    
     const videoCloseBtn = document.querySelector('.video-close');
     const playPauseBtn = document.querySelector('.play-pause');
     const muteUnmuteBtn = document.querySelector('.mute-unmute');
@@ -1514,151 +1619,226 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Helper function to mark video as watched
     function markVideoAsWatched() {
-      localStorage.setItem('wcmrc_video_watched', 'true');
+      try {
+        localStorage.setItem('wcmrc_video_watched', 'true');
+      } catch (storageError) {
+        console.warn('LocalStorage not available:', storageError);
+      }
     }
     
     // Show video function
     function showVideo() {
-      // Pause any site animations temporarily
-      pauseSiteAnimations();
-      
-      // Show video overlay with animation
-      videoOverlay.classList.add('visible');
-      
-      // Auto-play video (muted by default for better UX and browser compliance)
-      showcaseVideo.muted = true;
-      showcaseVideo.play().catch(e => {
-        console.warn('Auto-play prevented:', e);
-        // Update UI to show play button instead
-        playPauseBtn.querySelector('i').className = 'fas fa-play';
-      });
-      
-      // Mark as watched
-      markVideoAsWatched();
+      try {
+        // Pause any site animations temporarily
+        pauseSiteAnimations();
+        
+        // Show video overlay with animation
+        if (videoOverlay) videoOverlay.classList.add('visible');
+        
+        // Auto-play video (muted by default for better UX and browser compliance)
+        if (showcaseVideo) {
+          showcaseVideo.muted = true;
+          showcaseVideo.play().catch(e => {
+            console.warn('Auto-play prevented:', e);
+            // Update UI to show play button instead
+            if (playPauseBtn) {
+              const playIcon = playPauseBtn.querySelector('i');
+              if (playIcon) playIcon.className = 'fas fa-play';
+            }
+          });
+        }
+        
+        // Mark as watched
+        markVideoAsWatched();
+      } catch (error) {
+        console.warn('Error showing video:', error);
+      }
     }
     
     // Hide video function
     function hideVideo() {
-      // Pause the video
-      showcaseVideo.pause();
-      
-      // Hide overlay with animation
-      videoOverlay.classList.remove('visible');
-      
-      // Reset progress after overlay is hidden
-      setTimeout(() => {
-        showcaseVideo.currentTime = 0;
-        progressBar.style.width = '0%';
-      }, 600); // Match transition time
-      
-      // Resume site animations
-      resumeSiteAnimations();
+      try {
+        // Pause the video
+        if (showcaseVideo) showcaseVideo.pause();
+        
+        // Hide overlay with animation
+        if (videoOverlay) videoOverlay.classList.remove('visible');
+        
+        // Reset progress after overlay is hidden
+        setTimeout(() => {
+          if (showcaseVideo) {
+            showcaseVideo.currentTime = 0;
+            if (progressBar) progressBar.style.width = '0%';
+          }
+        }, 600); // Match transition time
+        
+        // Resume site animations
+        resumeSiteAnimations();
+      } catch (error) {
+        console.warn('Error hiding video:', error);
+      }
     }
     
     // Toggle play/pause
     function togglePlayPause() {
-      if (showcaseVideo.paused) {
-        showcaseVideo.play();
-        playPauseBtn.querySelector('i').className = 'fas fa-pause';
-      } else {
-        showcaseVideo.pause();
-        playPauseBtn.querySelector('i').className = 'fas fa-play';
+      if (!showcaseVideo) return;
+      
+      try {
+        if (showcaseVideo.paused) {
+          showcaseVideo.play();
+          if (playPauseBtn) {
+            const playIcon = playPauseBtn.querySelector('i');
+            if (playIcon) playIcon.className = 'fas fa-pause';
+          }
+        } else {
+          showcaseVideo.pause();
+          if (playPauseBtn) {
+            const playIcon = playPauseBtn.querySelector('i');
+            if (playIcon) playIcon.className = 'fas fa-play';
+          }
+        }
+      } catch (error) {
+        console.warn('Error toggling play/pause:', error);
       }
     }
     
     // Toggle mute/unmute
     function toggleMuteUnmute() {
-      showcaseVideo.muted = !showcaseVideo.muted;
-      muteUnmuteBtn.querySelector('i').className = showcaseVideo.muted ? 
-        'fas fa-volume-mute' : 'fas fa-volume-up';
+      if (!showcaseVideo || !muteUnmuteBtn) return;
+      
+      try {
+        showcaseVideo.muted = !showcaseVideo.muted;
+        const muteIcon = muteUnmuteBtn.querySelector('i');
+        if (muteIcon) {
+          muteIcon.className = showcaseVideo.muted ? 
+            'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+      } catch (error) {
+        console.warn('Error toggling mute/unmute:', error);
+      }
     }
     
     // Toggle fullscreen
     function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        if (showcaseVideo.requestFullscreen) {
-          showcaseVideo.requestFullscreen();
-        } else if (showcaseVideo.webkitRequestFullscreen) {
-          showcaseVideo.webkitRequestFullscreen();
-        } else if (showcaseVideo.msRequestFullscreen) {
-          showcaseVideo.msRequestFullscreen();
+      if (!showcaseVideo || !fullscreenBtn) return;
+      
+      try {
+        if (!document.fullscreenElement) {
+          if (showcaseVideo.requestFullscreen) {
+            showcaseVideo.requestFullscreen();
+          } else if (showcaseVideo.webkitRequestFullscreen) {
+            showcaseVideo.webkitRequestFullscreen();
+          } else if (showcaseVideo.msRequestFullscreen) {
+            showcaseVideo.msRequestFullscreen();
+          }
+          const fullscreenIcon = fullscreenBtn.querySelector('i');
+          if (fullscreenIcon) fullscreenIcon.className = 'fas fa-compress';
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+          const fullscreenIcon = fullscreenBtn.querySelector('i');
+          if (fullscreenIcon) fullscreenIcon.className = 'fas fa-expand';
         }
-        fullscreenBtn.querySelector('i').className = 'fas fa-compress';
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-        fullscreenBtn.querySelector('i').className = 'fas fa-expand';
+      } catch (error) {
+        console.warn('Error toggling fullscreen:', error);
       }
     }
     
     // Update progress bar during playback
     function updateProgress() {
-      if (showcaseVideo.duration) {
-        const percentage = (showcaseVideo.currentTime / showcaseVideo.duration) * 100;
-        progressBar.style.width = `${percentage}%`;
+      if (!showcaseVideo || !progressBar) return;
+      
+      try {
+        if (showcaseVideo.duration) {
+          const percentage = (showcaseVideo.currentTime / showcaseVideo.duration) * 100;
+          progressBar.style.width = `${percentage}%`;
+        }
+      } catch (error) {
+        console.warn('Error updating progress:', error);
       }
     }
     
     // Skip to position in video when clicking progress bar
     function skipTo(e) {
-      const rect = progressContainer.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      showcaseVideo.currentTime = pos * showcaseVideo.duration;
+      if (!showcaseVideo || !progressContainer) return;
+      
+      try {
+        const rect = progressContainer.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        showcaseVideo.currentTime = pos * showcaseVideo.duration;
+      } catch (error) {
+        console.warn('Error skipping to position:', error);
+      }
     }
     
     // Handle video ended
     function handleVideoEnded() {
-      // Reset play button icon
-      playPauseBtn.querySelector('i').className = 'fas fa-play';
-      
-      // Auto close after a brief delay
-      setTimeout(hideVideo, 1500);
+      try {
+        // Reset play button icon
+        if (playPauseBtn) {
+          const playIcon = playPauseBtn.querySelector('i');
+          if (playIcon) playIcon.className = 'fas fa-play';
+        }
+        
+        // Auto close after a brief delay
+        setTimeout(hideVideo, 1500);
+      } catch (error) {
+        console.warn('Error handling video ended:', error);
+      }
     }
     
     // Pause site animations to improve performance during video playback
     function pauseSiteAnimations() {
-      // Pause pilot carousel
-      const pilotCarousel = document.querySelector('.pilot-carousel');
-      if (pilotCarousel) {
-        pilotCarousel.style.animationPlayState = 'paused';
-      }
-      
-      // Pause sponsors carousel
-      const sponsorsCarousel = document.querySelector('.sponsors-carousel');
-      if (sponsorsCarousel) {
-        sponsorsCarousel.style.animationPlayState = 'paused';
-      }
-      
-      // Pause drone animation if active
-      const heroDrone = document.getElementById('heroDrone');
-      if (heroDrone) {
-        heroDrone.style.animationPlayState = 'paused';
+      try {
+        // Pause pilot carousel
+        const pilotCarousel = document.querySelector('.pilot-carousel');
+        if (pilotCarousel && pilotCarousel.style) {
+          pilotCarousel.style.animationPlayState = 'paused';
+        }
+        
+        // Pause sponsors carousel
+        const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+        if (sponsorsCarousel && sponsorsCarousel.style) {
+          sponsorsCarousel.style.animationPlayState = 'paused';
+        }
+        
+        // Pause drone animation if active
+        const heroDrone = document.getElementById('heroDrone');
+        if (heroDrone && heroDrone.style) {
+          heroDrone.style.animationPlayState = 'paused';
+        }
+      } catch (error) {
+        console.warn('Error pausing animations:', error);
       }
     }
     
     // Resume site animations
     function resumeSiteAnimations() {
-      // Resume pilot carousel
-      const pilotCarousel = document.querySelector('.pilot-carousel');
-      if (pilotCarousel) {
-        pilotCarousel.style.animationPlayState = 'running';
-      }
-      
-      // Resume sponsors carousel
-      const sponsorsCarousel = document.querySelector('.sponsors-carousel');
-      if (sponsorsCarousel) {
-        sponsorsCarousel.style.animationPlayState = 'running';
-      }
-      
-      // Resume drone animation if active
-      const heroDrone = document.getElementById('heroDrone');
-      if (heroDrone) {
-        heroDrone.style.animationPlayState = 'running';
+      try {
+        // Resume pilot carousel
+        const pilotCarousel = document.querySelector('.pilot-carousel');
+        if (pilotCarousel && pilotCarousel.style) {
+          pilotCarousel.style.animationPlayState = 'running';
+        }
+        
+        // Resume sponsors carousel
+        const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+        if (sponsorsCarousel && sponsorsCarousel.style) {
+          sponsorsCarousel.style.animationPlayState = 'running';
+        }
+        
+        // Resume drone animation if active
+        const heroDrone = document.getElementById('heroDrone');
+        if (heroDrone && heroDrone.style) {
+          heroDrone.style.animationPlayState = 'running';
+        }
+      } catch (error) {
+        console.warn('Error resuming animations:', error);
       }
     }
     
