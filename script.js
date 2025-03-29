@@ -249,121 +249,168 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Drag Handlers & Animation - Directly from "Working Example" ---
     function dragStart(e) {
-        // Return if we're in the middle of a card flip
-        if (isFlipping) return;
-        
-        // Always prevent default to avoid interaction issues
-        e.preventDefault();
-        
-        // Make sure CSS animation is disabled during drag
-        pilotCarousel.classList.add('js-controlled');
-        
-        // Get initial position based on event type
-        startPosition = getPositionX(e);
-        isDragging = true;
-        dragDistance = 0;
-        
-        // Stop auto-scrolling while user is interacting
-        stopAutoScroll();
-        
-        // Store the current position as our starting point
-        prevTranslate = currentTranslate;
-        
-        // Update cursor style
-        pilotCarousel.style.cursor = 'grabbing';
-        
-        // Ensure no transition for smooth dragging
-        pilotCarousel.style.transition = 'none';
-        
-        // Start the animation loop for smooth movement
-        cancelAnimationFrame(animationID);
-        animationID = requestAnimationFrame(animation);
-        
-        // Log for debugging
-        console.log("Drag started at position:", startPosition);
+        try {
+            // Return if we're in the middle of a card flip
+            if (isFlipping) return;
+            
+            // Always prevent default to avoid interaction issues
+            try {
+                e.preventDefault();
+            } catch (preventError) {
+                // Some mobile browsers don't allow preventDefault in all contexts
+                console.warn('Could not prevent default action:', preventError);
+            }
+            
+            // Make sure CSS animation is disabled during drag
+            pilotCarousel.classList.add('js-controlled');
+            
+            // Get initial position based on event type
+            startPosition = getPositionX(e);
+            isDragging = true;
+            dragDistance = 0;
+            
+            // Stop auto-scrolling while user is interacting
+            stopAutoScroll();
+            
+            // Store the current position as our starting point
+            prevTranslate = currentTranslate;
+            
+            // Update cursor style
+            pilotCarousel.style.cursor = 'grabbing';
+            
+            // Ensure no transition for smooth dragging
+            pilotCarousel.style.transition = 'none';
+            
+            // Start the animation loop for smooth movement
+            cancelAnimationFrame(animationID);
+            animationID = requestAnimationFrame(animation);
+            
+            // Log for debugging
+            console.log("Drag started at position:", startPosition);
+        } catch (error) {
+            console.warn('Error starting drag:', error);
+            // Reset to a safe state
+            isDragging = false;
+            pilotCarousel.style.cursor = 'grab';
+        }
     }
 
     function drag(e) {
-        if (!isDragging) return;
-        
-        // Prevent default behavior for both touch and mouse events
-        // Note: For touchmove we need this to prevent page scrolling
-        e.preventDefault();
-        e.stopPropagation();
+        try {
+            if (!isDragging) return;
+            
+            // Prevent default behavior for both touch and mouse events
+            // Note: For touchmove we need this to prevent page scrolling
+            try {
+                e.preventDefault();
+                e.stopPropagation();
+            } catch (preventError) {
+                // Some mobile browsers may not allow this
+            }
 
-        const currentPosition = getPositionX(e);
-        const moveDistance = currentPosition - startPosition;
-        dragDistance = Math.abs(moveDistance);
-        currentTranslate = prevTranslate + moveDistance; // Update position based on drag delta
-        
-        // Debug output for movement
-        if (dragDistance > 10) {
-            console.log(`Dragging: movement=${moveDistance}, translate=${currentTranslate}`);
+            const currentPosition = getPositionX(e);
+            const moveDistance = currentPosition - startPosition;
+            dragDistance = Math.abs(moveDistance);
+            currentTranslate = prevTranslate + moveDistance; // Update position based on drag delta
+            
+            // Debug output for movement
+            if (dragDistance > 10) {
+                console.log(`Dragging: movement=${moveDistance}, translate=${currentTranslate}`);
+            }
+        } catch (error) {
+            console.warn('Error during drag:', error);
+            // Don't end dragging here, let dragEnd handle it
         }
     }
 
     function animation() {
-        if (isDragging) {
-            // Apply position update without transition for smooth dragging
-            setCarouselPosition(false);
-            
-            // Continue animation as long as dragging is active
-            animationID = requestAnimationFrame(animation);
+        try {
+            if (isDragging) {
+                // Apply position update without transition for smooth dragging
+                setCarouselPosition(false);
+                
+                // Continue animation as long as dragging is active
+                animationID = requestAnimationFrame(animation);
+            }
+        } catch (error) {
+            console.warn('Error in drag animation:', error);
+            // Try to restore normal state
+            isDragging = false;
+            pilotCarousel.style.cursor = 'grab';
         }
     }
 
     function dragEnd() {
-        // Exit if we're not in dragging state
-        if (!isDragging) return;
-        
-        // Update state
-        isDragging = false;
-        
-        // Stop animation loop
-        cancelAnimationFrame(animationID);
-        
-        // Reset cursor style
-        pilotCarousel.style.cursor = 'grab';
+        try {
+            // Exit if we're not in dragging state
+            if (!isDragging) return;
+            
+            // Update state
+            isDragging = false;
+            
+            // Stop animation loop
+            cancelAnimationFrame(animationID);
+            
+            // Reset cursor style
+            pilotCarousel.style.cursor = 'grab';
 
-        // Add transition for smooth settling
-        pilotCarousel.style.transition = 'transform 0.3s ease-out';
+            // Add transition for smooth settling
+            pilotCarousel.style.transition = 'transform 0.3s ease-out';
 
-        // Get dimensions for boundary checks
-        const checkOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
-        const checkOriginalCardsWidth = checkOriginalCards.length * (cardWidth + cardGap);
+            // Get dimensions for boundary checks
+            const checkOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
+            const checkOriginalCardsWidth = checkOriginalCards.length * (cardWidth + cardGap);
 
-        // Prevent overscrolling beyond the start
-        if (currentTranslate > 0) {
-            console.log("dragEnd: Bounced off start");
-            currentTranslate = 0;
-        }
-        
-        // Prevent overscrolling beyond the end
-        const endThreshold = -(initialOffset + originalContentWidth + cardWidth);
-        if (currentTranslate < endThreshold) {
-            console.log(`dragEnd: Bounced off end (Threshold: ${endThreshold})`);
-            // Reset to a sensible position to prevent getting stuck
-            currentTranslate = -initialOffset;
-        }
-
-        // Apply final position with transition
-        setCarouselPosition(true);
-
-        // Restart auto-scroll after a brief pause
-        clearTimeout(window.restartScrollTimeout);
-        window.restartScrollTimeout = setTimeout(() => {
-            // Make sure we're not in the middle of another interaction
-            if (!isDragging && !isFlipping) {
-                // Remove transition before auto-scroll for smooth animation
-                pilotCarousel.style.transition = 'none';
-                startAutoScroll();
+            // Prevent overscrolling beyond the start
+            if (currentTranslate > 0) {
+                console.log("dragEnd: Bounced off start");
+                currentTranslate = 0;
             }
-        }, postDragPauseDuration);
+            
+            // Prevent overscrolling beyond the end
+            const endThreshold = -(initialOffset + originalContentWidth + cardWidth);
+            if (currentTranslate < endThreshold) {
+                console.log(`dragEnd: Bounced off end (Threshold: ${endThreshold})`);
+                // Reset to a sensible position to prevent getting stuck
+                currentTranslate = -initialOffset;
+            }
+
+            // Apply final position with transition
+            setCarouselPosition(true);
+
+            // Restart auto-scroll after a brief pause
+            clearTimeout(window.restartScrollTimeout);
+            window.restartScrollTimeout = setTimeout(() => {
+                // Make sure we're not in the middle of another interaction
+                if (!isDragging && !isFlipping) {
+                    // Remove transition before auto-scroll for smooth animation
+                    pilotCarousel.style.transition = 'none';
+                    startAutoScroll();
+                }
+            }, postDragPauseDuration);
+        } catch (error) {
+            console.warn('Error ending drag:', error);
+            // Try to recover
+            isDragging = false;
+            pilotCarousel.style.cursor = 'grab';
+            try {
+                // Attempt to restart auto-scroll
+                setTimeout(() => startAutoScroll(), 1000);
+            } catch (recoveryError) {
+                console.error('Could not recover from drag end error:', recoveryError);
+            }
+        }
     }
 
     function getPositionX(e) {
-        // Use pageX for mouse, clientX for touch
-        return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        try {
+            // Use pageX for mouse, clientX for touch
+            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        } catch (error) {
+            console.warn('Error getting position:', error);
+            // Return last known position as fallback
+            return startPosition || 0;
+        }
     }
     // --- End Drag Handlers & Animation ---
 
@@ -570,24 +617,66 @@ document.addEventListener('DOMContentLoaded', function() {
     const chaseSpeed = 0.1;
     const orbitSpeed = 0.05;
     let droneAngle = 0;
+    let lastScrollTime = 0;
+    let scrollThrottleDelay = 100; // ms
 
-    // Release drone on scroll
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 100 && !isChasing && heroLogoWithDrone.style.opacity === '1') {
-            // Make the drone "fly out" by showing the version without drone
-            heroLogoNoDrone.style.opacity = '1';
-            heroLogoWithDrone.style.opacity = '0';
-            heroDrone.style.opacity = '1';
-            isChasing = true;
-            
-            // Set initial position
-            const parentRect = heroLogoContainer.getBoundingClientRect();
-            homeLeft = parentRect.width / 2;
-            homeTop = parentRect.height / 2;
-            droneLeft = homeLeft;
-            droneTop = homeTop;
+    // Throttle function to limit how often a function is called
+    function throttle(callback, delay) {
+        const now = Date.now();
+        if (now - lastScrollTime >= delay) {
+            lastScrollTime = now;
+            callback();
         }
-    });
+    }
+
+    // Safe scroll handler with error protection
+    function handleScroll() {
+        try {
+            if (!heroLogoContainer || !heroDrone || !heroLogoNoDrone || !heroLogoWithDrone) return;
+            
+            if (window.scrollY > 100 && !isChasing && 
+                heroLogoWithDrone.style.opacity === '1' && 
+                heroLogoContainer.getBoundingClientRect) {
+                
+                // Make the drone "fly out" by showing the version without drone
+                heroLogoNoDrone.style.opacity = '1';
+                heroLogoWithDrone.style.opacity = '0';
+                heroDrone.style.opacity = '1';
+                isChasing = true;
+                
+                // Set initial position - with safety checks
+                try {
+                    const parentRect = heroLogoContainer.getBoundingClientRect();
+                    homeLeft = parentRect.width / 2;
+                    homeTop = parentRect.height / 2;
+                    droneLeft = homeLeft;
+                    droneTop = homeTop;
+                } catch (positionError) {
+                    console.warn('Error calculating drone position:', positionError);
+                    // Use default values if there's an error
+                    homeLeft = homeTop = droneLeft = droneTop = 50;
+                }
+            }
+            
+            // Handle scroll indicator
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (scrollIndicator && window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+                setTimeout(() => {
+                    if (scrollIndicator.style) {
+                        scrollIndicator.style.display = 'none';
+                    }
+                }, 500);
+            }
+        } catch (err) {
+            console.warn('Error in scroll handler:', err);
+        }
+    }
+
+    // Set up throttled scroll handler
+    window.addEventListener('scroll', function() {
+        throttle(handleScroll, scrollThrottleDelay);
+    }, { passive: true });
 
     // Track mouse position
     document.addEventListener('mousemove', (e) => {
@@ -597,105 +686,114 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize drone position at the center of the logo container
     function initDrone() {
-        const parentRect = heroLogoContainer.getBoundingClientRect();
-        homeLeft = parentRect.width / 2;
-        homeTop = parentRect.height / 2;
-        droneLeft = homeLeft;
-        droneTop = homeTop;
+        try {
+            if (!heroLogoContainer) return;
+            
+            const parentRect = heroLogoContainer.getBoundingClientRect();
+            homeLeft = parentRect.width / 2;
+            homeTop = parentRect.height / 2;
+            droneLeft = homeLeft;
+            droneTop = homeTop;
 
-        // Event listeners
-        heroLogoContainer.addEventListener('mouseleave', () => {
-            if (heroLogoWithDrone.style.opacity === '0') { // Only if drone is already released
-                isChasing = true;
-                isOrbiting = false;
-            }
-        });
+            // Event listeners
+            heroLogoContainer.addEventListener('mouseleave', () => {
+                if (heroLogoWithDrone.style.opacity === '0') { // Only if drone is already released
+                    isChasing = true;
+                    isOrbiting = false;
+                }
+            });
 
-        heroLogoContainer.addEventListener('click', () => {
-            if (isOrbiting) {
-                isChasing = false;
-                isOrbiting = false;
-            }
-        });
+            heroLogoContainer.addEventListener('click', () => {
+                if (isOrbiting) {
+                    isChasing = false;
+                    isOrbiting = false;
+                }
+            });
+        } catch (error) {
+            console.warn('Error initializing drone:', error);
+        }
     }
 
     // Animation loop
     function animateDrone() {
-        // Get parent container's position for coordinate conversion
-        const parentRect = heroLogoContainer.getBoundingClientRect();
-        const parentLeft = parentRect.left + window.scrollX;
-        const parentTop = parentRect.top + window.scrollY;
-
-        // Convert mouse position to parent coordinates
-        const mouseLeft = mouseX - parentLeft;
-        const mouseTop = mouseY - parentTop;
-
-        if (isChasing) {
-            const dx = mouseLeft - droneLeft;
-            const dy = mouseTop - droneTop;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 15 && !isOrbiting) {
-                isOrbiting = true;
-                orbitAngle = Math.atan2(dy, dx);
+        try {
+            if (!heroLogoContainer || !heroDrone) {
+                requestAnimationFrame(animateDrone);
+                return;
             }
+            
+            // Get parent container's position for coordinate conversion
+            const parentRect = heroLogoContainer.getBoundingClientRect();
+            const parentLeft = parentRect.left + window.scrollX;
+            const parentTop = parentRect.top + window.scrollY;
 
-            if (isOrbiting) {
-                orbitAngle += orbitSpeed;
-                // Set position directly to eliminate offset
-                droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
-                droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
-                droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
-            } else {
-                droneLeft += dx * chaseSpeed;
-                droneTop += dy * chaseSpeed;
-                droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-            }
-        } else {
-            // Return to home
-            const dx = homeLeft - droneLeft;
-            const dy = homeTop - droneTop;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 1) {
-                droneLeft = homeLeft;
-                droneTop = homeTop;
-                
-                // Restore original state when drone returns home
-                if (heroDrone.style.opacity !== '0') {
-                    heroDrone.style.opacity = '0';
-                    heroLogoNoDrone.style.opacity = '0';
-                    heroLogoWithDrone.style.opacity = '1';
+            // Convert mouse position to parent coordinates
+            const mouseLeft = mouseX - parentLeft;
+            const mouseTop = mouseY - parentTop;
+
+            if (isChasing) {
+                const dx = mouseLeft - droneLeft;
+                const dy = mouseTop - droneTop;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 15 && !isOrbiting) {
+                    isOrbiting = true;
+                    orbitAngle = Math.atan2(dy, dx);
+                }
+
+                if (isOrbiting) {
+                    orbitAngle += orbitSpeed;
+                    // Set position directly to eliminate offset
+                    droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
+                    droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
+                    droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
+                } else {
+                    droneLeft += dx * chaseSpeed;
+                    droneTop += dy * chaseSpeed;
+                    droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
                 }
             } else {
-                droneLeft += dx * 0.1;
-                droneTop += dy * 0.1;
-                droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+                // Return to home
+                const dx = homeLeft - droneLeft;
+                const dy = homeTop - droneTop;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 1) {
+                    droneLeft = homeLeft;
+                    droneTop = homeTop;
+                    
+                    // Restore original state when drone returns home
+                    if (heroDrone.style.opacity !== '0') {
+                        heroDrone.style.opacity = '0';
+                        heroLogoNoDrone.style.opacity = '0';
+                        heroLogoWithDrone.style.opacity = '1';
+                    }
+                } else {
+                    droneLeft += dx * 0.1;
+                    droneTop += dy * 0.1;
+                    droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+                }
             }
+
+            // Apply position and rotation, with hover in transform
+            const hover = Math.sin(Date.now() / 300) * 2;
+            heroDrone.style.left = `${droneLeft}px`;
+            heroDrone.style.top = `${droneTop}px`;
+            heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
+        } catch (error) {
+            console.warn('Error in drone animation:', error);
         }
-
-        // Apply position and rotation, with hover in transform
-        const hover = Math.sin(Date.now() / 300) * 2;
-        heroDrone.style.left = `${droneLeft}px`;
-        heroDrone.style.top = `${droneTop}px`;
-        heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
-
+        
+        // Continue animation regardless of errors
         requestAnimationFrame(animateDrone);
     }
 
     // Start the animation
-    initDrone();
-    requestAnimationFrame(animateDrone);
-    
-    // Make sure scroll indicator disappears when drone is released
-    window.addEventListener('scroll', function() {
-        const scrollIndicator = document.querySelector('.scroll-indicator');
-        if (scrollIndicator && window.scrollY > 100) {
-            scrollIndicator.style.opacity = '0';
-            setTimeout(() => {
-                scrollIndicator.style.display = 'none';
-            }, 500);
-        }
-    });
+    try {
+        initDrone();
+        requestAnimationFrame(animateDrone);
+    } catch (error) {
+        console.warn('Failed to start drone animation:', error);
+    }
 });
 
 // Ultra-simplified cursor for maximum performance
@@ -805,20 +903,38 @@ document.addEventListener('DOMContentLoaded', function() {
 // Scroll Animation for fade-in elements
 document.addEventListener('DOMContentLoaded', function() {
     const fadeElements = document.querySelectorAll('.fade-in');
+    let ticking = false;
     
     const fadeInOnScroll = () => {
-        const triggerBottom = window.innerHeight * 0.85;
-        fadeElements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            if (elementTop < triggerBottom) {
-                element.classList.add('active');
-            }
-        });
+        try {
+            const triggerBottom = window.innerHeight * 0.85;
+            fadeElements.forEach(element => {
+                if (!element) return;
+                try {
+                    const elementTop = element.getBoundingClientRect().top;
+                    if (elementTop < triggerBottom) {
+                        element.classList.add('active');
+                    }
+                } catch (rectError) {
+                    console.warn('Error getting element position:', rectError);
+                }
+            });
+            ticking = false;
+        } catch (error) {
+            console.warn('Error in fade animation:', error);
+            ticking = false;
+        }
     };
     
-    window.addEventListener('scroll', fadeInOnScroll);
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(fadeInOnScroll);
+            ticking = true;
+        }
+    }, { passive: true });
+    
     // Initial check
-    fadeInOnScroll();
+    window.requestAnimationFrame(fadeInOnScroll);
 });
 
 // Back to top button
@@ -826,22 +942,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const backToTopButton = document.querySelector('.back-to-top');
     if (!backToTopButton) return;
     
+    let isScrolling = false;
+    
     const toggleBackToTopButton = () => {
-        if (window.scrollY > 300) {
-            backToTopButton.classList.add('active');
-        } else {
-            backToTopButton.classList.remove('active');
+        try {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+            isScrolling = false;
+        } catch (error) {
+            console.warn('Error toggling back-to-top button:', error);
+            isScrolling = false;
         }
     };
     
     backToTopButton.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        try {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } catch (error) {
+            // Fallback for browsers that don't support smooth scrolling
+            window.scrollTo(0, 0);
+        }
     });
     
-    window.addEventListener('scroll', toggleBackToTopButton);
+    window.addEventListener('scroll', function() {
+        if (!isScrolling) {
+            window.requestAnimationFrame(toggleBackToTopButton);
+            isScrolling = true;
+        }
+    }, { passive: true });
+    
     // Initial check
     toggleBackToTopButton();
 });
