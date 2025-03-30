@@ -1004,59 +1004,77 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get all original sponsor items (non-clones)
         const sponsorItems = Array.from(sponsorsCarousel.querySelectorAll('.sponsor-item:not(.clone)'));
         
+        if (sponsorItems.length === 0) return;
+        
         // Clear existing clones
         const existingClones = sponsorsCarousel.querySelectorAll('.sponsor-item.clone');
         existingClones.forEach(clone => clone.remove());
         
-        // Create clones for seamless looping
+        // Fix the backslash typo if present in any sponsor item
+        sponsorItems.forEach(item => {
+            if (item.outerHTML.includes('<div class="sponsor-item">\\')) {
+                item.outerHTML = item.outerHTML.replace('\\', '');
+            }
+        });
+        
+        // Temporarily stop animation to take measurements
+        sponsorsCarousel.style.animation = 'none';
+        // Force reflow
+        void sponsorsCarousel.offsetWidth;
+        
+        // Ensure carousel has the correct CSS properties
+        sponsorsCarousel.style.display = 'flex';
+        sponsorsCarousel.style.width = 'max-content';
+        
+        // Get the gap size
+        const computedStyle = window.getComputedStyle(sponsorsCarousel);
+        const gapSize = computedStyle.gap === 'normal' ? 80 : parseInt(computedStyle.gap) || 80;
+        
+        // Create clones for seamless looping - one full set of sponsors
         sponsorItems.forEach(item => {
             const clone = item.cloneNode(true);
             clone.classList.add('clone');
             sponsorsCarousel.appendChild(clone);
         });
         
-        // Calculate animation duration based on number of sponsors
-        const scrollDuration = Math.max(30, sponsorItems.length * 5); // Min 30s, 5s per sponsor
-        sponsorsCarousel.style.animationDuration = `${scrollDuration}s`;
+        // Add a second set for safety
+        sponsorItems.forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.classList.add('clone');
+            sponsorsCarousel.appendChild(clone);
+        });
         
-        // Calculate the total width
-        const totalWidth = sponsorItems.reduce((width, item) => {
+        // Calculate the total width of all original sponsors
+        let totalWidth = 0;
+        
+        // Measure each sponsor item
+        sponsorItems.forEach((item, index) => {
             const itemWidth = item.offsetWidth;
-            const itemStyle = window.getComputedStyle(item);
-            const itemMargin = parseInt(itemStyle.marginLeft) + parseInt(itemStyle.marginRight);
-            return width + itemWidth + itemMargin;
-        }, 0);
+            totalWidth += itemWidth;
+            
+            // Add gap for all but the last item
+            if (index < sponsorItems.length - 1) {
+                totalWidth += gapSize;
+            }
+        });
         
-        // Add animation via style element instead of modifying stylesheet directly
+        // If measurements failed, use fallback width
+        if (totalWidth <= 0) {
+            const itemWidth = 200; // From CSS max-width
+            totalWidth = (itemWidth * sponsorItems.length) + (gapSize * (sponsorItems.length - 1));
+        }
+        
+        // Create an animation that moves exactly one set width
         safelyAddKeyframeAnimation('sponsorsScroll', `
             0% { transform: translateX(0); }
             100% { transform: translateX(-${totalWidth}px); }
         `);
-    }
-    
-    // Add hover effect to sponsor tier logos
-    const sponsorTierLogos = document.querySelectorAll('.sponsor-tier-logo');
-    if (sponsorTierLogos.length > 0) {
-        sponsorTierLogos.forEach(logo => {
-            logo.addEventListener('mouseenter', function() {
-                const img = this.querySelector('img');
-                if (img) {
-                    img.style.filter = 'grayscale(0%)';
-                    img.style.opacity = '1';
-                }
-            });
-            
-            logo.addEventListener('mouseleave', function() {
-                const img = this.querySelector('img');
-                if (img) {
-                    img.style.filter = 'grayscale(100%)';
-                    img.style.opacity = '0.8';
-                }
-            });
-        });
+        
+        // Set animation duration and apply
+        const scrollDuration = Math.max(30, sponsorItems.length * 5);
+        sponsorsCarousel.style.animation = `sponsorsScroll ${scrollDuration}s linear infinite`;
     }
 });
-
 // Event Calendar Functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Define event data (make sure this is at the top level of your events code)
