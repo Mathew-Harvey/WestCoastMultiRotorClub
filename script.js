@@ -10,14 +10,12 @@ function safelyAddKeyframeAnimation(animationName, keyframes) {
         document.head.appendChild(styleElement);
         return styleElement;
     } catch (error) {
-        console.warn(`Failed to add keyframe animation ${animationName}:`, error);
         return null;
     }
 }
 
 // Global error handler for unexpected errors
 window.addEventListener('error', function(event) {
-    console.warn('Global error caught:', event.error);
     // Prevent the error from crashing the page
     event.preventDefault();
     
@@ -30,7 +28,7 @@ window.addEventListener('error', function(event) {
             heroDrone.style.transform = 'translate(-50%, -50%)';
         }
     } catch (recoveryError) {
-        console.warn('Recovery attempt failed:', recoveryError);
+        // Silent recovery
     }
     
     return true;
@@ -42,7 +40,6 @@ const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 // Set a flag for optimized performance on mobile
 if (isMobileDevice) {
     document.body.classList.add('mobile-device');
-    console.log('Mobile device detected - applying performance optimizations');
 }
 
 // Mobile Navigation Toggle
@@ -57,44 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.querySelector('i').classList.toggle('fa-times');
         });
     }
-});
-
-// Theme Switcher Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const themeToggle = document.querySelector('.theme-toggle');
-    const themeSwitcher = document.getElementById('theme-switcher');
-
-    if (themeToggle && themeSwitcher) {
-        themeToggle.addEventListener('click', () => {
-            themeSwitcher.classList.toggle('active');
-        });
-    }
-});
-
-// Theme Switcher
-document.addEventListener('DOMContentLoaded', function() {
-    const themeButtons = document.querySelectorAll('.theme-btn');
-    const body = document.body;
-
-    themeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const theme = button.dataset.theme;
-            // Remove all theme classes
-            body.classList.remove('theme-cyberpunk', 'theme-minimalist');
-            // Add selected theme class if not default
-            if (theme !== 'default') {
-                body.classList.add(`theme-${theme}`);
-            }
-            // Update active button
-            themeButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            // Close theme switcher
-            const themeSwitcher = document.getElementById('theme-switcher');
-            if (themeSwitcher) {
-                themeSwitcher.classList.remove('active');
-            }
-        });
-    });
 });
 
 // Complete Pilot Carousel functionality - Reverting Drag Logic to Working Example
@@ -128,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial check for elements
     if (!pilotCarouselContainer || !pilotCarousel) {
-        console.error("Pilot carousel container or carousel element not found.");
         return;
     }
     let pilotCards = pilotCarousel.querySelectorAll('.pilot-card'); // Initial list
@@ -167,16 +125,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
         originalCardsCount = originalCards.length;
         if (originalCardsCount === 0) {
-             console.error("FATAL: Cannot calculate dimensions - No original cards found (check HTML).");
              return false;
         }
         // Add check for cardWidth calculation
         if (!originalCards[0]) {
-            console.error("Cannot get first original card for width calculation.");
             return false;
         }
         cardWidth = originalCards[0].offsetWidth;
-        if(cardWidth === 0) { console.warn("Card width is 0..."); }
+        if(cardWidth === 0) { }
 
         const computedGap = window.getComputedStyle(pilotCarousel).gap;
         cardGap = computedGap === 'normal' ? 30 : parseInt(computedGap) || 30;
@@ -185,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
         totalWidth = pilotCarousel.scrollWidth;
         const prependedClones = pilotCarousel.querySelectorAll('.clone-prepend');
         initialOffset = prependedClones.length * cardTotalWidth;
-        console.log(`Dimensions Calculated: OriginalCount=${originalCardsCount}, CardWidth=${cardWidth}, OriginalWidth=${originalContentWidth}, InitialOffset=${initialOffset}`);
         return true;
     }
 
@@ -193,8 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupCarouselClones() {
          const currentOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
         originalCardsCount = currentOriginalCards.length;
-        console.log(`Setup Clones: Found ${originalCardsCount} initial original cards.`);
-        if (originalCardsCount === 0) { console.error("FATAL: Cannot set up clones..."); return false; }
+        if (originalCardsCount === 0) { return false; }
 
         pilotCarousel.querySelectorAll('.pilot-card.clone').forEach(clone => clone.remove());
         const clonesToPrepend = []; const clonesToAppend = [];
@@ -223,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTranslate = -initialOffset;
         prevTranslate = currentTranslate;
         setCarouselPosition(false); // Set initial position correctly
-        console.log(`Clones Setup Complete: Initial Translate=${currentTranslate}`);
         return true;
     }
 
@@ -249,7 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Jump back instantly by the width of the original content block
                 const jumpAmount = originalContentWidth;
                 currentTranslate += jumpAmount;
-                console.log(`AutoScroll Reset: Jumped forward by ${jumpAmount}`);
                 setCarouselPosition(false); // Apply jump instantly
             }
 
@@ -259,7 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         pilotCarousel.style.transition = 'none'; // Ensure no transition for auto-scroll
         autoScrollID = requestAnimationFrame(scroll);
-        console.log("Auto-scroll started");
     }
 
     function stopAutoScroll() {
@@ -269,8 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Ensure CSS animation is disabled using class
             pilotCarousel.classList.add('js-controlled');
-            
-            console.log("Auto-scroll stopped");
         }
     }
 
@@ -293,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
             } catch (preventError) {
                 // Some mobile browsers don't allow preventDefault in all contexts
-                console.warn('Could not prevent default action:', preventError);
             }
             
             // Make sure CSS animation is disabled during drag
@@ -319,11 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Start the animation loop for smooth movement
             cancelAnimationFrame(animationID);
             animationID = requestAnimationFrame(animation);
-            
-            // Log for debugging
-            console.log("Drag started at position:", startPosition);
         } catch (error) {
-            console.warn('Error starting drag:', error);
             // Reset to a safe state
             isDragging = false;
             pilotCarousel.style.cursor = 'grab';
@@ -347,13 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const moveDistance = currentPosition - startPosition;
             dragDistance = Math.abs(moveDistance);
             currentTranslate = prevTranslate + moveDistance; // Update position based on drag delta
-            
-            // Debug output for movement
-            if (dragDistance > 10) {
-                console.log(`Dragging: movement=${moveDistance}, translate=${currentTranslate}`);
-            }
         } catch (error) {
-            console.warn('Error during drag:', error);
             // Don't end dragging here, let dragEnd handle it
         }
     }
@@ -368,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 animationID = requestAnimationFrame(animation);
             }
         } catch (error) {
-            console.warn('Error in drag animation:', error);
             // Try to restore normal state
             isDragging = false;
             pilotCarousel.style.cursor = 'grab';
@@ -398,14 +335,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Prevent overscrolling beyond the start
             if (currentTranslate > 0) {
-                console.log("dragEnd: Bounced off start");
                 currentTranslate = 0;
             }
             
             // Prevent overscrolling beyond the end
             const endThreshold = -(initialOffset + originalContentWidth + cardWidth);
             if (currentTranslate < endThreshold) {
-                console.log(`dragEnd: Bounced off end (Threshold: ${endThreshold})`);
                 // Reset to a sensible position to prevent getting stuck
                 currentTranslate = -initialOffset;
             }
@@ -424,7 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, postDragPauseDuration);
         } catch (error) {
-            console.warn('Error ending drag:', error);
             // Try to recover
             isDragging = false;
             pilotCarousel.style.cursor = 'grab';
@@ -432,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Attempt to restart auto-scroll
                 setTimeout(() => startAutoScroll(), 1000);
             } catch (recoveryError) {
-                console.error('Could not recover from drag end error:', recoveryError);
+                // Silent recovery
             }
         }
     }
@@ -442,7 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Use pageX for mouse, clientX for touch
             return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         } catch (error) {
-            console.warn('Error getting position:', error);
             // Return last known position as fallback
             return startPosition || 0;
         }
@@ -468,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isDukeGod = pilotNameElement && pilotNameElement.textContent.trim() === 'DukeGod';
         if (isDukeGod && !wasFlipped && dukegodFlipSound) {
             dukegodFlipSound.currentTime = 0;
-            dukegodFlipSound.play().catch(err => console.warn('Flip sound failed:', err));
+            dukegodFlipSound.play().catch(err => {});
         }
         setTimeout(() => {
             isFlipping = false;
@@ -556,9 +489,6 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', () => setTimeout(updateCardColors, 50)); 
         });
         
-        // Log for debugging
-        console.log("All event listeners successfully attached to carousel");
-        
         // Add resize handler
         window.addEventListener('resize', handleResize);
     }
@@ -569,21 +499,18 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAutoScroll();
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            console.log("Handling Resize...");
             // Re-initialize using robust functions
             if (setupCarouselClones()) {
                 updateCardColors();
                 setupCardFlip();
                 setupShineEffect();
                 startAutoScroll();
-            } else { console.error("Resize handling failed."); }
+            }
         }, 300);
     }
 
     // --- Initialization ---
     function initializeCarousel() {
-        console.log("Initializing Pilot Carousel...");
-        
         // First, completely remove CSS animation by adding our utility class
         pilotCarousel.classList.add('js-controlled');
         
@@ -592,7 +519,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add special touch-friendly styling for mobile devices
         if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            console.log("Touch device detected - adding touch-specific handling");
             pilotCarousel.style.touchAction = 'pan-y pinch-zoom';
             pilotCarouselContainer.style.overscrollBehaviorX = 'none';
         }
@@ -609,9 +535,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Start auto-scroll
             startAutoScroll();
-            console.log("Pilot Carousel Initialized Successfully.");
-        } else {
-            console.error("Pilot Carousel Initialization Failed - Check HTML and previous errors.");
         }
     }
 
@@ -628,7 +551,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if elements exist before trying to use them
     if (!heroLogoContainer || !heroDrone || !heroLogoNoDrone || !heroLogoWithDrone) {
-        console.warn('Hero section elements not found');
         return;
     }
 
@@ -687,7 +609,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     droneLeft = homeLeft;
                     droneTop = homeTop;
                 } catch (positionError) {
-                    console.warn('Error calculating drone position:', positionError);
                     // Use default values if there's an error
                     homeLeft = homeTop = droneLeft = droneTop = 50;
                 }
@@ -704,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 500);
             }
         } catch (err) {
-            console.warn('Error in scroll handler:', err);
+            // Silent error handling
         }
     }
 
@@ -745,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         } catch (error) {
-            console.warn('Error initializing drone:', error);
+            // Silent error handling
         }
     }
 
@@ -770,7 +691,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     parentTop = parentRect.top + window.scrollY;
                 }
             } catch (rectError) {
-                console.warn('Error getting container rect:', rectError);
                 // Continue with default values
             }
 
@@ -831,7 +751,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
             }
         } catch (error) {
-            console.warn('Error in drone animation:', error);
             // Don't stop animation loop on error, just continue
         }
         
@@ -849,7 +768,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initDrone();
         requestAnimationFrame(animateDrone);
     } catch (error) {
-        console.warn('Failed to start drone animation:', error);
+        // Silent error handling
     }
 });
 
@@ -990,7 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             element.classList.add('active');
                         }
                     } catch (rectError) {
-                        console.warn('Error getting element position:', rectError);
+                        // Silent error handling
                     }
                 }
                 
@@ -1004,7 +923,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             processNextBatch();
         } catch (error) {
-            console.warn('Error in fade animation:', error);
             ticking = false;
         }
     };
@@ -1050,7 +968,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             isScrolling = false;
         } catch (error) {
-            console.warn('Error toggling back-to-top button:', error);
             isScrolling = false;
         }
     };
@@ -1081,18 +998,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fixed Sponsors Carousel Initialization
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Initializing Sponsors Carousel");
     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
     
     if (sponsorsCarousel) {
         // Get all original sponsor items (non-clones)
         const sponsorItems = Array.from(sponsorsCarousel.querySelectorAll('.sponsor-item:not(.clone)'));
-        console.log(`Found ${sponsorItems.length} sponsor items`);
         
         // Clear existing clones
         const existingClones = sponsorsCarousel.querySelectorAll('.sponsor-item.clone');
         existingClones.forEach(clone => clone.remove());
-        console.log(`Removed ${existingClones.length} existing clones`);
         
         // Create clones for seamless looping
         sponsorItems.forEach(item => {
@@ -1100,12 +1014,10 @@ document.addEventListener('DOMContentLoaded', function() {
             clone.classList.add('clone');
             sponsorsCarousel.appendChild(clone);
         });
-        console.log(`Added ${sponsorItems.length} new clones`);
         
         // Calculate animation duration based on number of sponsors
         const scrollDuration = Math.max(30, sponsorItems.length * 5); // Min 30s, 5s per sponsor
         sponsorsCarousel.style.animationDuration = `${scrollDuration}s`;
-        console.log(`Set animation duration to ${scrollDuration}s`);
         
         // Calculate the total width
         const totalWidth = sponsorItems.reduce((width, item) => {
@@ -1114,21 +1026,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const itemMargin = parseInt(itemStyle.marginLeft) + parseInt(itemStyle.marginRight);
             return width + itemWidth + itemMargin;
         }, 0);
-        console.log(`Calculated total sponsor items width: ${totalWidth}px`);
         
         // Add animation via style element instead of modifying stylesheet directly
         safelyAddKeyframeAnimation('sponsorsScroll', `
             0% { transform: translateX(0); }
             100% { transform: translateX(-${totalWidth}px); }
         `);
-    } else {
-        console.warn("Sponsors carousel element not found");
     }
     
     // Add hover effect to sponsor tier logos
     const sponsorTierLogos = document.querySelectorAll('.sponsor-tier-logo');
     if (sponsorTierLogos.length > 0) {
-        console.log(`Found ${sponsorTierLogos.length} sponsor tier logos`);
         sponsorTierLogos.forEach(logo => {
             logo.addEventListener('mouseenter', function() {
                 const img = this.querySelector('img');
@@ -1151,8 +1059,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event Calendar Functionality
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Initializing Event Calendar");
-    
     // Define event data (make sure this is at the top level of your events code)
     const eventData = [
         {
@@ -1241,7 +1147,6 @@ document.addEventListener('DOMContentLoaded', function() {
             image: "./assets/drone6.jpg"
         }
     ];
-    console.log(`Loaded ${eventData.length} events`);
 
     // Calendar elements
     const prevMonthBtn = document.getElementById('prevMonth');
@@ -1251,7 +1156,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const upcomingEventsListElement = document.getElementById('upcomingEventsList');
     
     if (!calendarDaysElement) {
-        console.warn("Calendar days element not found");
         return;
     }
 
@@ -1259,7 +1163,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
-    console.log(`Initial calendar month/year: ${currentMonth + 1}/${currentYear}`);
 
     // Month navigation
     if (prevMonthBtn) {
@@ -1269,7 +1172,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentMonth = 11;
                 currentYear--;
             }
-            console.log(`Calendar navigated to: ${currentMonth + 1}/${currentYear}`);
             renderCalendar();
         });
     }
@@ -1281,14 +1183,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentMonth = 0;
                 currentYear++;
             }
-            console.log(`Calendar navigated to: ${currentMonth + 1}/${currentYear}`);
             renderCalendar();
         });
     }
 
     function renderCalendar() {
         if (!calendarDaysElement || !currentMonthYearElement) {
-            console.warn("Required calendar elements not found");
             return;
         }
         
@@ -1304,7 +1204,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate first day and days in month
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        console.log(`Rendering calendar: ${monthNames[currentMonth]} ${currentYear}, first day ${firstDay}, days in month ${daysInMonth}`);
         
         // Add empty cells for days before first of month
         for (let i = 0; i < firstDay; i++) {
@@ -1336,7 +1235,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add event indicators and handlers
             if (dayEvents.length > 0) {
                 dayElement.classList.add('has-events');
-                console.log(`Day ${day} has ${dayEvents.length} events`);
                 
                 // Create tooltip
                 const tooltip = document.createElement('div');
@@ -1354,7 +1252,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Add click handler
                 dayElement.addEventListener('click', () => {
-                    console.log(`Clicked on day ${day} with events`);
                     showEventsForDate(checkDate);
                 });
             }
@@ -1365,7 +1262,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentMonth === today.getMonth() && 
                 currentYear === today.getFullYear()) {
                 dayElement.classList.add('today');
-                console.log(`Marked day ${day} as today`);
             }
             
             calendarDaysElement.appendChild(dayElement);
@@ -1381,11 +1277,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to show events for a specific date
     function showEventsForDate(date) {
         if (!upcomingEventsListElement) {
-            console.warn("Upcoming events list element not found");
             return;
         }
-        
-        console.log(`Showing events for date: ${date.toDateString()}`);
         
         const dayEvents = eventData.filter(event => {
             const eventDate = new Date(event.date);
@@ -1408,12 +1301,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (dayEvents.length === 0) {
-            console.log(`No events found for ${date.toDateString()}`);
             upcomingEventsListElement.innerHTML = '<div class="no-events">No events scheduled for this date</div>';
             return;
         }
         
-        console.log(`Found ${dayEvents.length} events for ${date.toDateString()}`);
         const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         
         dayEvents.forEach(event => {
@@ -1471,11 +1362,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to show upcoming events
     function showUpcomingEvents() {
         if (!upcomingEventsListElement) {
-            console.warn("Upcoming events list element not found");
             return;
         }
-        
-        console.log("Showing upcoming events");
         
         // Reset the section title
         const eventsTitle = document.getElementById('eventsTitle');
@@ -1492,12 +1380,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .slice(0, 5);
         
         if (upcomingEvents.length === 0) {
-            console.log("No upcoming events found");
             upcomingEventsListElement.innerHTML = '<div class="no-events">No upcoming events scheduled</div>';
             return;
         }
         
-        console.log(`Found ${upcomingEvents.length} upcoming events`);
         const facebookEventsPage = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         
         upcomingEvents.forEach(event => {
@@ -1571,12 +1457,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewAllEventsBtn) {
         viewAllEventsBtn.href = "https://www.facebook.com/groups/westcoastmultirotorclub/events";
         viewAllEventsBtn.target = "_blank";
-        console.log("Updated VIEW ALL EVENTS button link");
     }
 
     // Initialize calendar when the page loads
     if (calendarDaysElement) {
-        console.log("Initializing calendar");
         renderCalendar();
     }
 });
@@ -1589,7 +1473,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Exit early if essential elements are not found
     if (!videoOverlay || !showcaseVideo) {
-        console.warn('Video elements not found, skipping video initialization');
         return;
     }
     
@@ -1622,7 +1505,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         localStorage.setItem('wcmrc_video_watched', 'true');
       } catch (storageError) {
-        console.warn('LocalStorage not available:', storageError);
+        // LocalStorage not available
       }
     }
     
@@ -1639,7 +1522,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (showcaseVideo) {
           showcaseVideo.muted = true;
           showcaseVideo.play().catch(e => {
-            console.warn('Auto-play prevented:', e);
             // Update UI to show play button instead
             if (playPauseBtn) {
               const playIcon = playPauseBtn.querySelector('i');
@@ -1651,7 +1533,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mark as watched
         markVideoAsWatched();
       } catch (error) {
-        console.warn('Error showing video:', error);
+        // Silent error handling
       }
     }
     
@@ -1675,7 +1557,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Resume site animations
         resumeSiteAnimations();
       } catch (error) {
-        console.warn('Error hiding video:', error);
+        // Silent error handling
       }
     }
     
@@ -1698,7 +1580,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
       } catch (error) {
-        console.warn('Error toggling play/pause:', error);
+        // Silent error handling
       }
     }
     
@@ -1714,7 +1596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'fas fa-volume-mute' : 'fas fa-volume-up';
         }
       } catch (error) {
-        console.warn('Error toggling mute/unmute:', error);
+        // Silent error handling
       }
     }
     
@@ -1745,7 +1627,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (fullscreenIcon) fullscreenIcon.className = 'fas fa-expand';
         }
       } catch (error) {
-        console.warn('Error toggling fullscreen:', error);
+        // Silent error handling
       }
     }
     
@@ -1759,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', function() {
           progressBar.style.width = `${percentage}%`;
         }
       } catch (error) {
-        console.warn('Error updating progress:', error);
+        // Silent error handling
       }
     }
     
@@ -1772,7 +1654,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const pos = (e.clientX - rect.left) / rect.width;
         showcaseVideo.currentTime = pos * showcaseVideo.duration;
       } catch (error) {
-        console.warn('Error skipping to position:', error);
+        // Silent error handling
       }
     }
     
@@ -1788,7 +1670,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Auto close after a brief delay
         setTimeout(hideVideo, 1500);
       } catch (error) {
-        console.warn('Error handling video ended:', error);
+        // Silent error handling
       }
     }
     
@@ -1813,7 +1695,7 @@ document.addEventListener('DOMContentLoaded', function() {
           heroDrone.style.animationPlayState = 'paused';
         }
       } catch (error) {
-        console.warn('Error pausing animations:', error);
+        // Silent error handling
       }
     }
     
@@ -1838,7 +1720,7 @@ document.addEventListener('DOMContentLoaded', function() {
           heroDrone.style.animationPlayState = 'running';
         }
       } catch (error) {
-        console.warn('Error resuming animations:', error);
+        // Silent error handling
       }
     }
     
@@ -1882,7 +1764,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Reset video position to start
                 showcaseVideo.currentTime = 0;
               } catch (e) {
-                console.warn('Failed to generate poster:', e);
+                // Silent error handling
               }
             });
           }
@@ -1952,4 +1834,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Call the function to create the poster
     createVideoPoster();
-  });
+});
