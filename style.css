@@ -2428,3 +2428,142 @@ header {
             height: 35px;
         }
     }
+
+/* Live Streams Section */
+#live-streams {
+    background-color: var(--card-bg);
+}
+
+.live-stream-main {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 60px; /* Space below main video */
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+}
+
+.live-stream-main iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.past-streams-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--secondary-color);
+    margin-bottom: 40px;
+    margin-top: 40px; /* Add space above this title */
+}
+
+.past-streams-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px; /* Space below gallery */
+}
+
+.past-stream-item {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.past-stream-item a {
+    display: block;
+    position: relative;
+}
+
+.past-stream-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: filter 0.3s ease;
+}
+
+.past-stream-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.past-stream-item:hover img {
+    filter: brightness(0.8);
+}
+
+.play-icon-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.past-stream-item:hover .play-icon-overlay {
+    opacity: 1;
+}
+
+.youtube-channel-link-container {
+    margin-top: 30px; /* Adjusted from 60px */
+}
+
+.youtube-channel-link {
+    background-color: #FF0000; /* YouTube Red */
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.youtube-channel-link:hover {
+    background-color: #cc0000; /* Darker YouTube Red */
+    box-shadow: var(--shadow-md);
+}
+
+.youtube-channel-link i {
+    font-size: 1.3em;
+}
+
+/* Add specific styles for the Live Streams section heading */
+#live-streams h2 {
+    /* Inherits general h2 styles, add overrides if needed */
+    margin-bottom: 30px; /* Adjust spacing below main heading */
+}
+
+/* Responsive adjustments for Live Streams */
+@media (max-width: 768px) {
+    .past-streams-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .past-streams-title {
+        font-size: 1.6rem;
+        margin-bottom: 30px;
+    }
+
+    .live-stream-main {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .past-streams-gallery {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 25px;
+    }
+}
