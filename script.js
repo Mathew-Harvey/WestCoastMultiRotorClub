@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupCarouselClones() {
         const currentOriginalCards = Array.from(pilotCarousel.querySelectorAll('.pilot-card:not(.clone)'));
         originalCardsCount = currentOriginalCards.length;
-        if (originalCardsCount === 0) { return false; }
+        if (originalCardsCount === 0) return false;
 
         pilotCarousel.querySelectorAll('.pilot-card.clone').forEach(clone => clone.remove());
         const clonesToPrepend = []; const clonesToAppend = [];
@@ -2062,4 +2062,282 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Call the function to create the poster
     createVideoPoster();
+});
+
+// Video Modal Functionality for Past Live Streams
+document.addEventListener('DOMContentLoaded', function () {
+    // Modal elements
+    const videoModalOverlay = document.getElementById('videoModalOverlay');
+    const videoModalContainer = document.getElementById('videoModalContainer');
+    const videoModalTitle = document.getElementById('videoModalTitle');
+    const videoModalDate = document.getElementById('videoModalDate');
+    const videoModalIframe = document.getElementById('videoModalIframe');
+    const videoModalClose = document.getElementById('videoModalClose');
+
+    // Exit early if modal elements are not found
+    if (!videoModalOverlay || !videoModalContainer || !videoModalIframe) {
+        return;
+    }
+
+    // Video metadata mapping
+    const videoMetadata = {
+        'Z0TYGtJkNYc': {
+            title: 'Global Drone Solutions - 2025 Winter Round 5',
+            date: 'January 15, 2025'
+        },
+        'q5riSjhoO6Y': {
+            title: 'Global Drone Solutions - 2025 Winter Round 4',
+            date: 'January 1, 2025'
+        },
+        'EQtrL84xII8': {
+            title: 'Global Drone Solutions - 2025 Winter Round 3',
+            date: 'December 18, 2024'
+        },
+        'erqHEa9xeU8': {
+            title: 'Global Drone Solutions - 2025 Winter Round 2',
+            date: 'December 4, 2024'
+        },
+        'xdZZHFEKjPA': {
+            title: 'Global Drone Solutions - 2025 Winter Round 1',
+            date: 'November 20, 2024'
+        },
+        'zwMSx5H6Ie4': {
+            title: 'Global Drone Solutions - 2024 Summer Grand Final',
+            date: 'November 6, 2024'
+        }
+    };
+
+    // Drag functionality variables
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    // Function to open video modal
+    function openVideoModal(videoId) {
+        try {
+            const metadata = videoMetadata[videoId];
+            if (!metadata) return;
+
+            // Set modal content
+            if (videoModalTitle) videoModalTitle.textContent = metadata.title;
+            if (videoModalDate) videoModalDate.textContent = metadata.date;
+            
+            // Set YouTube embed URL with autoplay
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            if (videoModalIframe) videoModalIframe.src = embedUrl;
+
+            // Reset modal position to center (remove any previous drag positioning)
+            videoModalContainer.style.transform = '';
+            videoModalContainer.style.left = '';
+            videoModalContainer.style.top = '';
+            videoModalContainer.style.position = '';
+
+            // Show modal
+            videoModalOverlay.classList.add('visible');
+
+            // Pause any site animations temporarily
+            pauseSiteAnimations();
+        } catch (error) {
+            console.error('Error opening video modal:', error);
+        }
+    }
+
+    // Function to close video modal
+    function closeVideoModal() {
+        try {
+            // Hide modal
+            videoModalOverlay.classList.remove('visible');
+            
+            // Stop video by clearing iframe src
+            if (videoModalIframe) {
+                setTimeout(() => {
+                    videoModalIframe.src = '';
+                }, 400); // Wait for transition to complete
+            }
+
+            // Resume site animations
+            resumeSiteAnimations();
+        } catch (error) {
+            console.error('Error closing video modal:', error);
+        }
+    }
+
+    // Drag functionality
+    function startDrag(e) {
+        if (!videoModalContainer) return;
+        
+        isDragging = true;
+        videoModalContainer.classList.add('dragging');
+
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Get the current visual position of the modal BEFORE removing transforms
+        const rect = videoModalContainer.getBoundingClientRect();
+        
+        // Calculate the offset between mouse position and modal's top-left corner
+        dragStartX = clientX - rect.left;
+        dragStartY = clientY - rect.top;
+
+        // Switch to absolute positioning while maintaining the same visual position
+        // Remove the transform and set explicit left/top to prevent jumping
+        videoModalContainer.style.transform = 'none';
+        videoModalContainer.style.left = `${rect.left}px`;
+        videoModalContainer.style.top = `${rect.top}px`;
+        videoModalContainer.style.position = 'fixed';
+
+        e.preventDefault();
+    }
+
+    function doDrag(e) {
+        if (!isDragging || !videoModalContainer) return;
+
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Calculate new position accounting for the initial click offset
+        const newX = clientX - dragStartX;
+        const newY = clientY - dragStartY;
+
+        // Constrain to viewport
+        const maxX = window.innerWidth - videoModalContainer.offsetWidth;
+        const maxY = window.innerHeight - videoModalContainer.offsetHeight;
+
+        const constrainedX = Math.max(0, Math.min(newX, maxX));
+        const constrainedY = Math.max(0, Math.min(newY, maxY));
+
+        // Apply position (transform is already set to 'none' in startDrag)
+        videoModalContainer.style.left = `${constrainedX}px`;
+        videoModalContainer.style.top = `${constrainedY}px`;
+
+        e.preventDefault();
+    }
+
+    function endDrag() {
+        if (!videoModalContainer) return;
+        
+        isDragging = false;
+        videoModalContainer.classList.remove('dragging');
+        
+        // Keep the modal in its current dragged position
+        // (don't reset to center unless user closes and reopens modal)
+    }
+
+    // Event listeners for past stream items
+    const pastStreamItems = document.querySelectorAll('.past-stream-item');
+    pastStreamItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const videoId = this.getAttribute('data-video-id');
+            if (videoId) {
+                openVideoModal(videoId);
+            }
+        });
+    });
+
+    // Modal close event listeners
+    if (videoModalClose) {
+        videoModalClose.addEventListener('click', closeVideoModal);
+    }
+
+    if (videoModalOverlay) {
+        videoModalOverlay.addEventListener('click', function(e) {
+            if (e.target === videoModalOverlay) {
+                closeVideoModal();
+            }
+        });
+    }
+
+    // Drag event listeners for modal header
+    const videoModalHeader = document.querySelector('.video-modal-header');
+    if (videoModalHeader) {
+        // Mouse events
+        videoModalHeader.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', endDrag);
+
+        // Touch events
+        videoModalHeader.addEventListener('touchstart', startDrag, { passive: false });
+        document.addEventListener('touchmove', doDrag, { passive: false });
+        document.addEventListener('touchend', endDrag);
+    }
+
+    // Keyboard event listener for ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && videoModalOverlay && videoModalOverlay.classList.contains('visible')) {
+            closeVideoModal();
+        }
+    });
+
+    // Helper functions for pausing/resuming animations
+    function pauseSiteAnimations() {
+        try {
+            // Pause pilot carousel
+            const pilotCarousel = document.querySelector('.pilot-carousel');
+            if (pilotCarousel && pilotCarousel.style) {
+                pilotCarousel.style.animationPlayState = 'paused';
+            }
+
+            // Pause sponsors carousel
+            const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+            if (sponsorsCarousel && sponsorsCarousel.style) {
+                sponsorsCarousel.style.animationPlayState = 'paused';
+            }
+        } catch (error) {
+            // Silent error handling
+        }
+    }
+
+    function resumeSiteAnimations() {
+        try {
+            // Resume pilot carousel
+            const pilotCarousel = document.querySelector('.pilot-carousel');
+            if (pilotCarousel && pilotCarousel.style) {
+                pilotCarousel.style.animationPlayState = 'running';
+            }
+
+            // Resume sponsors carousel
+            const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+            if (sponsorsCarousel && sponsorsCarousel.style) {
+                sponsorsCarousel.style.animationPlayState = 'running';
+            }
+        } catch (error) {
+            // Silent error handling
+        }
+    }
+
+    // Handle window resize to reposition modal if needed
+    window.addEventListener('resize', function() {
+        if (videoModalOverlay && videoModalOverlay.classList.contains('visible') && videoModalContainer) {
+            // Check if modal is outside viewport after resize
+            const rect = videoModalContainer.getBoundingClientRect();
+            const isOutsideViewport = rect.right > window.innerWidth || 
+                                    rect.bottom > window.innerHeight || 
+                                    rect.left < 0 || 
+                                    rect.top < 0;
+            
+            if (isOutsideViewport) {
+                // Only reset to center if modal is completely outside viewport
+                if (rect.left >= window.innerWidth || rect.top >= window.innerHeight || 
+                    rect.right <= 0 || rect.bottom <= 0) {
+                    // Reset to center
+                    videoModalContainer.style.transform = '';
+                    videoModalContainer.style.left = '';
+                    videoModalContainer.style.top = '';
+                    videoModalContainer.style.position = '';
+                } else {
+                    // Just constrain to viewport bounds
+                    const maxX = window.innerWidth - videoModalContainer.offsetWidth;
+                    const maxY = window.innerHeight - videoModalContainer.offsetHeight;
+                    
+                    const constrainedX = Math.max(0, Math.min(rect.left, maxX));
+                    const constrainedY = Math.max(0, Math.min(rect.top, maxY));
+                    
+                    videoModalContainer.style.transform = 'none';
+                    videoModalContainer.style.left = `${constrainedX}px`;
+                    videoModalContainer.style.top = `${constrainedY}px`;
+                    videoModalContainer.style.position = 'fixed';
+                }
+            }
+        }
+    });
 });

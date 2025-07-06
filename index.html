@@ -156,47 +156,72 @@
       <h3 class="past-streams-title">Past Live Streams</h3>
       <div class="past-streams-gallery fade-in">
 
-        <div class="past-stream-item">
-          <a href="https://youtu.be/Z0TYGtJkNYc?si=XUUbnpmOv1q0RhEf" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/Z0TYGtJkNYc/hqdefault.jpg" alt="Past Stream Thumbnail 1">
+        <div class="past-stream-item" data-video-id="Z0TYGtJkNYc">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/Z0TYGtJkNYc/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2025 Winter Round 5</h4>
+            <p class="stream-date">January 15, 2025</p>
+          </div>
         </div>
 
-        <div class="past-stream-item">
-          <a href="https://youtu.be/q5riSjhoO6Y?si=9g0TDSVLYQId57I9" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/q5riSjhoO6Y/hqdefault.jpg" alt="Past Stream Thumbnail 1">
+        <div class="past-stream-item" data-video-id="q5riSjhoO6Y">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/q5riSjhoO6Y/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2025 Winter Round 4</h4>
+            <p class="stream-date">January 1, 2025</p>
+          </div>
         </div>
 
-        <div class="past-stream-item">
-          <a href="https://youtu.be/EQtrL84xII8?si=d2WJ8SDxkWaXG-VU" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/EQtrL84xII8/hqdefault.jpg" alt="Past Stream Thumbnail 1">
+        <div class="past-stream-item" data-video-id="EQtrL84xII8">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/EQtrL84xII8/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2025 Winter Round 3</h4>
+            <p class="stream-date">December 18, 2024</p>
+          </div>
         </div>
-        <!-- Past Stream 1 -->
-        <div class="past-stream-item">
-          <a href="https://youtu.be/erqHEa9xeU8?si=Tv8nv4_4C_tGPKZ0" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/erqHEa9xeU8/hqdefault.jpg" alt="Past Stream Thumbnail 1">
+
+        <div class="past-stream-item" data-video-id="erqHEa9xeU8">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/erqHEa9xeU8/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2025 Winter Round 2</h4>
+            <p class="stream-date">December 4, 2024</p>
+          </div>
         </div>
-        <!-- Past Stream 2 -->
-        <div class="past-stream-item">
-          <a href="https://youtu.be/xdZZHFEKjPA?si=caHypE7AplZHGiS4" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/xdZZHFEKjPA/hqdefault.jpg" alt="Past Stream Thumbnail 2">
+
+        <div class="past-stream-item" data-video-id="xdZZHFEKjPA">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/xdZZHFEKjPA/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2025 Winter Round 1</h4>
+            <p class="stream-date">November 20, 2024</p>
+          </div>
         </div>
-        <!-- Past Stream 3 -->
-        <div class="past-stream-item">
-          <a href="https://youtu.be/zwMSx5H6Ie4?si=pczWYqKEa4i_3f4o" target="_blank" title="View Stream on YouTube">
-            <img src="https://img.youtube.com/vi/zwMSx5H6Ie4/hqdefault.jpg" alt="Past Stream Thumbnail 3">
+
+        <div class="past-stream-item" data-video-id="zwMSx5H6Ie4">
+          <div class="stream-thumbnail">
+            <img src="https://img.youtube.com/vi/zwMSx5H6Ie4/hqdefault.jpg" alt="Past Stream Thumbnail">
             <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </a>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-title">Global Drone Solutions - 2024 Summer Grand Final</h4>
+            <p class="stream-date">November 6, 2024</p>
+          </div>
         </div>
+
         <!-- Add more past streams as needed -->
       </div>
 
@@ -1442,6 +1467,25 @@
     <source src="./assets/audio/come_get_some.wav" type="audio/wav">
     Your browser does not support the audio element.
   </audio>
+  <!-- Video Modal -->
+  <div class="video-modal-overlay" id="videoModalOverlay">
+    <div class="video-modal-container" id="videoModalContainer">
+      <div class="video-modal-header">
+        <h3 class="video-modal-title" id="videoModalTitle">Video Title</h3>
+        <button class="video-modal-close" id="videoModalClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="video-modal-body">
+        <div class="video-modal-player">
+          <iframe id="videoModalIframe" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="video-modal-info">
+          <p class="video-modal-date" id="videoModalDate">Video Date</p>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Video Overlay Container -->
   <div class="video-overlay" id="videoOverlay">
     <div class="video-container">
