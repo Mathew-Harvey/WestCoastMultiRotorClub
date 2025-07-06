@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Capacitors Are Essential in FPV Drone Builds | WCMRC Tech Guides</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Basic Open Graph tags -->
+  <meta property="og:title" content="Why Capacitors Are Essential in FPV Drone Builds | WCMRC" />
+  <meta property="og:description"
+    content="Learn how a $2 capacitor can protect your FPV drone from voltage spikes and electrical noise. Essential electronics guide by WCMRC pilot ToGa." />
+  <meta property="og:url" content="https://westcoastmultirotors.com.au/capacitors-essential-fpv-builds" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="./assets/capacitor-for-drone.jpg" />
+</head>
+
+<body>
+
+  <!-- Custom cursor element -->
+  <div class="cursor"></div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="./index.html" class="logo">
+          <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
+        </a>
+        <ul class="nav-links">
+          <li><a href="./index.html#hero">Home</a></li>
+          <li><a href="./index.html#about">About</a></li>
+          <li><a href="./index.html#events">Events</a></li>
+          <li><a href="./index.html#membership">Pilots</a></li>
+          <li><a href="./index.html#gallery">Gallery</a></li>
+          <li><a href="./index.html#sponsors">Sponsors</a></li>
+          <li><a href="./index.html#contact">Contact</a></li>
+          <li><a href="./index.html#resources">Resources</a></li>
+        </ul>
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Hero Section -->
+  <section id="article-hero">
+    <div class="container">
+      <div class="article-hero-content">
+        <div class="breadcrumb">
+          <a href="./index.html">Home</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="./tech-guides.html">Tech Guides</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Why Capacitors Are Essential</span>
+        </div>
+        
+        <div class="article-meta-hero">
+          <span class="article-category">Electronics</span>
+          <span class="article-date">January 20, 2025</span>
+          <span class="article-read-time">8 min read</span>
+        </div>
+        
+        <h1>Why Capacitors Are Essential in FPV Drone Builds</h1>
+        <p class="article-subtitle">In the world of FPV drones, a $2 capacitor can mean the difference between a flawless flight and an expensive trip to the repair bench.</p>
+        
+        <div class="article-author-hero">
+          <div class="author-avatar-hero" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+          <div class="author-info-hero">
+            <span class="author-name">Nathan Lanchbury</span>
+            <span class="author-title">"ToGa" - WCMRC Pilot</span>
+            <span class="author-bio">Rising star pilot and electronics enthusiast</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <section id="article-content">
+    <div class="container">
+      <div class="article-layout">
+        <!-- Main Article Content -->
+        <article class="article-main">
+          <div class="article-image-main">
+            <img src="./assets/capacitor-for-drone.jpg" alt="FPV Drone Capacitor Installation" />
+            <div class="image-caption">
+              <i class="fas fa-info-circle"></i>
+              A properly installed capacitor can save hundreds of dollars in component damage from voltage spikes
+            </div>
+          </div>
+
+          <div class="article-content-body">
+            <div class="content-section">
+              <p class="lead-paragraph">Voltage spikes, electrical noise, and sudden current surges are all part of the harsh electrical environment inside a high-performance quad. Without proper mitigation, these can lead to everything from minor video noise to catastrophic failure of your ESCs or flight controller.</p>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-bolt"></i> Voltage Spikes and ESC Protection</h2>
+              <p>Brushless motors demand rapid bursts of current, especially during aggressive throttle changes. This causes voltage spikes that can momentarily exceed safe limits for your electronics. A well-placed capacitor acts as a buffer, absorbing these spikes and preventing them from reaching and damaging sensitive components. While some ESCs include built-in protection, they're often insufficient for high-power setups running 6S or high-kV motors.</p>
+              
+              <div class="tech-tip">
+                <div class="tip-header">
+                  <i class="fas fa-wrench"></i>
+                  <span>Tech Tip</span>
+                </div>
+                <p>A 1000µF 35V low-ESR capacitor is a common go-to because it provides a strong reservoir of charge to smooth out fluctuations, and the 35V rating ensures it can handle the peak voltages of a 6S system (which can momentarily exceed 30V under load). Lower-rated caps (e.g., 25V) might work for 4S, but they offer little headroom and risk failure over time.</p>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-tv"></i> Filtering Electrical Noise for a Cleaner Video Feed</h2>
+              <p>FPV systems are highly susceptible to electrical noise, which manifests as static, rolling lines, or distortion in your video feed. This noise is often generated by ESCs switching rapidly on and off, creating high-frequency interference that can leak into your VTX or camera power supply.</p>
+              
+              <p>Low-ESR capacitors excel at filtering out this noise by providing a stable voltage supply. Placing one directly across the main battery pads on your ESC or flight controller significantly reduces interference, leading to a cleaner video feed with minimal artifacts.</p>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-microchip"></i> Why Low-ESR Matters</h2>
+              <p>ESR (Equivalent Series Resistance) is a key factor in capacitor effectiveness. A high-ESR capacitor resists rapid charge and discharge cycles, making it less effective at filtering noise and absorbing spikes. Low-ESR capacitors, typically rated for switching power supplies, allow quick response to electrical fluctuations, making them ideal for FPV applications.</p>
+              
+              <div class="component-specs">
+                <h3>Recommended Capacitor Specifications:</h3>
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-cog"></i>
+                    <div class="spec-details">
+                      <strong>Capacitance:</strong>
+                      <span>1000µF (primary), 470µF or 330µF (secondary)</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-bolt"></i>
+                    <div class="spec-details">
+                      <strong>Voltage Rating:</strong>
+                      <span>35V for 6S, 25V minimum for 4S</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <div class="spec-details">
+                      <strong>ESR:</strong>
+                      <span>Low-ESR type, switching power supply rated</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-temperature-high"></i>
+                    <div class="spec-details">
+                      <strong>Temperature:</strong>
+                      <span>105°C rated for reliability</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h3><i class="fas fa-map-marker-alt"></i> Placement Matters</h3>
+              <p>For best results, capacitors should be soldered as close to the source of the voltage spikes as possible—typically across the main power leads on the ESC or flight controller. Additional smaller capacitors (e.g., 470µF or 330µF) can be added closer to specific components like the VTX if needed, but a single 1000µF cap on the main power rail is often enough for most builds.</p>
+              
+              <div class="placement-guide">
+                <h4>Installation Locations (in order of priority):</h4>
+                <ol>
+                  <li><strong>Primary:</strong> Main power pads on ESC or flight controller</li>
+                  <li><strong>Secondary:</strong> VTX power input (if video noise persists)</li>
+                  <li><strong>Tertiary:</strong> Camera power rail (for extremely sensitive setups)</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="content-section conclusion">
+              <h2><i class="fas fa-lightbulb"></i> Final Thoughts</h2>
+              <p>Skipping a capacitor might not kill your quad immediately, but over time, unfiltered voltage spikes can degrade components, causing random desyncs, burnt ESCs, or a fried flight controller. For the price of a single prop set, you can add a simple yet highly effective layer of protection to your build. Whether you're flying 4S, 6S, or even higher, a well-chosen capacitor is a must-have for any serious FPV pilot.</p>
+              
+              <div class="cost-benefit">
+                <div class="cost-side">
+                  <h4><i class="fas fa-dollar-sign"></i> Cost</h4>
+                  <p>$2-5 for a quality capacitor</p>
+                </div>
+                <div class="vs">VS</div>
+                <div class="benefit-side">
+                  <h4><i class="fas fa-shield-alt"></i> Protection</h4>
+                  <p>$50-200+ in potential component damage</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article Sidebar -->
+        <aside class="article-sidebar">
+          <div class="author-card">
+            <div class="author-avatar-large" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+            <h3>Nathan Lanchbury</h3>
+            <p class="author-handle">"ToGa"</p>
+            <p class="author-description">WCMRC rising star pilot with a passion for electronics and racing. Known for his technical approach to building and tuning racing quads.</p>
+            <div class="author-stats">
+              <div class="stat">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Years Flying</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">12</span>
+                <span class="stat-label">Podium Finishes</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="related-articles">
+            <h3>Related Guides</h3>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/drone5.jpg')"></div>
+              <div class="related-content">
+                <h4>Understanding ESC Protocols</h4>
+                <span class="related-author">by andAgainFPV</span>
+              </div>
+            </div>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/drone6.jpg')"></div>
+              <div class="related-content">
+                <h4>Motor Maintenance Guide</h4>
+                <span class="related-author">by ToGa</span>
+              </div>
+            </div>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/drone2.jpg')"></div>
+              <div class="related-content">
+                <h4>Wiring Your Racing Drone</h4>
+                <span class="related-author">by Kurt</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-article">
+            <h3>Share This Guide</h3>
+            <div class="share-buttons">
+              <button class="share-btn facebook"><i class="fab fa-facebook-f"></i></button>
+              <button class="share-btn twitter"><i class="fab fa-twitter"></i></button>
+              <button class="share-btn reddit"><i class="fab fa-reddit-alien"></i></button>
+              <button class="share-btn copy-link"><i class="fas fa-link"></i></button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>West Coast Mulirotor Club</h3>
+          <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
+            FPV flight.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="./index.html#hero">Home</a></li>
+            <li><a href="./index.html#about">About</a></li>
+            <li><a href="./index.html#events">Events</a></li>
+            <li><a href="./index.html#membership">Pilots</a></li>
+            <li><a href="./index.html#gallery">Gallery</a></li>
+            <li><a href="./index.html#sponsors">Sponsors</a></li>
+            <li><a href="./index.html#contact">Contact</a></li>
+            <li><a href="./index.html#resources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Tech Guides</h3>
+          <ul class="footer-links">
+            <li><a href="./tech-guides.html">All Guides</a></li>
+            <li><a href="./tech-guides.html#categories">Categories</a></li>
+            <li><a href="./tech-guides.html#newsletter-signup">Subscribe</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-newsletter">
+          <h3>Newsletter</h3>
+          <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
+          <form>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 West Coast Mulirotor Club. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+
+</body>
+
+</html> 

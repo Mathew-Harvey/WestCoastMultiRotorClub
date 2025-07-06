@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Guides | West Coast Multirotor Club</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Basic Open Graph tags -->
+  <meta property="og:title" content="Tech Guides | West Coast Multirotor Club" />
+  <meta property="og:description"
+    content="Technical guides for building, tuning, and maintaining your racing drones. Expert tips from WCMRC pilots." />
+  <meta property="og:url" content="https://westcoastmultirotors.com.au/tech-guides" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="./assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="West Coast Multirotor Club tech guides" />
+</head>
+
+<body>
+
+  <!-- Custom cursor element -->
+  <div class="cursor"></div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="./index.html" class="logo">
+          <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
+        </a>
+        <ul class="nav-links">
+          <li><a href="./index.html#hero">Home</a></li>
+          <li><a href="./index.html#about">About</a></li>
+          <li><a href="./index.html#events">Events</a></li>
+          <li><a href="./index.html#membership">Pilots</a></li>
+          <li><a href="./index.html#gallery">Gallery</a></li>
+          <li><a href="./index.html#sponsors">Sponsors</a></li>
+          <li><a href="./index.html#contact">Contact</a></li>
+          <li><a href="./index.html#resources">Resources</a></li>
+        </ul>
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Blog Hero Section -->
+  <section id="blog-hero">
+    <div class="container">
+      <div class="blog-hero-content">
+        <div class="breadcrumb">
+          <a href="./index.html">Home</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="./index.html#resources">Resources</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Tech Guides</span>
+        </div>
+        <h1>Tech Guides</h1>
+        <p>Expert technical guides for building, tuning, and maintaining your racing drones. Learn from the experience of WCMRC pilots and take your FPV skills to the next level.</p>
+                 <div class="blog-stats">
+           <div class="stat">
+             <i class="fas fa-book-open"></i>
+             <span>Growing Library</span>
+           </div>
+           <div class="stat">
+             <i class="fas fa-users"></i>
+             <span>WCMRC Pilots</span>
+           </div>
+           <div class="stat">
+             <i class="fas fa-clock"></i>
+             <span>Fresh Content</span>
+           </div>
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Article Section -->
+  <section id="featured-article">
+    <div class="container">
+      <h2>Featured Guide</h2>
+      <div class="featured-article-card fade-in">
+        <div class="featured-article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')">
+          <div class="featured-badge">Featured</div>
+        </div>
+        <div class="featured-article-content">
+          <div class="article-meta">
+            <span class="article-category">Electronics</span>
+            <span class="article-date">6 July 2025</span>
+            <span class="article-read-time">8 min read</span>
+          </div>
+          <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
+          <p>In the world of FPV drones, a $2 capacitor can mean the difference between a flawless flight and an expensive trip to the repair bench. Learn how voltage spikes, electrical noise, and current surges can destroy your electronics, and why a simple capacitor is your quad's best defense.</p>
+          
+          <div class="featured-article-preview">
+            <h4>What You'll Learn:</h4>
+            <ul>
+              <li><strong>Voltage Spike Protection:</strong> How capacitors protect ESCs and flight controllers from motor-induced voltage spikes</li>
+              <li><strong>Video Feed Filtering:</strong> Eliminate electrical noise for cleaner FPV video transmission</li>
+              <li><strong>Low-ESR Importance:</strong> Why Equivalent Series Resistance matters for effective filtering</li>
+              <li><strong>Proper Placement:</strong> Where to mount capacitors for maximum protection</li>
+              <li><strong>Component Selection:</strong> Choosing the right capacitance and voltage ratings for your setup</li>
+            </ul>
+            <div class="key-takeaway">
+              <i class="fas fa-lightbulb"></i>
+              <span><strong>Key Takeaway:</strong> A 1000µF 35V low-ESR capacitor costs less than a prop set but can prevent hundreds of dollars in component damage.</span>
+            </div>
+          </div>
+          
+          <div class="article-author">
+            <div class="author-avatar" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+            <div class="author-info">
+              <span class="author-name">Nathan Lanchbury</span>
+              <span class="author-title">"ToGa" - Rising Star Pilot</span>
+            </div>
+          </div>
+          <a href="./capacitors-essential-fpv-builds.html" class="btn article-btn">Read Full Guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categories">
+    <div class="container">
+      <h2>Browse by Category</h2>
+      <div class="categories-grid fade-in">
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3>Build Guides</h3>
+          <p>Step-by-step instructions for building racing drones from scratch</p>
+          <div class="category-count">8 guides</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-sliders-h"></i>
+          </div>
+          <h3>Tuning & Setup</h3>
+          <p>Optimize your drone's performance with expert tuning techniques</p>
+          <div class="category-count">6 guides</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <h3>Maintenance</h3>
+          <p>Keep your drone in peak condition with proper maintenance</p>
+          <div class="category-count">4 guides</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-microchip"></i>
+          </div>
+          <h3>Electronics</h3>
+          <p>Understanding and troubleshooting drone electronics</p>
+          <div class="category-count">5 guides</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h3>Racing Tips</h3>
+          <p>Improve your racing performance with pro techniques</p>
+          <div class="category-count">3 guides</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3>Troubleshooting</h3>
+          <p>Common problems and their solutions</p>
+          <div class="category-count">7 guides</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Grid Section -->
+  <section id="articles-grid">
+    <div class="container">
+      <div class="articles-header">
+        <h2>Latest Tech Guides</h2>
+        <div class="articles-filters">
+          <button class="filter-btn active" data-filter="all">All Guides</button>
+          <button class="filter-btn" data-filter="build">Build</button>
+          <button class="filter-btn" data-filter="tuning">Tuning</button>
+          <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+          <button class="filter-btn" data-filter="electronics">Electronics</button>
+        </div>
+      </div>
+      
+      <div class="articles-grid fade-in">
+                 <!-- Article 1 -->
+         <article class="article-card" data-category="electronics">
+           <div class="article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
+           <div class="article-content">
+             <div class="article-meta">
+               <span class="article-category">Electronics</span>
+               <span class="article-date">January 20, 2025</span>
+             </div>
+             <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
+             <p>A $2 capacitor can mean the difference between a flawless flight and an expensive repair bill. Learn how to protect your electronics from voltage spikes and electrical noise.</p>
+             <div class="article-footer">
+               <div class="article-author-mini">
+                 <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+                 <span>ToGa</span>
+               </div>
+               <span class="read-time">8 min read</span>
+             </div>
+           </div>
+         </article>
+
+        <!-- Article 2 -->
+        <article class="article-card" data-category="tuning">
+          <div class="article-image" style="background-image: url('./assets/drone4.jpg')"></div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-category">Tuning</span>
+              <span class="article-date">December 8, 2024</span>
+            </div>
+            <h3>PID Tuning for Beginners</h3>
+            <p>Master the basics of PID tuning to improve your drone's flight characteristics and responsiveness on the track.</p>
+            <div class="article-footer">
+              <div class="article-author-mini">
+                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
+                <span>Epoxy</span>
+              </div>
+              <span class="read-time">12 min read</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="article-card" data-category="electronics">
+          <div class="article-image" style="background-image: url('./assets/drone5.jpg')"></div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-category">Electronics</span>
+              <span class="article-date">December 5, 2024</span>
+            </div>
+            <h3>Understanding ESC Protocols</h3>
+            <p>A deep dive into ESC protocols and how they affect your drone's performance. Learn when to use DShot, Multishot, and OneShot.</p>
+            <div class="article-footer">
+              <div class="article-author-mini">
+                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/andAgain.jpg')"></div>
+                <span>andAgainFPV</span>
+              </div>
+              <span class="read-time">10 min read</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="article-card" data-category="maintenance">
+          <div class="article-image" style="background-image: url('./assets/drone2.jpg')"></div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-category">Maintenance</span>
+              <span class="article-date">December 3, 2024</span>
+            </div>
+            <h3>Motor Maintenance and Replacement</h3>
+            <p>Keep your motors running smooth with proper maintenance techniques and learn when it's time for a replacement.</p>
+            <div class="article-footer">
+              <div class="article-author-mini">
+                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+                <span>ToGa</span>
+              </div>
+              <span class="read-time">7 min read</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="article-card" data-category="build">
+          <div class="article-image" style="background-image: url('./assets/racingDrone.jpg')"></div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-category">Build Guide</span>
+              <span class="article-date">November 28, 2024</span>
+            </div>
+            <h3>Wiring Your Racing Drone Safely</h3>
+            <p>Learn proper wiring techniques to ensure reliable performance and easy maintenance of your racing drone.</p>
+            <div class="article-footer">
+              <div class="article-author-mini">
+                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Kurt.jpg')"></div>
+                <span>Kurt</span>
+              </div>
+              <span class="read-time">15 min read</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 6 -->
+        <article class="article-card" data-category="tuning">
+          <div class="article-image" style="background-image: url('./assets/gates.jpg')"></div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-category">Racing Tips</span>
+              <span class="article-date">November 25, 2024</span>
+            </div>
+            <h3>Camera Angle and Racing Lines</h3>
+            <p>Optimize your camera angle and learn to read racing lines for competitive advantage on the track.</p>
+            <div class="article-footer">
+              <div class="article-author-mini">
+                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Asylum.jpg')"></div>
+                <span>Asylum</span>
+              </div>
+              <span class="read-time">9 min read</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Load More Button -->
+      <div class="load-more-container">
+        <button class="btn load-more-btn">Load More Articles</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section id="newsletter-signup">
+    <div class="container">
+      <div class="newsletter-content fade-in">
+        <div class="newsletter-text">
+          <h3>Stay Updated with Latest Tech Guides</h3>
+          <p>Get notified when new tech guides are published. No spam, just valuable FPV content.</p>
+        </div>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Enter your email address" required>
+          <button type="submit" class="btn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>West Coast Mulirotor Club</h3>
+          <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
+            FPV flight.</p>
+          <h3>Sister FPV Racing Club <br>Rotor Cross</h3>
+          <a href="https://www.revolutionise.com.au/rox/home" target="_blank">
+            <img src="./assets/rotorCross.png" alt="Rotor Cross" class="footer-logo" />
+          </a>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="./index.html#hero">Home</a></li>
+            <li><a href="./index.html#about">About</a></li>
+            <li><a href="./index.html#events">Events</a></li>
+            <li><a href="./index.html#membership">Pilots</a></li>
+            <li><a href="./index.html#gallery">Gallery</a></li>
+            <li><a href="./index.html#sponsors">Sponsors</a></li>
+            <li><a href="./index.html#contact">Contact</a></li>
+            <li><a href="./index.html#resources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Tech Guides</h3>
+          <ul class="footer-links">
+            <li><a href="#featured-article">Featured Guides</a></li>
+            <li><a href="#categories">Browse Categories</a></li>
+            <li><a href="#articles-grid">All Articles</a></li>
+            <li><a href="#newsletter-signup">Subscribe</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-newsletter">
+          <h3>Newsletter</h3>
+          <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
+          <form>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 West Coast Mulirotor Club. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+
+</body>
+
+</html> 

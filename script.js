@@ -1072,6 +1072,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     top: target.offsetTop - 80,
                     behavior: 'smooth'
                 });
+
+                // Trigger fade-in check after smooth scroll completes
+                setTimeout(() => {
+                    triggerFadeInCheck();
+                }, 500); // Wait for smooth scroll to complete
             }
         });
     });
@@ -1128,6 +1133,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    // Make fadeInOnScroll available globally for navigation triggers
+    window.triggerFadeInCheck = () => {
+        window.requestAnimationFrame(fadeInOnScroll);
+    };
+
     // Use passive event listener with throttling for better performance
     window.addEventListener('scroll', function () {
         if (!ticking) {
@@ -1140,6 +1150,11 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         window.requestAnimationFrame(fadeInOnScroll);
     }, 100);
+    
+    // Additional check for when page loads with elements already in view
+    setTimeout(() => {
+        window.requestAnimationFrame(fadeInOnScroll);
+    }, 500);
 });
 
 // Back to top button
@@ -2026,7 +2041,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize video features
     generateVideoPoster();
-    initializeVideoFeature();
+    // initializeVideoFeature(); // Commented out to prevent auto-play on page load
 
     // Add keyboard support
     document.addEventListener('keydown', function (e) {
