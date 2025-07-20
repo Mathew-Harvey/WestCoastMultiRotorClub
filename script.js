@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function isIOSDevice() {
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     }
-    
+
     // Utility function to check passive event support
     function supportsPassiveEvents() {
         let passiveSupported = false;
@@ -202,11 +202,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelAnimationFrame(autoScrollID);
             }
         }
-        
+
         if (isDragging || isFlipping) return;
-        
+
         pilotCarousel.classList.add('js-controlled');
-        
+
         // Use a slower scroll speed on iOS
         const isIOS = isIOSDevice();
         autoScrollSpeed = isIOS ? 0.7 : 1.5; // Slower for iOS
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             setCarouselPosition(false);
-            
+
             // Use setTimeout for iOS to reduce GPU pressure
             if (isIOS) {
                 autoScrollID = setTimeout(() => {
@@ -267,9 +267,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function dragStart(e) {
         try {
             if (isFlipping) return;
-            
+
             const isIOS = isIOSDevice();
-            
+
             // Only prevent default on non-iOS to avoid interfering with Safari's scroll
             if (!isIOS) {
                 try {
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Some browsers don't allow preventDefault
                 }
             }
-            
+
             pilotCarousel.classList.add('js-controlled');
             startPosition = getPositionX(e);
             isDragging = true;
@@ -298,9 +298,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function drag(e) {
         try {
             if (!isDragging) return;
-            
+
             const isIOS = isIOSDevice();
-            
+
             // Only prevent default on non-iOS or when we know it's a horizontal drag
             if (!isIOS) {
                 try {
@@ -413,9 +413,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupCardFlip() {
         pilotCarousel.removeEventListener('click', handleFlipEvent);
         pilotCarousel.removeEventListener('touchend', handleTouchEndFlipEvent);
-        
+
         const isIOS = isIOSDevice();
-        
+
         // If on iOS, we'll handle card flips differently
         if (isIOS) {
             pilotCarousel.addEventListener('click', handleIOSFlipEvent);
@@ -453,31 +453,31 @@ document.addEventListener('DOMContentLoaded', function () {
         event.stopPropagation();
         dragDistance = 0;
     }
-    
-    function handleFlipEvent(e) { 
-        const targetCard = e.target.closest('.pilot-card'); 
-        if (targetCard) { 
-            executeFlip(targetCard, e); 
-        } 
+
+    function handleFlipEvent(e) {
+        const targetCard = e.target.closest('.pilot-card');
+        if (targetCard) {
+            executeFlip(targetCard, e);
+        }
     }
-    
+
     let lastTap = 0; let tapTimeout;
-    
+
     function handleTouchEndFlipEvent(e) {
         const targetCard = e.target.closest('.pilot-card');
         if (!targetCard) return;
         if (dragDistance < dragThreshold) { e.preventDefault(); }
         else { dragDistance = 0; return; }
-        const currentTime = new Date().getTime(); 
+        const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTap;
         clearTimeout(tapTimeout);
-        if (tapLength < 300 && tapLength > 0) { 
-            executeFlip(targetCard, e); 
-            lastTap = 0; 
+        if (tapLength < 300 && tapLength > 0) {
+            executeFlip(targetCard, e);
+            lastTap = 0;
         }
-        else { 
-            lastTap = currentTime; 
-            tapTimeout = setTimeout(() => { lastTap = 0; }, 300); 
+        else {
+            lastTap = currentTime;
+            tapTimeout = setTimeout(() => { lastTap = 0; }, 300);
         }
         dragDistance = 0;
     }
@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleIOSTouchEndFlipEvent(e) {
         const targetCard = e.target.closest('.pilot-card');
         if (!targetCard) return;
-        
+
         if (dragDistance < dragThreshold) {
             // On iOS we're more careful with preventDefault
             if (e.cancelable) {
@@ -503,11 +503,11 @@ document.addEventListener('DOMContentLoaded', function () {
             dragDistance = 0;
             return;
         }
-        
+
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTap;
         clearTimeout(tapTimeout);
-        
+
         if (tapLength < 300 && tapLength > 0) {
             executeIOSFlip(targetCard, e);
             lastTap = 0;
@@ -517,27 +517,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastTap = 0;
             }, 300);
         }
-        
+
         dragDistance = 0;
     }
-    
+
     // New iOS-friendly card flip implementation without 3D transforms
     function executeIOSFlip(targetCard, event) {
         if (dragDistance >= dragThreshold) {
             dragDistance = 0;
             return;
         }
-        
+
         if (isFlipping) return;
         isFlipping = true;
         stopAutoScroll();
-        
+
         const wasFlipped = targetCard.classList.contains('flipped');
-        
+
         // For iOS, instead of 3D transform, we simply toggle visibility of front/back
         const frontSide = targetCard.querySelector('.pilot-card-front');
         const backSide = targetCard.querySelector('.pilot-card-back');
-        
+
         if (frontSide && backSide) {
             if (!wasFlipped) {
                 // Transition from front to back
@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 200);
             }
         }
-        
+
         // Sound effect for DukeGod card (keep original functionality)
         const pilotNameElement = targetCard.querySelector('.pilot-card-name');
         const isDukeGod = pilotNameElement && pilotNameElement.textContent.trim() === 'DukeGod';
@@ -571,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dukegodFlipSound.currentTime = 0;
             dukegodFlipSound.play().catch(err => {});
         }
-        
+
         setTimeout(() => {
             isFlipping = false;
             clearTimeout(window.restartScrollTimeout);
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, postDragPauseDuration);
         }, 800);
-        
+
         event.stopPropagation();
         dragDistance = 0;
     }
@@ -594,30 +594,30 @@ document.addEventListener('DOMContentLoaded', function () {
         pilotCarousel.addEventListener('mousemove', handleShineMove);
         pilotCarousel.addEventListener('mouseout', handleShineOut);
     }
-    
+
     function handleShineMove(e) {
         if (isDragging) { handleShineOut(e); return; }
         const targetCard = e.target.closest('.pilot-card:not(.flipped)');
         if (targetCard) {
-            pilotCarousel.querySelectorAll('.pilot-card-shine').forEach(shineEl => { 
-                if (!targetCard.contains(shineEl)) { 
-                    shineEl.style.opacity = '0'; 
-                } 
+            pilotCarousel.querySelectorAll('.pilot-card-shine').forEach(shineEl => {
+                if (!targetCard.contains(shineEl)) {
+                    shineEl.style.opacity = '0';
+                }
             });
-            const shine = targetCard.querySelector('.pilot-card-shine'); 
+            const shine = targetCard.querySelector('.pilot-card-shine');
             if (!shine) return;
-            const rect = targetCard.getBoundingClientRect(); 
-            const x = e.clientX - rect.left; 
+            const rect = targetCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const xPercent = (x / rect.width) * 100; 
+            const xPercent = (x / rect.width) * 100;
             const yPercent = (y / rect.height) * 100;
-            shine.style.opacity = '1'; 
+            shine.style.opacity = '1';
             shine.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 70%)`;
-        } else { 
-            handleShineOut(e); 
+        } else {
+            handleShineOut(e);
         }
     }
-    
+
     function handleShineOut(e) {
         const relatedTarget = e.relatedTarget;
         if (!relatedTarget || !pilotCarousel.contains(relatedTarget)) {
@@ -683,9 +683,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeCarousel() {
         pilotCarousel.classList.add('js-controlled');
         void pilotCarousel.offsetWidth;
-        
+
         const isIOS = isIOSDevice();
-        
+
         if (isIOS) {
             // Apply iOS-specific styles to all cards
             document.querySelectorAll('.pilot-card').forEach(card => {
@@ -695,11 +695,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     cardInner.style.transformStyle = 'flat';
                     cardInner.style.transform = 'none';
                 }
-                
+
                 // Set initial states for front/back sides
                 const frontSide = card.querySelector('.pilot-card-front');
                 const backSide = card.querySelector('.pilot-card-back');
-                
+
                 if (frontSide) {
                     frontSide.style.opacity = '1';
                     frontSide.style.display = 'flex';
@@ -708,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     frontSide.style.transform = 'none';
                     frontSide.style.transition = 'opacity 0.3s ease';
                 }
-                
+
                 if (backSide) {
                     backSide.style.opacity = '0';
                     backSide.style.display = 'none';
@@ -718,15 +718,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     backSide.style.transition = 'opacity 0.3s ease';
                 }
             });
-            
+
             // Use simpler touch action for iOS
             pilotCarousel.style.touchAction = 'pan-y';
         } else {
             pilotCarousel.style.touchAction = 'pan-y pinch-zoom';
         }
-        
+
         pilotCarouselContainer.style.overscrollBehaviorX = 'none';
-        
+
         if (setupCarouselClones()) {
             updateCardColors();
             setupCardFlip();
@@ -736,10 +736,10 @@ document.addEventListener('DOMContentLoaded', function () {
             startAutoScroll();
         }
     }
-    
+
     // Start the carousel - Added this line to call the initialization
     initializeCarousel();
-    
+
 }); // End of Pilot Carousel functionality
 
 // Drone Animation Handler
@@ -955,7 +955,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Don't stop animation loop on error, just continue
         }
 
-        // Continue animation regardless of errors - use setTimeout to limit 
+        // Continue animation regardless of errors - use setTimeout to limit
         // animation updates during fast scrolling on mobile devices
         if (window.navigator.userAgent.includes('Mobile')) {
             setTimeout(() => requestAnimationFrame(animateDrone), 16); // Limit to ~60fps on mobile
@@ -1150,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         window.requestAnimationFrame(fadeInOnScroll);
     }, 100);
-    
+
     // Additional check for when page loads with elements already in view
     setTimeout(() => {
         window.requestAnimationFrame(fadeInOnScroll);
@@ -2096,29 +2096,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Video metadata mapping
     const videoMetadata = {
-        'Z0TYGtJkNYc': {
+
+        'M9kyPWRqRDo': {
             title: 'Global Drone Solutions - 2025 Winter Round 5',
-            date: 'January 15, 2025'
+            date: 'July 5, 2025'
+        },
+        'Z0TYGtJkNYc': {
+            title: 'Global Drone Solutions - 2025 Winter Round 3',
+            date: 'June 7, 2025'
+        },
+        'qbF6hs6pkcI': {
+            title: 'Global Drone Solutions - 2025 Winter Round 2',
+            date: 'May 24, 2025'
         },
         'q5riSjhoO6Y': {
-            title: 'Global Drone Solutions - 2025 Winter Round 4',
-            date: 'January 1, 2025'
+            title: 'Global Drone Solutions - 2025 Winter Round 1',
+            date: 'May 10, 2025'
         },
         'EQtrL84xII8': {
-            title: 'Global Drone Solutions - 2025 Winter Round 3',
-            date: 'December 18, 2024'
-        },
-        'erqHEa9xeU8': {
-            title: 'Global Drone Solutions - 2025 Winter Round 2',
-            date: 'December 4, 2024'
-        },
-        'xdZZHFEKjPA': {
-            title: 'Global Drone Solutions - 2025 Winter Round 1',
-            date: 'November 20, 2024'
-        },
-        'zwMSx5H6Ie4': {
             title: 'Global Drone Solutions - 2024 Summer Grand Final',
-            date: 'November 6, 2024'
+            date: 'April 12, 2025'
         }
     };
 
@@ -2136,7 +2133,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Set modal content
             if (videoModalTitle) videoModalTitle.textContent = metadata.title;
             if (videoModalDate) videoModalDate.textContent = metadata.date;
-            
+
             // Set YouTube embed URL with autoplay
             const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
             if (videoModalIframe) videoModalIframe.src = embedUrl;
@@ -2162,7 +2159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Hide modal
             videoModalOverlay.classList.remove('visible');
-            
+
             // Stop video by clearing iframe src
             if (videoModalIframe) {
                 setTimeout(() => {
@@ -2180,7 +2177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Drag functionality
     function startDrag(e) {
         if (!videoModalContainer) return;
-        
+
         isDragging = true;
         videoModalContainer.classList.add('dragging');
 
@@ -2189,7 +2186,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Get the current visual position of the modal BEFORE removing transforms
         const rect = videoModalContainer.getBoundingClientRect();
-        
+
         // Calculate the offset between mouse position and modal's top-left corner
         dragStartX = clientX - rect.left;
         dragStartY = clientY - rect.top;
@@ -2230,10 +2227,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function endDrag() {
         if (!videoModalContainer) return;
-        
+
         isDragging = false;
         videoModalContainer.classList.remove('dragging');
-        
+
         // Keep the modal in its current dragged position
         // (don't reset to center unless user closes and reopens modal)
     }
@@ -2325,14 +2322,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (videoModalOverlay && videoModalOverlay.classList.contains('visible') && videoModalContainer) {
             // Check if modal is outside viewport after resize
             const rect = videoModalContainer.getBoundingClientRect();
-            const isOutsideViewport = rect.right > window.innerWidth || 
-                                    rect.bottom > window.innerHeight || 
-                                    rect.left < 0 || 
+            const isOutsideViewport = rect.right > window.innerWidth ||
+                                    rect.bottom > window.innerHeight ||
+                                    rect.left < 0 ||
                                     rect.top < 0;
-            
+
             if (isOutsideViewport) {
                 // Only reset to center if modal is completely outside viewport
-                if (rect.left >= window.innerWidth || rect.top >= window.innerHeight || 
+                if (rect.left >= window.innerWidth || rect.top >= window.innerHeight ||
                     rect.right <= 0 || rect.bottom <= 0) {
                     // Reset to center
                     videoModalContainer.style.transform = '';
@@ -2343,10 +2340,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Just constrain to viewport bounds
                     const maxX = window.innerWidth - videoModalContainer.offsetWidth;
                     const maxY = window.innerHeight - videoModalContainer.offsetHeight;
-                    
+
                     const constrainedX = Math.max(0, Math.min(rect.left, maxX));
                     const constrainedY = Math.max(0, Math.min(rect.top, maxY));
-                    
+
                     videoModalContainer.style.transform = 'none';
                     videoModalContainer.style.left = `${constrainedX}px`;
                     videoModalContainer.style.top = `${constrainedY}px`;
