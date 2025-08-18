@@ -2097,6 +2097,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Video metadata mapping
     const videoMetadata = {
 
+        'lF8Ly45rlJI': {
+            title: 'Global Drone Solutions - 2025 Winter Round 8',
+            date: 'August 16, 2025'
+        },
+        'dq6_mui1MwA': {
+            title: 'Global Drone Solutions - 2025 Winter Round 6',
+            date: 'July 19, 2025'
+        },
         'M9kyPWRqRDo': {
             title: 'Global Drone Solutions - 2025 Winter Round 5',
             date: 'July 5, 2025'
