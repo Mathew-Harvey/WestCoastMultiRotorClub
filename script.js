@@ -1297,89 +1297,82 @@ document.addEventListener('DOMContentLoaded', function () {
     // Define event data (make sure this is at the top level of your events code)
     const eventData = [
         {
-            title: "Global Drone Solutions Summer Series round 8",
-            date: new Date(2025, 2, 23, 8, 0), // March 23, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            title: "Open Day",
+            date: new Date(2025, 10, 9, 8, 0), // November 9, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 1",
+            date: new Date(2025, 10, 30, 8, 0), // November 30, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 2",
+            date: new Date(2025, 11, 14, 8, 0), // December 14, 2025
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Open Day",
+            date: new Date(2026, 0, 11, 8, 0), // January 11, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 3",
+            date: new Date(2026, 0, 18, 8, 0), // January 18, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 4",
+            date: new Date(2026, 1, 1, 8, 0), // February 1, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 5",
+            date: new Date(2026, 1, 15, 8, 0), // February 15, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Open Day",
+            date: new Date(2026, 2, 8, 8, 0), // March 8, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 6",
+            date: new Date(2026, 2, 22, 8, 0), // March 22, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 7",
+            date: new Date(2026, 3, 12, 8, 0), // April 12, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Summer Series Round 8",
+            date: new Date(2026, 3, 26, 8, 0), // April 26, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"
         },
         {
             title: "Global Drone Solutions Summer Series Grand Final",
-            date: new Date(2025, 3, 12, 8, 0), // April 12, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            date: new Date(2026, 4, 3, 8, 0), // May 3, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone6.jpg"
         },
         {
-            title: "Global Drone Solutions Winter series round 1",
-            date: new Date(2025, 4, 10, 8, 0), // May 10, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
+            title: "Open Day",
+            date: new Date(2026, 4, 31, 8, 0), // May 31, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 2",
-            date: new Date(2025, 4, 24, 8, 0), // May 24, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 3",
-            date: new Date(2025, 5, 7, 8, 0), // June 7, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone5.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 4",
-            date: new Date(2025, 5, 21, 8, 0), // June 21, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 5",
-            date: new Date(2025, 6, 5, 8, 0), // July 5, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone5.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 6",
-            date: new Date(2025, 6, 19, 8, 0), // July 19, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 7",
-            date: new Date(2025, 7, 2, 8, 0), // August 2, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone5.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series round 8",
-            date: new Date(2025, 7, 16, 8, 0), // August 16, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
-        },
-        {
-            title: "Global Drone Solutions Winter series Grand final",
-            date: new Date(2025, 7, 30, 8, 0), // August 30, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone5.jpg"
-        },
-        {
-            title: "Freestyle day",
-            date: new Date(2025, 8, 13, 9, 0), // September 13, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
-        },
-        {
-            title: "Open day",
-            date: new Date(2025, 9, 4, 9, 0), // October 4, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone5.jpg"
-        },
-        {
-            title: "The Global Drone Solutions WA State Championships",
-            date: new Date(2025, 9, 11, 9, 0), // October 11, 2025
-            endDate: new Date(2025, 9, 12, 17, 0), // October 12, 2025
-            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events",
-            image: "./assets/drone6.jpg"
         }
     ];
 
@@ -2079,7 +2072,7 @@ document.addEventListener('DOMContentLoaded', function () {
     createVideoPoster();
 });
 
-// Video Modal Functionality for Past Live Streams
+// Centralized Video Management System
 document.addEventListener('DOMContentLoaded', function () {
     // Modal elements
     const videoModalOverlay = document.getElementById('videoModalOverlay');
@@ -2094,43 +2087,199 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // Video metadata mapping
-    const videoMetadata = {
-
-        'lm3tOaEIhWs': {
+    // ============================================================================
+    // CENTRALIZED VIDEO DATA - Add new videos to the TOP of this array
+    // The first video will automatically become the main showcase
+    // All others will be historic videos
+    // ============================================================================
+    const videoDatabase = [
+        {
+            id: 'qgY-r-NAYZ0',
+            title: 'WA State Championships - Finals & Presentations',
+            date: 'December 15, 2024',
+            description: 'The epic conclusion of the WA State Championships with finals racing and trophy presentations!'
+        },
+        {
+            id: 'QLVPLPC_jK8',
+            title: 'WA State Championships - Day 2 Racing',
+            date: 'December 15, 2024',
+            description: 'Intense day 2 racing action from the WA State Championships'
+        },
+        {
+            id: 'JrUmRHmvzeo',
+            title: 'WA State Championships - Day 1 Competition',
+            date: 'December 14, 2024',
+            description: 'Opening day excitement and qualifying rounds from the State Championships'
+        },
+        {
+            id: 'l8AzqAO1eus',
+            title: 'WA State Championships - Practice & Setup',
+            date: 'December 14, 2024',
+            description: 'Pre-competition practice sessions and event setup from the State Championships weekend'
+        },
+        {
+            id: 'lm3tOaEIhWs',
             title: 'Global Drone Solutions - 2025 Winter Grand Final',
-            date: 'August 31, 2025'
+            date: 'August 31, 2025',
+            description: 'The thrilling conclusion to our 2025 Winter series!'
         },
-
-        'lF8Ly45rlJI': {
+        {
+            id: 'lF8Ly45rlJI',
             title: 'Global Drone Solutions - 2025 Winter Round 8',
-            date: 'August 16, 2025'
+            date: 'August 16, 2025',
+            description: 'Intense racing action from round 8'
         },
-        'dq6_mui1MwA': {
+        {
+            id: 'dq6_mui1MwA',
             title: 'Global Drone Solutions - 2025 Winter Round 6',
-            date: 'July 19, 2025'
+            date: 'July 19, 2025',
+            description: 'High-speed competition and amazing pilots'
         },
-        'M9kyPWRqRDo': {
+        {
+            id: 'M9kyPWRqRDo',
             title: 'Global Drone Solutions - 2025 Winter Round 5',
-            date: 'July 5, 2025'
+            date: 'July 5, 2025',
+            description: 'Mid-season excitement and close finishes'
         },
-        'Z0TYGtJkNYc': {
+        {
+            id: 'Z0TYGtJkNYc',
             title: 'Global Drone Solutions - 2025 Winter Round 3',
-            date: 'June 7, 2025'
+            date: 'June 7, 2025',
+            description: 'Early season momentum building'
         },
-        'qbF6hs6pkcI': {
+        {
+            id: 'qbF6hs6pkcI',
             title: 'Global Drone Solutions - 2025 Winter Round 2',
-            date: 'May 24, 2025'
+            date: 'May 24, 2025',
+            description: 'Second round of winter racing'
         },
-        'q5riSjhoO6Y': {
+        {
+            id: 'q5riSjhoO6Y',
             title: 'Global Drone Solutions - 2025 Winter Round 1',
-            date: 'May 10, 2025'
+            date: 'May 10, 2025',
+            description: 'Season opener with fantastic racing'
         },
-        'EQtrL84xII8': {
+        {
+            id: 'EQtrL84xII8',
             title: 'Global Drone Solutions - 2024 Summer Grand Final',
-            date: 'April 12, 2025'
+            date: 'April 12, 2025',
+            description: 'Epic finale of our summer racing series'
         }
-    };
+    ];
+
+    // ============================================================================
+    // VIDEO MANAGEMENT FUNCTIONS
+    // ============================================================================
+    
+    // Get the current showcase video (first in array)
+    function getCurrentShowcaseVideo() {
+        return videoDatabase[0];
+    }
+    
+    // Get all historic videos (all except first)
+    function getHistoricVideos() {
+        return videoDatabase.slice(1);
+    }
+    
+    // Function to add a new video (call this when you have a new video to showcase)
+    function addNewVideo(videoData) {
+        // Add new video to the beginning of the array
+        videoDatabase.unshift(videoData);
+        // Refresh the display
+        updateVideoDisplay();
+    }
+    
+    // Function to get YouTube thumbnail URL
+    function getYouTubeThumbnail(videoId, quality = 'hqdefault') {
+        return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
+    }
+    
+    // Function to update the main showcase video
+    function updateShowcaseVideo() {
+        const showcaseVideo = getCurrentShowcaseVideo();
+        const showcaseContainer = document.querySelector('.live-stream-main iframe');
+        
+        if (showcaseContainer && showcaseVideo) {
+            const embedUrl = `https://www.youtube.com/embed/${showcaseVideo.id}?si=Xp-kXUlwPCYuED-5`;
+            showcaseContainer.src = embedUrl;
+            showcaseContainer.title = showcaseVideo.title;
+            
+            // Update the section title if needed
+            const sectionTitle = document.querySelector('#live-streams h2');
+            if (sectionTitle) {
+                sectionTitle.textContent = 'Latest Live Stream';
+            }
+            
+            // Update the description
+            const sectionDescription = document.querySelector('#live-streams p');
+            if (sectionDescription) {
+                sectionDescription.textContent = showcaseVideo.description || 'Catch the replay of our most recent race day action!';
+            }
+        }
+    }
+    
+    // Function to generate historic videos HTML
+    function generateHistoricVideosHTML() {
+        const historicVideos = getHistoricVideos();
+        let html = '';
+        
+        historicVideos.forEach(video => {
+            html += `
+                <div class="past-stream-item" data-video-id="${video.id}">
+                    <div class="stream-thumbnail">
+                        <img src="${getYouTubeThumbnail(video.id)}" alt="Past Stream Thumbnail" loading="lazy">
+                        <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="stream-info">
+                        <h4 class="stream-title">${video.title}</h4>
+                        <p class="stream-date">${video.date}</p>
+                    </div>
+                </div>
+            `;
+        });
+        
+        return html;
+    }
+    
+    // Function to update the entire video display
+    function updateVideoDisplay() {
+        updateShowcaseVideo();
+        
+        // Update historic videos
+        const historicContainer = document.querySelector('.past-streams-gallery');
+        if (historicContainer) {
+            historicContainer.innerHTML = generateHistoricVideosHTML();
+            // Re-attach event listeners to new elements
+            attachVideoClickListeners();
+        }
+    }
+    
+    // Function to attach click listeners to video items
+    function attachVideoClickListeners() {
+        const pastStreamItems = document.querySelectorAll('.past-stream-item');
+        pastStreamItems.forEach(item => {
+            // Remove existing listeners to prevent duplicates
+            item.removeEventListener('click', handleVideoClick);
+            item.addEventListener('click', handleVideoClick);
+        });
+    }
+    
+    // Handle video click
+    function handleVideoClick(event) {
+        const videoId = event.currentTarget.getAttribute('data-video-id');
+        if (videoId) {
+            openVideoModal(videoId);
+        }
+    }
+    
+    // Convert old metadata format for backward compatibility
+    const videoMetadata = {};
+    videoDatabase.forEach(video => {
+        videoMetadata[video.id] = {
+            title: video.title,
+            date: video.date
+        };
+    });
 
     // Drag functionality variables
     let isDragging = false;
@@ -2365,4 +2514,58 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // ============================================================================
+    // INITIALIZATION
+    // ============================================================================
+    
+    // Initialize the video system when page loads
+    function initializeVideoSystem() {
+        updateVideoDisplay();
+        
+        // Make functions available globally for easy video management
+        window.WCMRCVideoManager = {
+            addNewVideo: addNewVideo,
+            getCurrentShowcase: getCurrentShowcaseVideo,
+            getHistoricVideos: getHistoricVideos,
+            refreshDisplay: updateVideoDisplay,
+            videoDatabase: videoDatabase
+        };
+        
+        console.log('🎥 WCMRC Video System Initialized');
+        console.log('📝 To add a new video, use: WCMRCVideoManager.addNewVideo({id: "VIDEO_ID", title: "Title", date: "Date", description: "Description"})');
+        console.log('📺 Current showcase:', getCurrentShowcaseVideo().title);
+    }
+    
+    // ============================================================================
+    // EASY VIDEO MANAGEMENT EXAMPLES
+    // ============================================================================
+    /*
+    
+    Example: Adding a new video (this will automatically move current showcase to historic)
+    
+    WCMRCVideoManager.addNewVideo({
+        id: 'NEW_VIDEO_ID_HERE',
+        title: 'Global Drone Solutions - 2025 Spring Round 1',
+        date: 'September 15, 2025',
+        description: 'Exciting season opener with new pilots and amazing competition!'
+    });
+    
+    Example: View current system state
+    
+    console.log('Current showcase:', WCMRCVideoManager.getCurrentShowcase());
+    console.log('Historic videos:', WCMRCVideoManager.getHistoricVideos());
+    
+    Example: Refresh display after manual changes
+    
+    WCMRCVideoManager.refreshDisplay();
+    
+    */
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeVideoSystem);
+    } else {
+        initializeVideoSystem();
+    }
 });
