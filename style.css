@@ -1422,6 +1422,30 @@ header {
         z-index: 3;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     }
+
+    .pilot-card-tenure-stars {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #FFD700;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        z-index: 3;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        display: flex;
+        gap: 2px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .pilot-card-tenure-stars .star {
+        color: #FFD700;
+        text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);
+        font-size: 0.85rem;
+    }
     
     .pilot-card-image {
         width: 100%;
