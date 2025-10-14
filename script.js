@@ -2095,27 +2095,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const videoDatabase = [
         {
             id: 'qgY-r-NAYZ0',
-            title: 'WA State Championships - Finals & Presentations',
-            date: 'December 15, 2024',
-            description: 'The epic conclusion of the WA State Championships with finals racing and trophy presentations!'
+            title: 'WA State Championships Racing',
+            date: 'October 12, 2025',
+            description: 'High-speed 5" racing action from day 2 of the WA State Championships!'
         },
         {
             id: 'QLVPLPC_jK8',
-            title: 'WA State Championships - Day 2 Racing',
-            date: 'December 15, 2024',
-            description: 'Intense day 2 racing action from the WA State Championships'
+            title: 'WA State Championships Freestyle',
+            date: 'October 11, 2025',
+            description: 'Amazing freestyle performances from the WA State Championships'
         },
         {
             id: 'JrUmRHmvzeo',
-            title: 'WA State Championships - Day 1 Competition',
-            date: 'December 14, 2024',
-            description: 'Opening day excitement and qualifying rounds from the State Championships'
+            title: 'WA State Championships Whoop Racing',
+            date: 'October 11, 2025',
+            description: 'Exciting tiny whoop racing competition from the State Championships'
         },
         {
             id: 'l8AzqAO1eus',
-            title: 'WA State Championships - Practice & Setup',
-            date: 'December 14, 2024',
-            description: 'Pre-competition practice sessions and event setup from the State Championships weekend'
+            title: 'WA State Championships Time Trials',
+            date: 'October 11, 2025',
+            description: 'Time trial sessions to set qualifying positions for the WA State Championships'
         },
         {
             id: 'lm3tOaEIhWs',
