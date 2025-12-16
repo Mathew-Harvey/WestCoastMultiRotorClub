@@ -2094,6 +2094,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // ============================================================================
     const videoDatabase = [
         {
+            id: '2ufT9mS4Mig',
+            title: 'Global Drone Solutions - 2025 Summer Round 2',
+            date: 'December 14, 2025',
+            description: 'Racing action from Round 2 of the 2025/26 Summer Series!'
+        },
+        {
+            id: 'tdHy1c-RWxM',
+            title: 'Global Drone Solutions - 2025 Summer Round 1',
+            date: 'November 30, 2025',
+            description: 'Season opener - Summer Series 2025/26 Round 1!'
+        },
+        {
             id: 'qgY-r-NAYZ0',
             title: 'WA State Championships Racing',
             date: 'October 12, 2025',
