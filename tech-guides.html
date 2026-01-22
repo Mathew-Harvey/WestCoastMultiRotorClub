@@ -85,46 +85,139 @@
     </div>
   </section>
 
+  <!-- Guide Selector Section -->
+  <section id="guide-selector">
+    <div class="container">
+      <h2>Select a Guide</h2>
+      <p class="selector-intro">Click on any guide below to dive in. Our growing library covers everything from electronics to software setup.</p>
+      
+      <div class="guide-selector-grid fade-in">
+        <!-- Guide Card 1 - Capacitors -->
+        <a href="./capacitors-essential-fpv-builds.html" class="guide-selector-card">
+          <div class="guide-card-image" style="background-image: url('./assets/capacitor-for-drone.jpg')">
+            <div class="guide-card-overlay"></div>
+            <span class="guide-card-category">Electronics</span>
+            <span class="guide-card-time"><i class="fas fa-clock"></i> 8 min</span>
+          </div>
+          <div class="guide-card-content">
+            <h3>Why Capacitors Are Essential in FPV Builds</h3>
+            <p>Protect your electronics from voltage spikes with a simple $2 component.</p>
+            <div class="guide-card-footer">
+              <div class="guide-card-author">
+                <div class="guide-author-avatar" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+                <span>ToGa</span>
+              </div>
+              <span class="guide-card-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Guide Card 2 - Driver Fixer -->
+        <a href="./driver-fixer-guide.html" class="guide-selector-card featured">
+          <div class="guide-card-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+            <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="width: 100%; height: 100%; object-fit: contain; padding: 20px;" />
+            <div class="guide-card-overlay"></div>
+            <span class="guide-card-category">Troubleshooting</span>
+            <span class="guide-card-time"><i class="fas fa-clock"></i> 6 min</span>
+            <span class="new-badge">NEW</span>
+          </div>
+          <div class="guide-card-content">
+            <h3>Fix Flight Controller Driver Issues on Windows</h3>
+            <p>Solve Betaflight connection problems with the ImpulseRC Driver Fixer tool.</p>
+            <div class="guide-card-footer">
+              <div class="guide-card-author">
+                <div class="guide-author-avatar" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
+                <span>DukeGod</span>
+              </div>
+              <span class="guide-card-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Guide Card 3 - Hertz Hunter -->
+        <a href="./hertz-hunter-guide.html" class="guide-selector-card">
+          <div class="guide-card-image" style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);">
+            <div class="guide-card-overlay"></div>
+            <span class="guide-card-category">Build Guide</span>
+            <span class="guide-card-time"><i class="fas fa-clock"></i> 10 min</span>
+            <div class="guide-card-icon">
+              <i class="fas fa-wave-square"></i>
+            </div>
+            <span class="new-badge">NEW</span>
+          </div>
+          <div class="guide-card-content">
+            <h3>Hertz Hunter: DIY 5.8GHz Spectrum Analyser</h3>
+            <p>Build a cheap RF spectrum analyser for diagnosing VTX issues at race events—under $60 AUD.</p>
+            <div class="guide-card-footer">
+              <div class="guide-card-author">
+                <div class="guide-author-avatar" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
+                <span>Epoxy</span>
+              </div>
+              <span class="guide-card-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Placeholder for future guides -->
+        <div class="guide-selector-card placeholder">
+          <div class="guide-card-image placeholder-bg">
+            <div class="placeholder-icon">
+              <i class="fas fa-plus-circle"></i>
+            </div>
+          </div>
+          <div class="guide-card-content">
+            <h3>More Guides Coming Soon</h3>
+            <p>We're constantly adding new technical content. Check back regularly!</p>
+            <div class="guide-card-footer">
+              <span class="placeholder-text">Stay tuned...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Featured Article Section -->
   <section id="featured-article">
     <div class="container">
       <h2>Featured Guide</h2>
       <div class="featured-article-card fade-in">
-        <div class="featured-article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')">
+        <div class="featured-article-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); display: flex; align-items: center; justify-content: center;">
+          <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="max-width: 80%; max-height: 80%; object-fit: contain;" />
           <div class="featured-badge">Featured</div>
         </div>
         <div class="featured-article-content">
           <div class="article-meta">
-            <span class="article-category">Electronics</span>
-            <span class="article-date">6 July 2025</span>
-            <span class="article-read-time">8 min read</span>
+            <span class="article-category">Troubleshooting</span>
+            <span class="article-date">22 January 2026</span>
+            <span class="article-read-time">6 min read</span>
           </div>
-          <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
-          <p>In the world of FPV drones, a $2 capacitor can mean the difference between a flawless flight and an expensive trip to the repair bench. Learn how voltage spikes, electrical noise, and current surges can destroy your electronics, and why a simple capacitor is your quad's best defense.</p>
+          <h3>Fix Flight Controller Driver Issues on Windows</h3>
+          <p>Can't connect to Betaflight? Flight controller not recognized? Windows driver conflicts are one of the most common frustrations for FPV pilots. Learn how to use the ImpulseRC Driver Fixer to automatically repair USB, DFU, and bootloader drivers.</p>
           
           <div class="featured-article-preview">
             <h4>What You'll Learn:</h4>
             <ul>
-              <li><strong>Voltage Spike Protection:</strong> How capacitors protect ESCs and flight controllers from motor-induced voltage spikes</li>
-              <li><strong>Video Feed Filtering:</strong> Eliminate electrical noise for cleaner FPV video transmission</li>
-              <li><strong>Low-ESR Importance:</strong> Why Equivalent Series Resistance matters for effective filtering</li>
-              <li><strong>Proper Placement:</strong> Where to mount capacitors for maximum protection</li>
-              <li><strong>Component Selection:</strong> Choosing the right capacitance and voltage ratings for your setup</li>
+              <li><strong>Why Connections Fail:</strong> Understanding VCP and DFU drivers on Windows</li>
+              <li><strong>Quick Fix Solution:</strong> Using ImpulseRC Driver Fixer for automatic repairs</li>
+              <li><strong>Bootloader Mode:</strong> How to enter DFU mode on your flight controller</li>
+              <li><strong>Common Issues:</strong> Troubleshooting persistent connection problems</li>
+              <li><strong>Direct Download:</strong> Get the tool and fix your setup in minutes</li>
             </ul>
             <div class="key-takeaway">
               <i class="fas fa-lightbulb"></i>
-              <span><strong>Key Takeaway:</strong> A 1000µF 35V low-ESR capacitor costs less than a prop set but can prevent hundreds of dollars in component damage.</span>
+              <span><strong>Key Takeaway:</strong> The ImpulseRC Driver Fixer automatically detects and repairs driver conflicts that prevent Betaflight from connecting to your flight controller.</span>
             </div>
           </div>
           
           <div class="article-author">
-            <div class="author-avatar" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+            <div class="author-avatar" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
             <div class="author-info">
-              <span class="author-name">Nathan Lanchbury</span>
-              <span class="author-title">"ToGa" - Rising Star Pilot</span>
+              <span class="author-name">Terry "DukeGod"</span>
+              <span class="author-title">WCMRC Pilot</span>
             </div>
           </div>
-          <a href="./capacitors-essential-fpv-builds.html" class="btn article-btn">Read Full Guide</a>
+          <a href="./driver-fixer-guide.html" class="btn article-btn">Read Full Guide</a>
         </div>
       </div>
     </div>
@@ -194,6 +287,7 @@
         <h2>Latest Tech Guides</h2>
         <div class="articles-filters">
           <button class="filter-btn active" data-filter="all">All Guides</button>
+          <button class="filter-btn" data-filter="troubleshooting">Troubleshooting</button>
           <button class="filter-btn" data-filter="build">Build</button>
           <button class="filter-btn" data-filter="tuning">Tuning</button>
           <button class="filter-btn" data-filter="maintenance">Maintenance</button>
@@ -202,27 +296,78 @@
       </div>
       
       <div class="articles-grid fade-in">
-                 <!-- Article 1 -->
-         <article class="article-card" data-category="electronics">
-           <div class="article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
-           <div class="article-content">
-             <div class="article-meta">
-               <span class="article-category">Electronics</span>
-               <span class="article-date">January 20, 2025</span>
-             </div>
-             <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
-             <p>A $2 capacitor can mean the difference between a flawless flight and an expensive repair bill. Learn how to protect your electronics from voltage spikes and electrical noise.</p>
-             <div class="article-footer">
-               <div class="article-author-mini">
-                 <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
-                 <span>ToGa</span>
-               </div>
-               <span class="read-time">8 min read</span>
-             </div>
-           </div>
-         </article>
+        <!-- Article 1 - NEW Hertz Hunter Guide -->
+        <article class="article-card" data-category="build">
+          <a href="./hertz-hunter-guide.html" style="text-decoration: none; color: inherit;">
+            <div class="article-image" style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-wave-square" style="font-size: 4rem; color: rgba(41, 167, 223, 0.8);"></i>
+            </div>
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="article-category" style="background: #dc3545; color: white;">NEW</span>
+                <span class="article-category">Build Guide</span>
+                <span class="article-date">January 22, 2026</span>
+              </div>
+              <h3>Hertz Hunter: DIY 5.8GHz Spectrum Analyser</h3>
+              <p>Build a cheap RF spectrum analyser for diagnosing VTX issues and finding interference at race events—under $60 AUD.</p>
+              <div class="article-footer">
+                <div class="article-author-mini">
+                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
+                  <span>Epoxy</span>
+                </div>
+                <span class="read-time">10 min read</span>
+              </div>
+            </div>
+          </a>
+        </article>
 
-        <!-- Article 2 -->
+        <!-- Article 2 - Driver Fixer Guide -->
+        <article class="article-card" data-category="troubleshooting">
+          <a href="./driver-fixer-guide.html" style="text-decoration: none; color: inherit;">
+            <div class="article-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); display: flex; align-items: center; justify-content: center;">
+              <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="max-width: 80%; max-height: 80%; object-fit: contain;" />
+            </div>
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="article-category">Troubleshooting</span>
+                <span class="article-date">January 22, 2026</span>
+              </div>
+              <h3>Fix Flight Controller Driver Issues on Windows</h3>
+              <p>Can't connect to Betaflight? Learn how to use ImpulseRC Driver Fixer to repair USB and DFU driver conflicts automatically.</p>
+              <div class="article-footer">
+                <div class="article-author-mini">
+                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
+                  <span>DukeGod</span>
+                </div>
+                <span class="read-time">6 min read</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- Article 3 - Capacitors -->
+        <article class="article-card" data-category="electronics">
+          <a href="./capacitors-essential-fpv-builds.html" style="text-decoration: none; color: inherit;">
+            <div class="article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="article-category">Electronics</span>
+                <span class="article-date">January 20, 2025</span>
+              </div>
+              <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
+              <p>A $2 capacitor can mean the difference between a flawless flight and an expensive repair bill. Learn how to protect your electronics from voltage spikes and electrical noise.</p>
+              <div class="article-footer">
+                <div class="article-author-mini">
+                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+                  <span>ToGa</span>
+                </div>
+                <span class="read-time">8 min read</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- Article 3 -->
         <article class="article-card" data-category="tuning">
           <div class="article-image" style="background-image: url('./assets/drone4.jpg')"></div>
           <div class="article-content">

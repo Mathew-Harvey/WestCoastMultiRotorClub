@@ -2094,6 +2094,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // ============================================================================
     const videoDatabase = [
         {
+            id: 'JQZf6poeUo8',
+            title: 'Global Drone Solutions - 2025 Summer Round 3',
+            date: 'January 18, 2026',
+            description: 'Round 3 of the 2025/26 Summer Series!'
+        },
+        {
             id: '2ufT9mS4Mig',
             title: 'Global Drone Solutions - 2025 Summer Round 2',
             date: 'December 14, 2025',

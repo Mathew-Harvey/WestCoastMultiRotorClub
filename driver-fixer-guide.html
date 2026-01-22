@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fix Flight Controller Driver Issues on Windows | WCMRC Tech Guides</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Basic Open Graph tags -->
+  <meta property="og:title" content="Fix Flight Controller Driver Issues on Windows | WCMRC" />
+  <meta property="og:description"
+    content="Can't connect to Betaflight? Learn how to use ImpulseRC Driver Fixer to automatically repair USB and DFU driver issues on Windows." />
+  <meta property="og:url" content="https://westcoastmultirotors.com.au/driver-fixer-guide" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="./assets/og-image.jpg" />
+</head>
+
+<body>
+
+  <!-- Custom cursor element -->
+  <div class="cursor"></div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="./index.html" class="logo">
+          <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
+        </a>
+        <ul class="nav-links">
+          <li><a href="./index.html#hero">Home</a></li>
+          <li><a href="./index.html#about">About</a></li>
+          <li><a href="./index.html#events">Events</a></li>
+          <li><a href="./index.html#membership">Pilots</a></li>
+          <li><a href="./index.html#gallery">Gallery</a></li>
+          <li><a href="./index.html#sponsors">Sponsors</a></li>
+          <li><a href="./index.html#contact">Contact</a></li>
+          <li><a href="./index.html#resources">Resources</a></li>
+        </ul>
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Hero Section -->
+  <section id="article-hero" style="background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(15,52,96,0.9)), url('./assets/drone2.jpg') center/cover no-repeat;">
+    <div class="container">
+      <div class="article-hero-content">
+        <div class="breadcrumb">
+          <a href="./index.html">Home</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="./tech-guides.html">Tech Guides</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Fix Driver Issues</span>
+        </div>
+        
+        <div class="article-meta-hero">
+          <span class="article-category">Troubleshooting</span>
+          <span class="article-date">January 22, 2026</span>
+          <span class="article-read-time">6 min read</span>
+        </div>
+        
+        <h1>Fix Flight Controller Driver Issues on Windows</h1>
+        <p class="article-subtitle">Can't connect to Betaflight? Flight controller not recognized? The ImpulseRC Driver Fixer automatically repairs the USB driver conflicts that plague Windows users.</p>
+        
+        <div class="article-author-hero">
+          <div class="author-avatar-hero" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
+          <div class="author-info-hero">
+            <span class="author-name">Terry "DukeGod"</span>
+            <span class="author-title">WCMRC Pilot</span>
+            <span class="author-bio">Experienced builder and troubleshooter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <section id="article-content">
+    <div class="container">
+      <div class="article-layout">
+        <!-- Main Article Content -->
+        <article class="article-main">
+          <div class="article-image-main">
+            <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="width: 100%; height: 100%; object-fit: contain; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 30px;" />
+          </div>
+
+          <div class="article-content-body">
+            <div class="content-section">
+              <p class="lead-paragraph">One of the most frustrating experiences for FPV pilots is plugging in their flight controller only to find that Betaflight Configurator can't detect it. The culprit? Windows driver conflicts. The good news is there's a simple, automated solution that fixes these issues in minutes.</p>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-question-circle"></i> Why Connection Issues Happen</h2>
+              <p>Flight controllers use STM32 processors that require two different drivers to work properly with Windows:</p>
+              
+              <div class="component-specs">
+                <h3>The Two Essential Drivers:</h3>
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-plug"></i>
+                    <div class="spec-details">
+                      <strong>VCP Driver (Virtual COM Port)</strong>
+                      <span>Used during normal operation to connect Betaflight Configurator. Shows as a COM port in Device Manager.</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-download"></i>
+                    <div class="spec-details">
+                      <strong>DFU Driver (Device Firmware Upgrade)</strong>
+                      <span>Used in bootloader mode for flashing firmware. Shows as "STM32 BOOTLOADER" in Device Manager.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p>Windows often installs the wrong drivers, creates conflicts between driver versions, or leaves "ghost" devices that interfere with proper detection. This results in symptoms like:</p>
+              
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 10px;"><strong>"No device found"</strong> in Betaflight Configurator</li>
+                <li style="margin-bottom: 10px;"><strong>Device appears then disappears</strong> from Device Manager</li>
+                <li style="margin-bottom: 10px;"><strong>"Unknown USB Device"</strong> error messages</li>
+                <li style="margin-bottom: 10px;"><strong>Can't enter DFU mode</strong> to flash firmware</li>
+                <li style="margin-bottom: 10px;"><strong>COM port constantly changing</strong> numbers</li>
+              </ul>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-magic"></i> The Solution: ImpulseRC Driver Fixer</h2>
+              <p>ImpulseRC Driver Fixer is a free utility that automatically detects and repairs these driver issues. It's been the go-to solution in the FPV community for years and works with virtually all STM32-based flight controllers.</p>
+              
+              <div class="tech-tip" style="background: #e8f5e9; border-left-color: #4caf50;">
+                <div class="tip-header" style="color: #2e7d32;">
+                  <i class="fas fa-check-circle"></i>
+                  <span>What It Fixes Automatically</span>
+                </div>
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li>STM32 VCP and DFU driver conflicts</li>
+                  <li>WinUSB driver binding issues</li>
+                  <li>Ghost/phantom device entries</li>
+                  <li>COM port conflicts and registry problems</li>
+                  <li>CP210x, FTDI, and CH340 chipset issues</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-download"></i> Download the Tool</h2>
+              <p>We've included the ImpulseRC Driver Fixer directly on our site for easy access. Click the button below to download:</p>
+              
+              <div style="text-align: center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, rgba(41, 167, 223, 0.1), rgba(41, 167, 223, 0.05)); border-radius: 15px; border: 2px dashed var(--primary-color);">
+                <i class="fas fa-file-download" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 15px; display: block;"></i>
+                <a href="./assets/ImpulseRC_Driver_Fixer.exe" download class="btn" style="font-size: 1.1rem; padding: 18px 35px;">
+                  <i class="fas fa-download" style="margin-right: 10px;"></i>Download ImpulseRC Driver Fixer
+                </a>
+                <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">Windows only • Run as Administrator</p>
+              </div>
+
+              <div class="tech-tip" style="background: #fff3e0; border-left-color: #ff9800;">
+                <div class="tip-header" style="color: #e65100;">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Safety Note</span>
+                </div>
+                <p>This tool only modifies Windows drivers—it does NOT touch your flight controller's firmware. It's completely safe to run and you can use it multiple times if needed.</p>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-list-ol"></i> Step-by-Step Instructions</h2>
+              
+              <div class="placement-guide" style="background: white; border: 1px solid #e0e0e0;">
+                <h4>Before You Start:</h4>
+                <ol>
+                  <li><strong>Close all configurator software</strong> (Betaflight, INAV, BLHeli Suite, etc.)</li>
+                  <li><strong>Use a quality USB cable</strong> – Many issues are caused by charge-only cables without data lines!</li>
+                  <li><strong>Try different USB ports</strong> – USB 2.0 ports often work better than USB 3.0</li>
+                </ol>
+              </div>
+
+              <h3 style="margin-top: 30px;"><i class="fas fa-play-circle"></i> Running the Driver Fixer</h3>
+              
+              <div class="step-by-step">
+                <div class="step-item" style="display: flex; gap: 20px; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                  <div class="step-number" style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+                  <div class="step-content">
+                    <h4 style="margin: 0 0 10px 0; color: var(--secondary-color);">Right-click and Run as Administrator</h4>
+                    <p style="margin: 0;">The tool needs admin privileges to modify drivers. Right-click the downloaded .exe file and select "Run as administrator".</p>
+                  </div>
+                </div>
+
+                <div class="step-item" style="display: flex; gap: 20px; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                  <div class="step-number" style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+                  <div class="step-content">
+                    <h4 style="margin: 0 0 10px 0; color: var(--secondary-color);">Connect Your Flight Controller</h4>
+                    <p style="margin: 0;">Plug your flight controller into your PC with a USB data cable. Leave it in normal mode (don't hold any buttons).</p>
+                  </div>
+                </div>
+
+                <div class="step-item" style="display: flex; gap: 20px; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                  <div class="step-number" style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+                  <div class="step-content">
+                    <h4 style="margin: 0 0 10px 0; color: var(--secondary-color);">Click "Install/Repair Drivers"</h4>
+                    <p style="margin: 0;">The tool will scan your system and begin repairing driver issues. Follow any on-screen prompts.</p>
+                  </div>
+                </div>
+
+                <div class="step-item" style="display: flex; gap: 20px; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                  <div class="step-number" style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</div>
+                  <div class="step-content">
+                    <h4 style="margin: 0 0 10px 0; color: var(--secondary-color);">Enter Bootloader/DFU Mode When Prompted</h4>
+                    <p style="margin: 0;">The tool may ask you to put your FC in bootloader mode. Do this by:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                      <li>Hold the <strong>BOOT</strong> button on your FC while plugging in USB, OR</li>
+                      <li>Use the CLI command <code style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">bl</code> in Betaflight (if connected), OR</li>
+                      <li>Short the <strong>BOOT</strong> pads on your FC while connecting</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="step-item" style="display: flex; gap: 20px; margin-bottom: 25px; padding: 20px; background: #e8f5e9; border-radius: 10px; border-left: 4px solid #4caf50;">
+                  <div class="step-number" style="width: 40px; height: 40px; background: #4caf50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">5</div>
+                  <div class="step-content">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">Verify the Fix</h4>
+                    <p style="margin: 0;">Unplug and replug your flight controller, then open Betaflight Configurator. Your FC should now appear in the port dropdown!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-exclamation-triangle"></i> Still Having Issues?</h2>
+              <p>If the driver fixer doesn't solve your problem, try these additional troubleshooting steps:</p>
+              
+              <div class="component-specs">
+                <h3>Common Solutions:</h3>
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-usb"></i>
+                    <div class="spec-details">
+                      <strong>Try a Different Cable</strong>
+                      <span>Many USB cables are charge-only. Use a known-good data cable, ideally short (under 1 meter).</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-desktop"></i>
+                    <div class="spec-details">
+                      <strong>Use a USB 2.0 Port</strong>
+                      <span>Some FCs have issues with USB 3.0 ports. Try a USB 2.0 port or a powered USB hub.</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-redo"></i>
+                    <div class="spec-details">
+                      <strong>Restart Your Computer</strong>
+                      <span>After running the driver fixer, a restart ensures all driver changes take effect.</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-trash-alt"></i>
+                    <div class="spec-details">
+                      <strong>Remove Ghost Devices</strong>
+                      <span>In Device Manager, show hidden devices and remove any duplicate/phantom COM ports.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tech-tip">
+                <div class="tip-header">
+                  <i class="fas fa-info-circle"></i>
+                  <span>Pro Tip</span>
+                </div>
+                <p>If your FC is showing as "Unknown USB Device" with error code 43, this often indicates a faulty USB connection on the FC itself. Try reflowing the USB connector solder joints or check for physical damage.</p>
+              </div>
+            </div>
+
+            <div class="content-section conclusion">
+              <h2><i class="fas fa-check-circle"></i> Summary</h2>
+              <p>Driver issues are one of the most common problems Windows users face when working with flight controllers. The ImpulseRC Driver Fixer provides a quick, automated solution that saves hours of frustration.</p>
+              
+              <div class="cost-benefit">
+                <div class="cost-side" style="background: #ffebee; border-color: #ef9a9a;">
+                  <h4><i class="fas fa-times-circle"></i> Without Fix</h4>
+                  <p>Hours of manual driver troubleshooting</p>
+                </div>
+                <div class="vs">VS</div>
+                <div class="benefit-side">
+                  <h4><i class="fas fa-check-circle"></i> With Fix</h4>
+                  <p>5 minutes to a working connection</p>
+                </div>
+              </div>
+
+              <div style="text-align: center; margin-top: 30px;">
+                <a href="./assets/ImpulseRC_Driver_Fixer.exe" download class="btn" style="font-size: 1rem;">
+                  <i class="fas fa-download" style="margin-right: 8px;"></i>Download Driver Fixer
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article Sidebar -->
+        <aside class="article-sidebar">
+          <div class="author-card">
+            <div class="author-avatar-large" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
+            <h3>Terry "DukeGod"</h3>
+            <p class="author-handle">WCMRC Pilot</p>
+            <p class="author-description">Experienced pilot and builder who has helped countless club members troubleshoot their setups. Known for his methodical approach to problem-solving.</p>
+            <div class="author-stats">
+              <div class="stat">
+                <span class="stat-number">5+</span>
+                <span class="stat-label">Years Flying</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Builds</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="related-articles">
+            <h3>Related Guides</h3>
+            <a href="./capacitors-essential-fpv-builds.html" style="text-decoration: none; color: inherit;">
+              <div class="related-article-item">
+                <div class="related-thumbnail" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
+                <div class="related-content">
+                  <h4>Why Capacitors Are Essential</h4>
+                  <span class="related-author">by ToGa</span>
+                </div>
+              </div>
+            </a>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/drone5.jpg')"></div>
+              <div class="related-content">
+                <h4>Understanding ESC Protocols</h4>
+                <span class="related-author">by andAgainFPV</span>
+              </div>
+            </div>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/racingDrone.jpg')"></div>
+              <div class="related-content">
+                <h4>Wiring Your Racing Drone</h4>
+                <span class="related-author">by Kurt</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-article">
+            <h3>Share This Guide</h3>
+            <div class="share-buttons">
+              <button class="share-btn facebook"><i class="fab fa-facebook-f"></i></button>
+              <button class="share-btn twitter"><i class="fab fa-twitter"></i></button>
+              <button class="share-btn reddit"><i class="fab fa-reddit-alien"></i></button>
+              <button class="share-btn copy-link"><i class="fas fa-link"></i></button>
+            </div>
+          </div>
+
+          <!-- Quick Download Card -->
+          <div style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: var(--border-radius); padding: 25px; text-align: center; color: white;">
+            <i class="fas fa-download" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.9;"></i>
+            <h3 style="color: white; margin-bottom: 10px;">Quick Download</h3>
+            <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px;">Get the ImpulseRC Driver Fixer and fix your connection issues now.</p>
+            <a href="./assets/ImpulseRC_Driver_Fixer.exe" download class="btn" style="background: white; color: var(--primary-color); width: 100%;">
+              Download Now
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>West Coast Mulirotor Club</h3>
+          <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
+            FPV flight.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="./index.html#hero">Home</a></li>
+            <li><a href="./index.html#about">About</a></li>
+            <li><a href="./index.html#events">Events</a></li>
+            <li><a href="./index.html#membership">Pilots</a></li>
+            <li><a href="./index.html#gallery">Gallery</a></li>
+            <li><a href="./index.html#sponsors">Sponsors</a></li>
+            <li><a href="./index.html#contact">Contact</a></li>
+            <li><a href="./index.html#resources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Tech Guides</h3>
+          <ul class="footer-links">
+            <li><a href="./tech-guides.html">All Guides</a></li>
+            <li><a href="./tech-guides.html#categories">Categories</a></li>
+            <li><a href="./tech-guides.html#newsletter-signup">Subscribe</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-newsletter">
+          <h3>Newsletter</h3>
+          <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
+          <form>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 West Coast Mulirotor Club. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+
+</body>
+
+</html>

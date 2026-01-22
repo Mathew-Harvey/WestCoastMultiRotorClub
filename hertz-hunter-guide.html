@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hertz Hunter - DIY 5.8GHz Spectrum Analyser | WCMRC Tech Guides</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Basic Open Graph tags -->
+  <meta property="og:title" content="Hertz Hunter - DIY 5.8GHz Spectrum Analyser | WCMRC" />
+  <meta property="og:description"
+    content="Build your own affordable spectrum analyser for FPV drones. Diagnose VTX issues and find interference at race events for under $60 AUD." />
+  <meta property="og:url" content="https://westcoastmultirotors.com.au/hertz-hunter-guide" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="./assets/og-image.jpg" />
+</head>
+
+<body>
+
+  <!-- Custom cursor element -->
+  <div class="cursor"></div>
+
+  <!-- Back to top button -->
+  <div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="./index.html" class="logo">
+          <img src="./assets/wcmrcLogo.png" alt="West Coast MultiRotor Club Logo" />
+        </a>
+        <ul class="nav-links">
+          <li><a href="./index.html#hero">Home</a></li>
+          <li><a href="./index.html#about">About</a></li>
+          <li><a href="./index.html#events">Events</a></li>
+          <li><a href="./index.html#membership">Pilots</a></li>
+          <li><a href="./index.html#gallery">Gallery</a></li>
+          <li><a href="./index.html#sponsors">Sponsors</a></li>
+          <li><a href="./index.html#contact">Contact</a></li>
+          <li><a href="./index.html#resources">Resources</a></li>
+        </ul>
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Hero Section -->
+  <section id="article-hero" style="background: linear-gradient(135deg, rgba(15, 52, 96, 0.95), rgba(41, 167, 223, 0.85)), url('./assets/drone2.jpg') center/cover no-repeat;">
+    <div class="container">
+      <div class="article-hero-content">
+        <div class="breadcrumb">
+          <a href="./index.html">Home</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="./tech-guides.html">Tech Guides</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Hertz Hunter</span>
+        </div>
+        
+        <div class="article-meta-hero">
+          <span class="article-category">Build Guide</span>
+          <span class="article-date">January 22, 2026</span>
+          <span class="article-read-time">10 min read</span>
+        </div>
+        
+        <h1>Hertz Hunter: DIY 5.8GHz Spectrum Analyser</h1>
+        <p class="article-subtitle">Build a cheap and effective RF spectrum analyser for diagnosing VTX issues and finding interference at race events—all for under $60 AUD.</p>
+        
+        <div class="article-author-hero">
+          <div class="author-avatar-hero" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
+          <div class="author-info-hero">
+            <span class="author-name">Simon Easton "Epoxy"</span>
+            <span class="author-title">WCMRC Pilot & Builder</span>
+            <span class="author-bio">DIY enthusiast and problem solver</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <section id="article-content">
+    <div class="container">
+      <div class="article-layout">
+        <!-- Main Article Content -->
+        <article class="article-main">
+          <div class="article-image-main" style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%); display: flex; align-items: center; justify-content: center; height: 300px;">
+            <i class="fas fa-wave-square" style="font-size: 6rem; color: rgba(41, 167, 223, 0.6);"></i>
+          </div>
+
+          <div class="article-content-body">
+            <div class="content-section">
+              <p class="lead-paragraph">At a racing event, a damaged VTX was broadcasting at full power on two channels simultaneously, interfering with another pilot. A spectrum analyser was essential for diagnosing this issue—two peaks at different frequencies were clearly visible when only the damaged VTX was powered on. This project makes this critical diagnostic tool accessible to every pilot and race organiser.</p>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-question-circle"></i> What is Hertz Hunter?</h2>
+              <p>Hertz Hunter is a "poor-man's RF Explorer" for FPV drones. It's a DIY spectrum analyser that scans the 5.8GHz frequencies used by FPV video transmitters and displays the signal strength on a small OLED screen. It's designed to be:</p>
+              
+              <div class="component-specs">
+                <h3>Key Benefits:</h3>
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div class="spec-details">
+                      <strong>Affordable</strong>
+                      <span>Build cost under $60 AUD—a fraction of commercial spectrum analysers</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-tools"></i>
+                    <div class="spec-details">
+                      <strong>DIY Friendly</strong>
+                      <span>Easy to build yourself with common components and basic soldering skills</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-briefcase"></i>
+                    <div class="spec-details">
+                      <strong>Portable</strong>
+                      <span>Compact enough to fit in any race-day tool bag</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-code"></i>
+                    <div class="spec-details">
+                      <strong>Open Source</strong>
+                      <span>Fully documented on GitHub with active development</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-search"></i> Why You Need a Spectrum Analyser</h2>
+              <p>A spectrum analyser is essential for race organisers and serious pilots. Here's what it helps you diagnose:</p>
+              
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 12px;"><strong>Find VTX interference</strong> — Quickly see which frequencies are in use and spot conflicts</li>
+                <li style="margin-bottom: 12px;"><strong>Diagnose malfunctioning VTXs</strong> — Detect VTXs broadcasting on wrong frequencies or multiple channels</li>
+                <li style="margin-bottom: 12px;"><strong>Identify background noise</strong> — Find sources of RF interference at your flying field</li>
+                <li style="margin-bottom: 12px;"><strong>Verify VTX output</strong> — Confirm your VTX is actually transmitting on the channel you set</li>
+                <li style="margin-bottom: 12px;"><strong>Race day troubleshooting</strong> — Essential tool for resolving video issues quickly</li>
+              </ul>
+
+              <div class="tech-tip" style="background: #fff3e0; border-left-color: #ff9800;">
+                <div class="tip-header" style="color: #e65100;">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span>Real World Example</span>
+                </div>
+                <p>At a race event, one pilot's damaged VTX was broadcasting at full power on TWO channels simultaneously—knocking out another pilot's video feed. Without a spectrum analyser, this would have been nearly impossible to diagnose. With Hertz Hunter, the dual peaks were immediately visible on the graph.</p>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-list-check"></i> Features</h2>
+              
+              <h3><i class="fas fa-broadcast-tower"></i> Frequency Scanning</h3>
+              <p>Hertz Hunter uses a common RX5808 video receiver module to scan the FPV frequency bands:</p>
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px;"><strong>Standard band:</strong> 5645MHz to 5945MHz (covers most FPV channels)</li>
+                <li style="margin-bottom: 8px;"><strong>Low-band:</strong> 5345MHz to 5645MHz (for low-band channels)</li>
+              </ul>
+
+              <h3><i class="fas fa-sliders-h"></i> Selectable Scan Resolution</h3>
+              <div class="component-specs" style="margin-top: 15px;">
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-search-plus"></i>
+                    <div class="spec-details">
+                      <strong>2.5MHz Interval</strong>
+                      <span>Highest resolution, slowest update rate—best for detailed analysis</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-balance-scale"></i>
+                    <div class="spec-details">
+                      <strong>5MHz Interval</strong>
+                      <span>Medium resolution, medium update rate—good all-rounder</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <div class="spec-details">
+                      <strong>10MHz Interval</strong>
+                      <span>Lowest resolution, fastest update rate—quick overview scanning</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 30px;"><i class="fas fa-gamepad"></i> Input Options</h3>
+              <p>Multiple ways to control the device:</p>
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px;"><strong>Three buttons:</strong> PREV, SEL, NEXT for simple navigation</li>
+                <li style="margin-bottom: 8px;"><strong>Rotary encoder:</strong> Turn anticlockwise (PREV), click (SEL), turn clockwise (NEXT)</li>
+              </ul>
+
+              <h3><i class="fas fa-cog"></i> Additional Features</h3>
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px;"><strong>Battery monitoring</strong> with low battery alarm</li>
+                <li style="margin-bottom: 8px;"><strong>RSSI calibration</strong> between known low and high values</li>
+                <li style="margin-bottom: 8px;"><strong>Signal strength display</strong> for selected frequency</li>
+                <li style="margin-bottom: 8px;"><strong>Settings persistence</strong> saved between reboots</li>
+                <li style="margin-bottom: 8px;"><strong>Wi-Fi API</strong> for integration with other software</li>
+                <li style="margin-bottom: 8px;"><strong>USB serial communication</strong> with official client program</li>
+              </ul>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-rocket"></i> Getting Started</h2>
+              <p>The Hertz Hunter project is fully open source and well-documented on GitHub. Here's everything you need to build your own:</p>
+              
+              <div style="text-align: center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, rgba(41, 167, 223, 0.1), rgba(41, 167, 223, 0.05)); border-radius: 15px; border: 2px dashed var(--primary-color);">
+                <i class="fab fa-github" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 15px; display: block;"></i>
+                <a href="https://github.com/odddollar/Hertz-hunter" target="_blank" rel="noopener noreferrer" class="btn" style="font-size: 1.1rem; padding: 18px 35px; margin-bottom: 15px;">
+                  <i class="fab fa-github" style="margin-right: 10px;"></i>View on GitHub
+                </a>
+                <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">Full source code, documentation & build guides</p>
+              </div>
+
+              <div class="placement-guide" style="background: white; border: 1px solid #e0e0e0;">
+                <h4>GitHub Documentation:</h4>
+                <ol>
+                  <li><strong>HARDWARE.md</strong> — Hardware designs and component list</li>
+                  <li><strong>SOFTWARE.md</strong> — Software setup and firmware flashing</li>
+                  <li><strong>USAGE.md</strong> — Firmware usage and settings guide</li>
+                  <li><strong>API.md</strong> — API documentation for Wi-Fi integration</li>
+                  <li><strong>USB.md</strong> — USB serial communication documentation</li>
+                </ol>
+              </div>
+
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://github.com/odddollar/Hertz-hunter/releases/tag/v2.3.0" target="_blank" rel="noopener noreferrer" class="btn" style="background: #28a745;">
+                  <i class="fas fa-download" style="margin-right: 10px;"></i>Download Latest Release (v2.3.0)
+                </a>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-tools"></i> What You'll Need</h2>
+              <p>The build uses readily available components. The total cost should be under <strong>$60 AUD</strong>:</p>
+              
+              <div class="component-specs">
+                <h3>Core Components:</h3>
+                <div class="specs-grid">
+                  <div class="spec-item">
+                    <i class="fas fa-microchip"></i>
+                    <div class="spec-details">
+                      <strong>ESP32 or similar MCU</strong>
+                      <span>The brain of the device—handles scanning and display</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-satellite-dish"></i>
+                    <div class="spec-details">
+                      <strong>RX5808 Module</strong>
+                      <span>Common FPV receiver module that does the RF scanning</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-desktop"></i>
+                    <div class="spec-details">
+                      <strong>OLED Display</strong>
+                      <span>Small screen to show the spectrum graph</span>
+                    </div>
+                  </div>
+                  <div class="spec-item">
+                    <i class="fas fa-battery-full"></i>
+                    <div class="spec-details">
+                      <strong>Battery & Power</strong>
+                      <span>LiPo battery with voltage monitoring circuit</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tech-tip" style="background: #e8f5e9; border-left-color: #4caf50;">
+                <div class="tip-header" style="color: #2e7d32;">
+                  <i class="fas fa-lightbulb"></i>
+                  <span>Build Tip</span>
+                </div>
+                <p>Check the <a href="https://github.com/odddollar/Hertz-hunter/blob/master/HARDWARE.md" target="_blank" rel="noopener noreferrer" style="color: #2e7d32; font-weight: 600;">HARDWARE.md</a> file on GitHub for the complete component list with recommended suppliers and exact part numbers.</p>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2><i class="fas fa-code-branch"></i> Future Development</h2>
+              <p>The project is actively developed with exciting features in the pipeline:</p>
+              
+              <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Custom PCB</strong> — Integrated power management circuitry for a cleaner build</li>
+                <li style="margin-bottom: 10px;"><strong>3D printed case</strong> — Designed for the custom PCB</li>
+                <li style="margin-bottom: 10px;"><strong>Web interface</strong> — Interact with the scanner and view detailed graphs (currently in development on the <code style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">web-ui</code> branch)</li>
+              </ul>
+
+              <div class="tech-tip">
+                <div class="tip-header">
+                  <i class="fas fa-info-circle"></i>
+                  <span>Latest Release: v2.3.0</span>
+                </div>
+                <p>Released January 21, 2026, this version adds USB serial communication for connecting to client programs on your PC. Check the <a href="https://github.com/odddollar/Hertz-hunter/releases/tag/v2.3.0" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); font-weight: 600;">release notes</a> for full details.</p>
+              </div>
+            </div>
+
+            <div class="content-section conclusion">
+              <h2><i class="fas fa-check-circle"></i> Summary</h2>
+              <p>Hertz Hunter puts professional-grade diagnostic capabilities in the hands of every FPV pilot and race organiser. For under $60 and a few hours of building, you'll have a tool that can save race days, diagnose mysterious video problems, and help maintain a clean RF environment at your flying field.</p>
+              
+              <div class="cost-benefit">
+                <div class="cost-side" style="background: #e3f2fd; border-color: #90caf9;">
+                  <h4><i class="fas fa-wrench"></i> DIY Build</h4>
+                  <p>~$60 AUD + a few hours</p>
+                </div>
+                <div class="vs">VS</div>
+                <div class="benefit-side">
+                  <h4><i class="fas fa-shopping-cart"></i> Commercial</h4>
+                  <p>$200-500+ for RF Explorer</p>
+                </div>
+              </div>
+
+              <div style="text-align: center; margin-top: 30px;">
+                <a href="https://github.com/odddollar/Hertz-hunter" target="_blank" rel="noopener noreferrer" class="btn" style="font-size: 1rem;">
+                  <i class="fab fa-github" style="margin-right: 8px;"></i>Start Building on GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article Sidebar -->
+        <aside class="article-sidebar">
+          <div class="author-card">
+            <div class="author-avatar-large" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
+            <h3>Simon Easton</h3>
+            <p class="author-handle">"Epoxy"</p>
+            <p class="author-description">Experienced pilot and DIY enthusiast who loves building custom tools and solving technical challenges in the FPV community.</p>
+            <div class="author-stats">
+              <div class="stat">
+                <span class="stat-number">5+</span>
+                <span class="stat-label">Years Flying</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">DIY</span>
+                <span class="stat-label">Builder</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="related-articles">
+            <h3>Related Guides</h3>
+            <a href="./driver-fixer-guide.html" style="text-decoration: none; color: inherit;">
+              <div class="related-article-item">
+                <div class="related-thumbnail" style="background: linear-gradient(135deg, #1a1a2e, #0f3460); display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-usb" style="color: rgba(41, 167, 223, 0.6);"></i>
+                </div>
+                <div class="related-content">
+                  <h4>Fix FC Driver Issues</h4>
+                  <span class="related-author">by DukeGod</span>
+                </div>
+              </div>
+            </a>
+            <a href="./capacitors-essential-fpv-builds.html" style="text-decoration: none; color: inherit;">
+              <div class="related-article-item">
+                <div class="related-thumbnail" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
+                <div class="related-content">
+                  <h4>Why Capacitors Are Essential</h4>
+                  <span class="related-author">by ToGa</span>
+                </div>
+              </div>
+            </a>
+            <div class="related-article-item">
+              <div class="related-thumbnail" style="background-image: url('./assets/drone5.jpg')"></div>
+              <div class="related-content">
+                <h4>Understanding ESC Protocols</h4>
+                <span class="related-author">by andAgainFPV</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-article">
+            <h3>Share This Guide</h3>
+            <div class="share-buttons">
+              <button class="share-btn facebook"><i class="fab fa-facebook-f"></i></button>
+              <button class="share-btn twitter"><i class="fab fa-twitter"></i></button>
+              <button class="share-btn reddit"><i class="fab fa-reddit-alien"></i></button>
+              <button class="share-btn copy-link"><i class="fas fa-link"></i></button>
+            </div>
+          </div>
+
+          <!-- Quick Links Card -->
+          <div style="background: linear-gradient(135deg, #24292e, #1a1e22); border-radius: var(--border-radius); padding: 25px; text-align: center; color: white;">
+            <i class="fab fa-github" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.9;"></i>
+            <h3 style="color: white; margin-bottom: 10px;">Project Links</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+              <a href="https://github.com/odddollar/Hertz-hunter" target="_blank" rel="noopener noreferrer" class="btn" style="background: white; color: #24292e; width: 100%; font-size: 0.85rem;">
+                <i class="fab fa-github" style="margin-right: 5px;"></i> GitHub Repo
+              </a>
+              <a href="https://github.com/odddollar/Hertz-hunter/releases/tag/v2.3.0" target="_blank" rel="noopener noreferrer" class="btn" style="background: #28a745; color: white; width: 100%; font-size: 0.85rem;">
+                <i class="fas fa-download" style="margin-right: 5px;"></i> Latest Release
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>West Coast Mulirotor Club</h3>
+          <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
+            FPV flight.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="./index.html#hero">Home</a></li>
+            <li><a href="./index.html#about">About</a></li>
+            <li><a href="./index.html#events">Events</a></li>
+            <li><a href="./index.html#membership">Pilots</a></li>
+            <li><a href="./index.html#gallery">Gallery</a></li>
+            <li><a href="./index.html#sponsors">Sponsors</a></li>
+            <li><a href="./index.html#contact">Contact</a></li>
+            <li><a href="./index.html#resources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Tech Guides</h3>
+          <ul class="footer-links">
+            <li><a href="./tech-guides.html">All Guides</a></li>
+            <li><a href="./tech-guides.html#categories">Categories</a></li>
+            <li><a href="./tech-guides.html#newsletter-signup">Subscribe</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-newsletter">
+          <h3>Newsletter</h3>
+          <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
+          <form>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Your Email" />
+            </div>
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 West Coast Mulirotor Club. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+
+</body>
+
+</html>
