@@ -2094,6 +2094,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // ============================================================================
     const videoDatabase = [
         {
+            id: 'JpKggqmL_L4',
+            title: 'Global Drone Solutions - 2026 Summer Round 5',
+            date: 'February 15, 2026',
+            description: 'Round 5 with a tighter track than usual — 5 laps of survival racing!'
+        },
+        {
+            id: 'IV26L2GFXtg',
+            title: 'Global Drone Solutions - 2026 Summer Round 4',
+            date: 'February 1, 2026',
+            description: 'Summer Heat 4 — thrilling racing action from the 2025/26 Summer Series!'
+        },
+        {
             id: 'JQZf6poeUo8',
             title: 'Global Drone Solutions - 2025 Summer Round 3',
             date: 'January 18, 2026',
