@@ -2094,6 +2094,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // ============================================================================
     const videoDatabase = [
         {
+            id: 'SkEbct9AzPI',
+            title: 'Global Drone Solutions - 2026 Summer Round 6',
+            date: 'March 8, 2026',
+            description: 'Round 6 on the Australian Nationals Qualifier track — 14 pilots, high pace, and a tight season ladder!'
+        },
+        {
             id: 'JpKggqmL_L4',
             title: 'Global Drone Solutions - 2026 Summer Round 5',
             date: 'February 15, 2026',
@@ -2230,7 +2236,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const showcaseContainer = document.querySelector('.live-stream-main iframe');
         
         if (showcaseContainer && showcaseVideo) {
-            const embedUrl = `https://www.youtube.com/embed/${showcaseVideo.id}?si=Xp-kXUlwPCYuED-5`;
+            const embedUrl = `https://www.youtube.com/embed/${showcaseVideo.id}?si=OosCje1CNRY05Uhu`;
             showcaseContainer.src = embedUrl;
             showcaseContainer.title = showcaseVideo.title;
             
