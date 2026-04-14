@@ -2094,6 +2094,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // ============================================================================
     const videoDatabase = [
         {
+            id: 'KHAsRnM1vHE',
+            title: 'Global Drone Solutions - 2026 Summer Round 7',
+            date: 'April 12, 2026',
+            description: 'Round 7 of the 2025/26 Summer Series!'
+        },
+        {
             id: 'SkEbct9AzPI',
             title: 'Global Drone Solutions - 2026 Summer Round 6',
             date: 'March 8, 2026',
