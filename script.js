@@ -1358,19 +1358,79 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         {
             title: "Global Drone Solutions Summer Series Round 8",
-            date: new Date(2026, 3, 26, 8, 0), // April 26, 2026
+            date: new Date(2026, 4, 2, 8, 0), // May 2, 2026
             link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"
         },
         {
             title: "Global Drone Solutions Summer Series Grand Final",
-            date: new Date(2026, 4, 3, 8, 0), // May 3, 2026
+            date: new Date(2026, 4, 9, 8, 0), // May 9, 2026
             link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone6.jpg"
         },
         {
-            title: "Open Day",
-            date: new Date(2026, 4, 31, 8, 0), // May 31, 2026
+            title: "Free Open Day Beginners Day",
+            date: new Date(2026, 4, 30, 9, 0), // May 30, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 1",
+            date: new Date(2026, 5, 13, 8, 0), // June 13, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 2",
+            date: new Date(2026, 5, 27, 8, 0), // June 27, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 3",
+            date: new Date(2026, 6, 11, 8, 0), // July 11, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 4",
+            date: new Date(2026, 6, 25, 8, 0), // July 25, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 5",
+            date: new Date(2026, 7, 8, 8, 0), // August 8, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 6",
+            date: new Date(2026, 7, 22, 8, 0), // August 22, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 7",
+            date: new Date(2026, 8, 5, 8, 0), // September 5, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Round 8",
+            date: new Date(2026, 8, 19, 8, 0), // September 19, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "Global Drone Solutions Winter Series Grand Final",
+            date: new Date(2026, 9, 3, 8, 0), // October 3, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "2026 AWA WA State Drone Racing Championships",
+            date: new Date(2026, 9, 17, 8, 0), // October 17-18, 2026
             link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"
         }
