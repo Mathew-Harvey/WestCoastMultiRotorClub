@@ -2152,122 +2152,179 @@ document.addEventListener('DOMContentLoaded', function () {
     // The first video will automatically become the main showcase
     // All others will be historic videos
     // ============================================================================
+    const SERIES_LABELS = {
+        '2026-winter': '2026 Winter Series',
+        '2026-summer': '2026 Summer Series',
+        '2025-summer': '2025/26 Summer Series',
+        'state-champs-2025': 'WA State Championships 2025',
+        '2025-winter': '2025 Winter Series',
+        '2024-summer': '2024 Summer Series'
+    };
+
+    const SERIES_FILTER_LABELS = {
+        '2026-winter': '2026 Winter',
+        '2026-summer': '2026 Summer',
+        '2025-summer': '2025/26 Summer',
+        'state-champs-2025': 'State Champs',
+        '2025-winter': '2025 Winter',
+        '2024-summer': '2024 Summer'
+    };
+
+    const SERIES_ORDER = [
+        '2026-winter',
+        '2026-summer',
+        '2025-summer',
+        'state-champs-2025',
+        '2025-winter',
+        '2024-summer'
+    ];
+
     const videoDatabase = [
+        {
+            id: 'ZZeIoFfyDZU',
+            title: 'Global Drone Solutions 2026 Winter Heat 1 (HD Highlights Edition)',
+            date: 'June 13, 2026',
+            description: 'Season opener for the 2026 Winter Series — HD highlights from an action-packed first heat!',
+            series: '2026-winter'
+        },
         {
             id: 'KHAsRnM1vHE',
             title: 'Global Drone Solutions - 2026 Summer Round 7',
             date: 'April 12, 2026',
-            description: 'Round 7 of the 2025/26 Summer Series!'
+            description: 'Round 7 of the 2025/26 Summer Series!',
+            series: '2026-summer'
         },
         {
             id: 'SkEbct9AzPI',
             title: 'Global Drone Solutions - 2026 Summer Round 6',
             date: 'March 8, 2026',
-            description: 'Round 6 on the Australian Nationals Qualifier track — 14 pilots, high pace, and a tight season ladder!'
+            description: 'Round 6 on the Australian Nationals Qualifier track — 14 pilots, high pace, and a tight season ladder!',
+            series: '2026-summer'
         },
         {
             id: 'JpKggqmL_L4',
             title: 'Global Drone Solutions - 2026 Summer Round 5',
             date: 'February 15, 2026',
-            description: 'Round 5 with a tighter track than usual — 5 laps of survival racing!'
+            description: 'Round 5 with a tighter track than usual — 5 laps of survival racing!',
+            series: '2026-summer'
         },
         {
             id: 'IV26L2GFXtg',
             title: 'Global Drone Solutions - 2026 Summer Round 4',
             date: 'February 1, 2026',
-            description: 'Summer Heat 4 — thrilling racing action from the 2025/26 Summer Series!'
+            description: 'Summer Heat 4 — thrilling racing action from the 2025/26 Summer Series!',
+            series: '2026-summer'
         },
         {
             id: 'JQZf6poeUo8',
             title: 'Global Drone Solutions - 2025 Summer Round 3',
             date: 'January 18, 2026',
-            description: 'Round 3 of the 2025/26 Summer Series!'
+            description: 'Round 3 of the 2025/26 Summer Series!',
+            series: '2025-summer'
         },
         {
             id: '2ufT9mS4Mig',
             title: 'Global Drone Solutions - 2025 Summer Round 2',
             date: 'December 14, 2025',
-            description: 'Racing action from Round 2 of the 2025/26 Summer Series!'
+            description: 'Racing action from Round 2 of the 2025/26 Summer Series!',
+            series: '2025-summer'
         },
         {
             id: 'tdHy1c-RWxM',
             title: 'Global Drone Solutions - 2025 Summer Round 1',
             date: 'November 30, 2025',
-            description: 'Season opener - Summer Series 2025/26 Round 1!'
+            description: 'Season opener - Summer Series 2025/26 Round 1!',
+            series: '2025-summer'
         },
         {
             id: 'qgY-r-NAYZ0',
             title: 'WA State Championships Racing',
             date: 'October 12, 2025',
-            description: 'High-speed 5" racing action from day 2 of the WA State Championships!'
+            description: 'High-speed 5" racing action from day 2 of the WA State Championships!',
+            series: 'state-champs-2025'
         },
         {
             id: 'QLVPLPC_jK8',
             title: 'WA State Championships Freestyle',
             date: 'October 11, 2025',
-            description: 'Amazing freestyle performances from the WA State Championships'
+            description: 'Amazing freestyle performances from the WA State Championships',
+            series: 'state-champs-2025'
         },
         {
             id: 'JrUmRHmvzeo',
             title: 'WA State Championships Whoop Racing',
             date: 'October 11, 2025',
-            description: 'Exciting tiny whoop racing competition from the State Championships'
+            description: 'Exciting tiny whoop racing competition from the State Championships',
+            series: 'state-champs-2025'
         },
         {
             id: 'l8AzqAO1eus',
             title: 'WA State Championships Time Trials',
             date: 'October 11, 2025',
-            description: 'Time trial sessions to set qualifying positions for the WA State Championships'
+            description: 'Time trial sessions to set qualifying positions for the WA State Championships',
+            series: 'state-champs-2025'
         },
         {
             id: 'lm3tOaEIhWs',
             title: 'Global Drone Solutions - 2025 Winter Grand Final',
             date: 'August 31, 2025',
-            description: 'The thrilling conclusion to our 2025 Winter series!'
+            description: 'The thrilling conclusion to our 2025 Winter series!',
+            series: '2025-winter'
         },
         {
             id: 'lF8Ly45rlJI',
             title: 'Global Drone Solutions - 2025 Winter Round 8',
             date: 'August 16, 2025',
-            description: 'Intense racing action from round 8'
+            description: 'Intense racing action from round 8',
+            series: '2025-winter'
         },
         {
             id: 'dq6_mui1MwA',
             title: 'Global Drone Solutions - 2025 Winter Round 6',
             date: 'July 19, 2025',
-            description: 'High-speed competition and amazing pilots'
+            description: 'High-speed competition and amazing pilots',
+            series: '2025-winter'
         },
         {
             id: 'M9kyPWRqRDo',
             title: 'Global Drone Solutions - 2025 Winter Round 5',
             date: 'July 5, 2025',
-            description: 'Mid-season excitement and close finishes'
+            description: 'Mid-season excitement and close finishes',
+            series: '2025-winter'
         },
         {
             id: 'Z0TYGtJkNYc',
             title: 'Global Drone Solutions - 2025 Winter Round 3',
             date: 'June 7, 2025',
-            description: 'Early season momentum building'
+            description: 'Early season momentum building',
+            series: '2025-winter'
         },
         {
             id: 'qbF6hs6pkcI',
             title: 'Global Drone Solutions - 2025 Winter Round 2',
             date: 'May 24, 2025',
-            description: 'Second round of winter racing'
+            description: 'Second round of winter racing',
+            series: '2025-winter'
         },
         {
             id: 'q5riSjhoO6Y',
             title: 'Global Drone Solutions - 2025 Winter Round 1',
             date: 'May 10, 2025',
-            description: 'Season opener with fantastic racing'
+            description: 'Season opener with fantastic racing',
+            series: '2025-winter'
         },
         {
             id: 'EQtrL84xII8',
             title: 'Global Drone Solutions - 2024 Summer Grand Final',
             date: 'April 12, 2025',
-            description: 'Epic finale of our summer racing series'
+            description: 'Epic finale of our summer racing series',
+            series: '2024-summer'
         }
     ];
+
+    let activeSeriesFilter = 'all';
+    let librarySearchTerm = '';
+    let libraryListenersAttached = false;
 
     // ============================================================================
     // VIDEO MANAGEMENT FUNCTIONS
@@ -2320,49 +2377,243 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Function to generate historic videos HTML
-    function generateHistoricVideosHTML() {
-        const historicVideos = getHistoricVideos();
-        let html = '';
-        
-        historicVideos.forEach(video => {
-            html += `
-                <div class="past-stream-item" data-video-id="${video.id}">
-                    <div class="stream-thumbnail">
-                        <img src="${getYouTubeThumbnail(video.id)}" alt="Past Stream Thumbnail" loading="lazy">
-                        <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-                    </div>
-                    <div class="stream-info">
-                        <h4 class="stream-title">${video.title}</h4>
-                        <p class="stream-date">${video.date}</p>
-                    </div>
+    // Function to generate a single video card
+    function generateVideoCardHTML(video) {
+        return `
+            <article class="replay-card" data-video-id="${video.id}" tabindex="0" role="button"
+                aria-label="Play ${video.title}">
+                <div class="replay-card-media">
+                    <img src="${getYouTubeThumbnail(video.id, 'mqdefault')}" alt="" loading="lazy">
+                    <span class="replay-card-play" aria-hidden="true"><i class="fas fa-play"></i></span>
+                    <span class="replay-card-date">${video.date}</span>
                 </div>
+                <h4 class="replay-card-title">${video.title}</h4>
+            </article>
+        `;
+    }
+
+    function shouldUseShelfLayout() {
+        return activeSeriesFilter === 'all' && !librarySearchTerm.trim();
+    }
+
+    function getFilteredHistoricVideos() {
+        const search = librarySearchTerm.trim().toLowerCase();
+
+        return getHistoricVideos().filter(video => {
+            const matchesSeries = activeSeriesFilter === 'all' || video.series === activeSeriesFilter;
+            if (!matchesSeries) return false;
+
+            if (!search) return true;
+
+            const haystack = `${video.title} ${video.date} ${video.description || ''} ${SERIES_LABELS[video.series] || ''}`.toLowerCase();
+            return haystack.includes(search);
+        });
+    }
+
+    function groupVideosBySeries(videos) {
+        const groups = new Map();
+
+        videos.forEach(video => {
+            const seriesKey = video.series || 'other';
+            if (!groups.has(seriesKey)) {
+                groups.set(seriesKey, []);
+            }
+            groups.get(seriesKey).push(video);
+        });
+
+        return SERIES_ORDER
+            .filter(seriesKey => groups.has(seriesKey))
+            .map(seriesKey => ({
+                seriesKey,
+                label: SERIES_LABELS[seriesKey] || seriesKey,
+                videos: groups.get(seriesKey)
+            }));
+    }
+
+    function renderVideoLibraryFilters() {
+        const filtersContainer = document.getElementById('videoLibraryFilters');
+        if (!filtersContainer) return;
+
+        const availableSeries = [...new Set(getHistoricVideos().map(video => video.series))];
+        const orderedSeries = SERIES_ORDER.filter(series => availableSeries.includes(series));
+
+        let html = `
+            <button type="button" class="video-filter-chip${activeSeriesFilter === 'all' ? ' active' : ''}"
+                data-series="all" role="tab" aria-selected="${activeSeriesFilter === 'all'}">
+                All
+            </button>
+        `;
+
+        orderedSeries.forEach(seriesKey => {
+            const isActive = activeSeriesFilter === seriesKey;
+            html += `
+                <button type="button" class="video-filter-chip${isActive ? ' active' : ''}"
+                    data-series="${seriesKey}" role="tab" aria-selected="${isActive}">
+                    ${SERIES_FILTER_LABELS[seriesKey] || SERIES_LABELS[seriesKey]}
+                </button>
             `;
         });
-        
-        return html;
+
+        filtersContainer.innerHTML = html;
+    }
+
+    function renderVideoLibraryGroups() {
+        const groupsContainer = document.getElementById('videoLibraryGroups');
+        const emptyState = document.getElementById('videoLibraryEmpty');
+        const meta = document.getElementById('videoLibraryMeta');
+        if (!groupsContainer) return;
+
+        const filteredVideos = getFilteredHistoricVideos();
+        const groupedVideos = groupVideosBySeries(filteredVideos);
+        const totalHistoric = getHistoricVideos().length;
+        const useShelfLayout = shouldUseShelfLayout();
+
+        if (meta) {
+            if (filteredVideos.length === totalHistoric && useShelfLayout) {
+                meta.textContent = `${totalHistoric} replays across ${groupedVideos.length} series`;
+            } else if (filteredVideos.length === totalHistoric) {
+                meta.textContent = `${totalHistoric} replays in the library`;
+            } else {
+                meta.textContent = `Showing ${filteredVideos.length} of ${totalHistoric} replays`;
+            }
+        }
+
+        if (filteredVideos.length === 0) {
+            groupsContainer.innerHTML = '';
+            if (emptyState) emptyState.hidden = false;
+            return;
+        }
+
+        if (emptyState) emptyState.hidden = true;
+
+        if (useShelfLayout) {
+            let html = '<div class="video-library-shelves">';
+            groupedVideos.forEach(group => {
+                html += `
+                    <div class="video-shelf" data-series-group="${group.seriesKey}">
+                        <div class="video-shelf-header">
+                            <div class="video-shelf-heading">
+                                <h4 class="video-shelf-title">${group.label}</h4>
+                                <span class="video-shelf-count">${group.videos.length} replay${group.videos.length === 1 ? '' : 's'}</span>
+                            </div>
+                            ${group.videos.length > 3 ? `
+                                <button type="button" class="video-shelf-view-all" data-series="${group.seriesKey}">
+                                    View all <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div class="video-shelf-track" tabindex="0" aria-label="${group.label} replays">
+                            ${group.videos.map(video => generateVideoCardHTML(video)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            groupsContainer.innerHTML = html;
+            return;
+        }
+
+        const activeLabel = activeSeriesFilter !== 'all'
+            ? (SERIES_LABELS[activeSeriesFilter] || 'Filtered replays')
+            : 'Search results';
+
+        groupsContainer.innerHTML = `
+            <div class="video-library-results">
+                <div class="video-library-results-header">
+                    <h4 class="video-library-results-title">${activeLabel}</h4>
+                    <button type="button" class="video-library-clear" id="videoLibraryClear">
+                        <i class="fas fa-times" aria-hidden="true"></i> Show all series
+                    </button>
+                </div>
+                <div class="video-library-grid">
+                    ${filteredVideos.map(video => generateVideoCardHTML(video)).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    function renderVideoLibrary() {
+        renderVideoLibraryFilters();
+        renderVideoLibraryGroups();
+        attachVideoClickListeners();
+    }
+
+    function handleLibrarySearch(event) {
+        librarySearchTerm = event.target.value;
+        renderVideoLibraryGroups();
+        attachVideoClickListeners();
+    }
+
+    function handleLibraryFilterClick(event) {
+        const chip = event.target.closest('.video-filter-chip');
+        if (!chip) return;
+
+        activeSeriesFilter = chip.getAttribute('data-series') || 'all';
+        renderVideoLibrary();
+    }
+
+    function handleLibraryShelfActions(event) {
+        const viewAllBtn = event.target.closest('.video-shelf-view-all');
+        if (viewAllBtn) {
+            activeSeriesFilter = viewAllBtn.getAttribute('data-series') || 'all';
+            renderVideoLibrary();
+            return;
+        }
+
+        const clearBtn = event.target.closest('.video-library-clear');
+        if (clearBtn) {
+            activeSeriesFilter = 'all';
+            librarySearchTerm = '';
+            const searchInput = document.getElementById('videoLibrarySearch');
+            if (searchInput) searchInput.value = '';
+            renderVideoLibrary();
+        }
+    }
+
+    function handleVideoCardKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleVideoClick(event);
+        }
+    }
+
+    function attachVideoLibraryListeners() {
+        if (libraryListenersAttached) return;
+
+        const searchInput = document.getElementById('videoLibrarySearch');
+        const filtersContainer = document.getElementById('videoLibraryFilters');
+        const groupsContainer = document.getElementById('videoLibraryGroups');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', handleLibrarySearch);
+        }
+
+        if (filtersContainer) {
+            filtersContainer.addEventListener('click', handleLibraryFilterClick);
+        }
+
+        if (groupsContainer) {
+            groupsContainer.addEventListener('click', handleLibraryShelfActions);
+        }
+
+        libraryListenersAttached = true;
     }
     
     // Function to update the entire video display
     function updateVideoDisplay() {
         updateShowcaseVideo();
-        
-        // Update historic videos
-        const historicContainer = document.querySelector('.past-streams-gallery');
-        if (historicContainer) {
-            historicContainer.innerHTML = generateHistoricVideosHTML();
-            // Re-attach event listeners to new elements
-            attachVideoClickListeners();
-        }
+        renderVideoLibrary();
+        attachVideoLibraryListeners();
     }
     
     // Function to attach click listeners to video items
     function attachVideoClickListeners() {
-        const pastStreamItems = document.querySelectorAll('.past-stream-item');
-        pastStreamItems.forEach(item => {
-            // Remove existing listeners to prevent duplicates
+        const videoCards = document.querySelectorAll('.replay-card');
+        videoCards.forEach(item => {
             item.removeEventListener('click', handleVideoClick);
+            item.removeEventListener('keydown', handleVideoCardKeydown);
             item.addEventListener('click', handleVideoClick);
+            item.addEventListener('keydown', handleVideoCardKeydown);
         });
     }
     
@@ -2499,16 +2750,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // (don't reset to center unless user closes and reopens modal)
     }
 
-    // Event listeners for past stream items
-    const pastStreamItems = document.querySelectorAll('.past-stream-item');
-    pastStreamItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const videoId = this.getAttribute('data-video-id');
-            if (videoId) {
-                openVideoModal(videoId);
-            }
-        });
-    });
+    // Event listeners for past stream items are attached dynamically via attachVideoClickListeners
 
     // Modal close event listeners
     if (videoModalClose) {
