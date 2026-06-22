@@ -2913,3 +2913,224 @@ document.addEventListener('DOMContentLoaded', function () {
         initializeVideoSystem();
     }
 });
+
+// ============================================================================
+// PHOTO GALLERY SYSTEM
+// ============================================================================
+(function () {
+    const GALLERY_BASE = './assets/gallery/';
+    const PHOTOS_PER_PAGE = 12;
+
+    let manifest = null;
+    let activeAlbum = null;
+    let visibleCount = PHOTOS_PER_PAGE;
+    let lightboxIndex = 0;
+
+    const els = {};
+
+    function cacheElements() {
+        els.albums = document.getElementById('galleryAlbums');
+        els.header = document.getElementById('galleryAlbumHeader');
+        els.grid = document.getElementById('galleryGrid');
+        els.loadMore = document.getElementById('galleryLoadMore');
+        els.lightbox = document.getElementById('galleryLightbox');
+        if (els.lightbox) {
+            els.lightboxImg = els.lightbox.querySelector('.gallery-lightbox-img');
+            els.lightboxCaption = els.lightbox.querySelector('.gallery-lightbox-caption');
+            els.lightboxCounter = els.lightbox.querySelector('.gallery-lightbox-counter');
+            els.lightboxClose = els.lightbox.querySelector('.gallery-lightbox-close');
+            els.lightboxPrev = els.lightbox.querySelector('.gallery-lightbox-prev');
+            els.lightboxNext = els.lightbox.querySelector('.gallery-lightbox-next');
+        }
+    }
+
+    function photoPath(albumId, file, size) {
+        return `${GALLERY_BASE}${albumId}/${size}/${file}`;
+    }
+
+    function renderAlbumTabs() {
+        els.albums.innerHTML = manifest.albums.map(album => `
+            <button class="gallery-album-card fade-in${album.id === activeAlbum.id ? ' active' : ''}"
+                    role="tab"
+                    aria-selected="${album.id === activeAlbum.id}"
+                    data-album-id="${album.id}"
+                    style="background-image: url('${GALLERY_BASE}${album.cover}')">
+                <div class="gallery-album-info">
+                    <h3>${album.title}</h3>
+                    <span>${album.date} · ${album.photos.length} photos</span>
+                </div>
+            </button>
+        `).join('');
+
+        els.albums.querySelectorAll('.gallery-album-card').forEach(btn => {
+            btn.addEventListener('click', () => selectAlbum(btn.dataset.albumId));
+        });
+    }
+
+    function renderAlbumHeader() {
+        els.header.innerHTML = `
+            <div class="gallery-album-header-text">
+                <h3>${activeAlbum.title}</h3>
+                <p>${activeAlbum.description}</p>
+            </div>
+            <span class="gallery-album-count">
+                <i class="fas fa-camera"></i> ${activeAlbum.photos.length} photos
+            </span>
+        `;
+    }
+
+    function renderGrid() {
+        const photos = activeAlbum.photos.slice(0, visibleCount);
+
+        els.grid.innerHTML = photos.map((photo, i) => {
+            const featured = i === 0 && visibleCount >= PHOTOS_PER_PAGE ? ' featured' : '';
+            const caption = photo.caption
+                ? `<div class="gallery-item-caption">${photo.caption}</div>`
+                : '';
+            return `
+                <div class="gallery-item fade-in${featured}" role="listitem" data-index="${i}" tabindex="0">
+                    <img src="${photoPath(activeAlbum.id, photo.file, 'thumbs')}"
+                         data-full="${photoPath(activeAlbum.id, photo.file, 'full')}"
+                         alt="${photo.caption || activeAlbum.title}"
+                         loading="lazy" />
+                    ${caption}
+                </div>
+            `;
+        }).join('');
+
+        els.grid.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index, 10)));
+            item.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(parseInt(item.dataset.index, 10));
+                }
+            });
+        });
+
+        renderLoadMore();
+        triggerFadeIn(els.grid);
+    }
+
+    function renderLoadMore() {
+        const remaining = activeAlbum.photos.length - visibleCount;
+        if (remaining <= 0) {
+            els.loadMore.innerHTML = '';
+            return;
+        }
+        els.loadMore.innerHTML = `
+            <button class="btn gallery-load-more-btn">
+                Load ${Math.min(remaining, PHOTOS_PER_PAGE)} more photos
+                <span style="opacity:0.7;margin-left:6px">(${remaining} remaining)</span>
+            </button>
+        `;
+        els.loadMore.querySelector('.gallery-load-more-btn').addEventListener('click', () => {
+            visibleCount += PHOTOS_PER_PAGE;
+            renderGrid();
+        });
+    }
+
+    function selectAlbum(albumId) {
+        activeAlbum = manifest.albums.find(a => a.id === albumId);
+        visibleCount = PHOTOS_PER_PAGE;
+        renderAlbumTabs();
+        renderAlbumHeader();
+        renderGrid();
+    }
+
+    function openLightbox(index) {
+        lightboxIndex = index;
+        updateLightbox();
+        els.lightbox.classList.add('active');
+        els.lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        els.lightbox.classList.remove('active');
+        els.lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        els.lightboxImg.src = '';
+    }
+
+    function updateLightbox() {
+        const photo = activeAlbum.photos[lightboxIndex];
+        const item = els.grid.querySelector(`[data-index="${lightboxIndex}"] img`);
+        els.lightboxImg.src = item ? item.dataset.full : photoPath(activeAlbum.id, photo.file, 'full');
+        els.lightboxCaption.textContent = photo.caption || '';
+        els.lightboxCaption.style.display = photo.caption ? 'block' : 'none';
+        els.lightboxCounter.textContent = `${lightboxIndex + 1} / ${activeAlbum.photos.length}`;
+    }
+
+    function navigateLightbox(direction) {
+        lightboxIndex = (lightboxIndex + direction + activeAlbum.photos.length) % activeAlbum.photos.length;
+        updateLightbox();
+    }
+
+    function bindLightboxEvents() {
+        els.lightboxClose.addEventListener('click', closeLightbox);
+        els.lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
+        els.lightboxNext.addEventListener('click', () => navigateLightbox(1));
+
+        els.lightbox.addEventListener('click', e => {
+            if (e.target === els.lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', e => {
+            if (!els.lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+
+        let touchStartX = 0;
+        els.lightbox.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        els.lightbox.addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(diff) > 50) navigateLightbox(diff > 0 ? -1 : 1);
+        }, { passive: true });
+    }
+
+    function triggerFadeIn(container) {
+        requestAnimationFrame(() => {
+            container.querySelectorAll('.fade-in:not(.active)').forEach(el => {
+                el.classList.add('active');
+            });
+        });
+    }
+
+    async function initializeGallery() {
+        cacheElements();
+        if (!els.grid) return;
+
+        try {
+            const response = await fetch(`${GALLERY_BASE}manifest.json`);
+            if (!response.ok) throw new Error('Failed to load gallery manifest');
+            manifest = await response.json();
+            activeAlbum = manifest.albums.find(a => a.featured) || manifest.albums[0];
+
+            renderAlbumTabs();
+            renderAlbumHeader();
+            renderGrid();
+            bindLightboxEvents();
+
+            window.WCMRCGallery = {
+                manifest,
+                selectAlbum,
+                refresh: () => selectAlbum(activeAlbum.id)
+            };
+        } catch (err) {
+            els.grid.innerHTML = '<p class="text-center">Gallery photos are loading soon. Check back after the next race day!</p>';
+            console.warn('Gallery init failed:', err);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeGallery);
+    } else {
+        initializeGallery();
+    }
+})();

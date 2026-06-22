@@ -1,0 +1,192 @@
+﻿{
+    "albums":  [
+                   {
+                       "id":  "winter-series-round-1-2026",
+                       "description":  "Action from Round 1 of the 2026 Winter Series at Kwinana.",
+                       "cover":  "winter-series-round-1-2026/thumbs/DSC02265.jpg",
+                       "featured":  true,
+                       "date":  "2026",
+                       "title":  "Winter Series Round 1",
+                       "photos":  [
+                                      {
+                                          "file":  "DSC02265.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02270.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02272.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02273.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02274.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02274-2.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02276.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02286.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02287.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02293.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02297.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02298.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02302.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02303.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02306.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02307.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02308.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02310.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02311.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02312.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02313.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02315.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02316.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02318.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02323.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02324.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02328.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02329.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02330.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02331.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02334.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02336.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02337.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02339.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02341.jpg",
+                                          "caption":  ""
+                                      },
+                                      {
+                                          "file":  "DSC02343.jpg",
+                                          "caption":  ""
+                                      }
+                                  ]
+                   },
+                   {
+                       "id":  "legacy",
+                       "description":  "Memorable moments from past race days and events.",
+                       "cover":  "legacy/thumbs/drone5.jpg",
+                       "featured":  false,
+                       "date":  "Archive",
+                       "title":  "Club Highlights",
+                       "photos":  [
+                                      {
+                                          "file":  "champaign.jpg",
+                                          "caption":  "Championship celebration on the podium"
+                                      },
+                                      {
+                                          "file":  "club1.jpg",
+                                          "caption":  "Pilots preparing for the national qualifier"
+                                      },
+                                      {
+                                          "file":  "drone5.jpg",
+                                          "caption":  "Night race with LED-equipped drones"
+                                      },
+                                      {
+                                          "file":  "drone6.jpg",
+                                          "caption":  "Close finish at the summer championship"
+                                      },
+                                      {
+                                          "file":  "oldGathering.jpg",
+                                          "caption":  "Aerial view of our custom-built race track"
+                                      },
+                                      {
+                                          "file":  "people1.jpg",
+                                          "caption":  "Technical pit stop during endurance race"
+                                      }
+                                  ]
+                   }
+               ]
+}

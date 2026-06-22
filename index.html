@@ -1851,37 +1851,30 @@
     <div class="container">
       <h2>Moments from the Track</h2>
       <p class="text-center mb-5">Where the future of racing takes flight – right here on the West Coast.</p>
-      <div class="gallery-grid">
-        <div class="gallery-item fade-in" style="background-image: url('./assets/champaign.jpg')">
-          <div class="gallery-item-caption">
-            <h3>High-speed chase through the forest course</h3>
-          </div>
-        </div>
-        <div class="gallery-item fade-in" style="background-image: url('./assets/club1.jpg')">
-          <div class="gallery-item-caption">
-            <h3>Pilots preparing for the national qualifier</h3>
-          </div>
-        </div>
-        <div class="gallery-item fade-in" style="background-image: url('./assets/drone5.jpg')">
-          <div class="gallery-item-caption">
-            <h3>Night race with LED-equipped drones</h3>
-          </div>
-        </div>
-        <div class="gallery-item fade-in" style="background-image: url('./assets/drone6.jpg')">
-          <div class="gallery-item-caption">
-            <h3>Close finish at the summer championship</h3>
-          </div>
-        </div>
-        <div class="gallery-item fade-in" style="background-image: url('./assets/oldGathering.jpg')">
-          <div class="gallery-item-caption">
-            <h3>Aerial view of our custom-built race track</h3>
-          </div>
-        </div>
-        <div class="gallery-item fade-in" style="background-image: url('./assets/people1.jpg')">
-          <div class="gallery-item-caption">
-            <h3>Technical pit stop during endurance race</h3>
-          </div>
-        </div>
+
+      <div class="gallery-albums fade-in" id="galleryAlbums" role="tablist" aria-label="Photo albums"></div>
+
+      <div class="gallery-album-header fade-in" id="galleryAlbumHeader"></div>
+
+      <div class="gallery-grid" id="galleryGrid" role="list"></div>
+
+      <div class="gallery-load-more fade-in" id="galleryLoadMore"></div>
+    </div>
+
+    <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-label="Photo viewer">
+      <button class="gallery-lightbox-close" aria-label="Close photo viewer">
+        <i class="fas fa-times"></i>
+      </button>
+      <button class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Previous photo">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Next photo">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <div class="gallery-lightbox-content">
+        <img class="gallery-lightbox-img" src="" alt="" />
+        <p class="gallery-lightbox-caption"></p>
+        <span class="gallery-lightbox-counter"></span>
       </div>
     </div>
   </section>
