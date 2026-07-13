@@ -1759,6 +1759,18 @@ header {
         color: rgba(41, 167, 223, 0.3);
         letter-spacing: 2px;
     }
+
+    .pilot-card-sponsor-logo {
+        position: absolute;
+        bottom: 12px;
+        left: 16px;
+        height: 1.15rem;
+        width: auto;
+        object-fit: contain;
+        z-index: 3;
+        border-radius: 2px;
+        opacity: 0.95;
+    }
     
     /* Holographic Card Shine Effect */
     .pilot-card-shine {
