@@ -2181,6 +2181,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const videoDatabase = [
         {
+            id: 'H7eQZIEOpbI',
+            title: 'Global Drone Solutions - 2026 Winter Round 3',
+            date: 'July 11, 2026',
+            description: 'Round 3 of the 2026 Winter Series — Round 2 was washed out by rain, so the racing came back hot!',
+            series: '2026-winter'
+        },
+        {
             id: 'ZZeIoFfyDZU',
             title: 'Global Drone Solutions 2026 Winter Heat 1 (HD Highlights Edition)',
             date: 'June 13, 2026',
