@@ -67,20 +67,6 @@
         </div>
         <h1>Tech Guides</h1>
         <p>Expert technical guides for building, tuning, and maintaining your racing drones. Learn from the experience of WCMRC pilots and take your FPV skills to the next level.</p>
-                 <div class="blog-stats">
-           <div class="stat">
-             <i class="fas fa-book-open"></i>
-             <span>Growing Library</span>
-           </div>
-           <div class="stat">
-             <i class="fas fa-users"></i>
-             <span>WCMRC Pilots</span>
-           </div>
-           <div class="stat">
-             <i class="fas fa-clock"></i>
-             <span>Fresh Content</span>
-           </div>
-         </div>
       </div>
     </div>
   </section>
@@ -89,10 +75,31 @@
   <section id="guide-selector">
     <div class="container">
       <h2>Select a Guide</h2>
-      <p class="selector-intro">Click on any guide below to dive in. Our growing library covers everything from electronics to software setup.</p>
+      <p class="selector-intro">Click on any guide below to dive in. Our growing library covers everything from electronics to member builds.</p>
       
       <div class="guide-selector-grid fade-in">
-        <!-- Guide Card 1 - Capacitors -->
+        <!-- Guide Card - Members Builds -->
+        <a href="./members-builds-2026.html" class="guide-selector-card featured">
+          <div class="guide-card-image" style="background-image: url('./assets/racingDrone.jpg')">
+            <div class="guide-card-overlay"></div>
+            <span class="guide-card-category">Builds</span>
+            <span class="guide-card-time"><i class="fas fa-clock"></i> 15 min</span>
+            <span class="new-badge">NEW</span>
+          </div>
+          <div class="guide-card-content">
+            <h3>Members Builds 2026</h3>
+            <p>Club-proven part lists with AU buy links, manuals, and component photos from WCMRC pilots.</p>
+            <div class="guide-card-footer">
+              <div class="guide-card-author">
+                <div class="guide-author-avatar" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
+                <span>WCMRC Pilots</span>
+              </div>
+              <span class="guide-card-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Guide Card - Capacitors -->
         <a href="./capacitors-essential-fpv-builds.html" class="guide-selector-card">
           <div class="guide-card-image" style="background-image: url('./assets/capacitor-for-drone.jpg')">
             <div class="guide-card-overlay"></div>
@@ -112,14 +119,13 @@
           </div>
         </a>
 
-        <!-- Guide Card 2 - Driver Fixer -->
-        <a href="./driver-fixer-guide.html" class="guide-selector-card featured">
+        <!-- Guide Card - Driver Fixer -->
+        <a href="./driver-fixer-guide.html" class="guide-selector-card">
           <div class="guide-card-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
             <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="width: 100%; height: 100%; object-fit: contain; padding: 20px;" />
             <div class="guide-card-overlay"></div>
             <span class="guide-card-category">Troubleshooting</span>
             <span class="guide-card-time"><i class="fas fa-clock"></i> 6 min</span>
-            <span class="new-badge">NEW</span>
           </div>
           <div class="guide-card-content">
             <h3>Fix Flight Controller Driver Issues on Windows</h3>
@@ -134,7 +140,7 @@
           </div>
         </a>
 
-        <!-- Guide Card 3 - Hertz Hunter -->
+        <!-- Guide Card - Hertz Hunter -->
         <a href="./hertz-hunter-guide.html" class="guide-selector-card">
           <div class="guide-card-image" style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);">
             <div class="guide-card-overlay"></div>
@@ -143,7 +149,6 @@
             <div class="guide-card-icon">
               <i class="fas fa-wave-square"></i>
             </div>
-            <span class="new-badge">NEW</span>
           </div>
           <div class="guide-card-content">
             <h3>Hertz Hunter: DIY 5.8GHz Spectrum Analyser</h3>
@@ -157,336 +162,6 @@
             </div>
           </div>
         </a>
-
-        <!-- Placeholder for future guides -->
-        <div class="guide-selector-card placeholder">
-          <div class="guide-card-image placeholder-bg">
-            <div class="placeholder-icon">
-              <i class="fas fa-plus-circle"></i>
-            </div>
-          </div>
-          <div class="guide-card-content">
-            <h3>More Guides Coming Soon</h3>
-            <p>We're constantly adding new technical content. Check back regularly!</p>
-            <div class="guide-card-footer">
-              <span class="placeholder-text">Stay tuned...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Article Section -->
-  <section id="featured-article">
-    <div class="container">
-      <h2>Featured Guide</h2>
-      <div class="featured-article-card fade-in">
-        <div class="featured-article-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); display: flex; align-items: center; justify-content: center;">
-          <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="max-width: 80%; max-height: 80%; object-fit: contain;" />
-          <div class="featured-badge">Featured</div>
-        </div>
-        <div class="featured-article-content">
-          <div class="article-meta">
-            <span class="article-category">Troubleshooting</span>
-            <span class="article-date">22 January 2026</span>
-            <span class="article-read-time">6 min read</span>
-          </div>
-          <h3>Fix Flight Controller Driver Issues on Windows</h3>
-          <p>Can't connect to Betaflight? Flight controller not recognized? Windows driver conflicts are one of the most common frustrations for FPV pilots. Learn how to use the ImpulseRC Driver Fixer to automatically repair USB, DFU, and bootloader drivers.</p>
-          
-          <div class="featured-article-preview">
-            <h4>What You'll Learn:</h4>
-            <ul>
-              <li><strong>Why Connections Fail:</strong> Understanding VCP and DFU drivers on Windows</li>
-              <li><strong>Quick Fix Solution:</strong> Using ImpulseRC Driver Fixer for automatic repairs</li>
-              <li><strong>Bootloader Mode:</strong> How to enter DFU mode on your flight controller</li>
-              <li><strong>Common Issues:</strong> Troubleshooting persistent connection problems</li>
-              <li><strong>Direct Download:</strong> Get the tool and fix your setup in minutes</li>
-            </ul>
-            <div class="key-takeaway">
-              <i class="fas fa-lightbulb"></i>
-              <span><strong>Key Takeaway:</strong> The ImpulseRC Driver Fixer automatically detects and repairs driver conflicts that prevent Betaflight from connecting to your flight controller.</span>
-            </div>
-          </div>
-          
-          <div class="article-author">
-            <div class="author-avatar" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
-            <div class="author-info">
-              <span class="author-name">Terry "DukeGod"</span>
-              <span class="author-title">WCMRC Pilot</span>
-            </div>
-          </div>
-          <a href="./driver-fixer-guide.html" class="btn article-btn">Read Full Guide</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Categories Section -->
-  <section id="categories">
-    <div class="container">
-      <h2>Browse by Category</h2>
-      <div class="categories-grid fade-in">
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-cogs"></i>
-          </div>
-          <h3>Build Guides</h3>
-          <p>Step-by-step instructions for building racing drones from scratch</p>
-          <div class="category-count">8 guides</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-sliders-h"></i>
-          </div>
-          <h3>Tuning & Setup</h3>
-          <p>Optimize your drone's performance with expert tuning techniques</p>
-          <div class="category-count">6 guides</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-tools"></i>
-          </div>
-          <h3>Maintenance</h3>
-          <p>Keep your drone in peak condition with proper maintenance</p>
-          <div class="category-count">4 guides</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-microchip"></i>
-          </div>
-          <h3>Electronics</h3>
-          <p>Understanding and troubleshooting drone electronics</p>
-          <div class="category-count">5 guides</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <h3>Racing Tips</h3>
-          <p>Improve your racing performance with pro techniques</p>
-          <div class="category-count">3 guides</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <h3>Troubleshooting</h3>
-          <p>Common problems and their solutions</p>
-          <div class="category-count">7 guides</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Articles Grid Section -->
-  <section id="articles-grid">
-    <div class="container">
-      <div class="articles-header">
-        <h2>Latest Tech Guides</h2>
-        <div class="articles-filters">
-          <button class="filter-btn active" data-filter="all">All Guides</button>
-          <button class="filter-btn" data-filter="troubleshooting">Troubleshooting</button>
-          <button class="filter-btn" data-filter="build">Build</button>
-          <button class="filter-btn" data-filter="tuning">Tuning</button>
-          <button class="filter-btn" data-filter="maintenance">Maintenance</button>
-          <button class="filter-btn" data-filter="electronics">Electronics</button>
-        </div>
-      </div>
-      
-      <div class="articles-grid fade-in">
-        <!-- Article 1 - NEW Hertz Hunter Guide -->
-        <article class="article-card" data-category="build">
-          <a href="./hertz-hunter-guide.html" style="text-decoration: none; color: inherit;">
-            <div class="article-image" style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%); display: flex; align-items: center; justify-content: center;">
-              <i class="fas fa-wave-square" style="font-size: 4rem; color: rgba(41, 167, 223, 0.8);"></i>
-            </div>
-            <div class="article-content">
-              <div class="article-meta">
-                <span class="article-category" style="background: #dc3545; color: white;">NEW</span>
-                <span class="article-category">Build Guide</span>
-                <span class="article-date">January 22, 2026</span>
-              </div>
-              <h3>Hertz Hunter: DIY 5.8GHz Spectrum Analyser</h3>
-              <p>Build a cheap RF spectrum analyser for diagnosing VTX issues and finding interference at race events—under $60 AUD.</p>
-              <div class="article-footer">
-                <div class="article-author-mini">
-                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
-                  <span>Epoxy</span>
-                </div>
-                <span class="read-time">10 min read</span>
-              </div>
-            </div>
-          </a>
-        </article>
-
-        <!-- Article 2 - Driver Fixer Guide -->
-        <article class="article-card" data-category="troubleshooting">
-          <a href="./driver-fixer-guide.html" style="text-decoration: none; color: inherit;">
-            <div class="article-image" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); display: flex; align-items: center; justify-content: center;">
-              <img src="./assets/logo.webp" alt="ImpulseRC Driver Fixer" style="max-width: 80%; max-height: 80%; object-fit: contain;" />
-            </div>
-            <div class="article-content">
-              <div class="article-meta">
-                <span class="article-category">Troubleshooting</span>
-                <span class="article-date">January 22, 2026</span>
-              </div>
-              <h3>Fix Flight Controller Driver Issues on Windows</h3>
-              <p>Can't connect to Betaflight? Learn how to use ImpulseRC Driver Fixer to repair USB and DFU driver conflicts automatically.</p>
-              <div class="article-footer">
-                <div class="article-author-mini">
-                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/DukeGod.jpg')"></div>
-                  <span>DukeGod</span>
-                </div>
-                <span class="read-time">6 min read</span>
-              </div>
-            </div>
-          </a>
-        </article>
-
-        <!-- Article 3 - Capacitors -->
-        <article class="article-card" data-category="electronics">
-          <a href="./capacitors-essential-fpv-builds.html" style="text-decoration: none; color: inherit;">
-            <div class="article-image" style="background-image: url('./assets/capacitor-for-drone.jpg')"></div>
-            <div class="article-content">
-              <div class="article-meta">
-                <span class="article-category">Electronics</span>
-                <span class="article-date">January 20, 2025</span>
-              </div>
-              <h3>Why Capacitors Are Essential in FPV Drone Builds</h3>
-              <p>A $2 capacitor can mean the difference between a flawless flight and an expensive repair bill. Learn how to protect your electronics from voltage spikes and electrical noise.</p>
-              <div class="article-footer">
-                <div class="article-author-mini">
-                  <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
-                  <span>ToGa</span>
-                </div>
-                <span class="read-time">8 min read</span>
-              </div>
-            </div>
-          </a>
-        </article>
-
-        <!-- Article 3 -->
-        <article class="article-card" data-category="tuning">
-          <div class="article-image" style="background-image: url('./assets/drone4.jpg')"></div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-category">Tuning</span>
-              <span class="article-date">December 8, 2024</span>
-            </div>
-            <h3>PID Tuning for Beginners</h3>
-            <p>Master the basics of PID tuning to improve your drone's flight characteristics and responsiveness on the track.</p>
-            <div class="article-footer">
-              <div class="article-author-mini">
-                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Epoxy.jpg')"></div>
-                <span>Epoxy</span>
-              </div>
-              <span class="read-time">12 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Article 3 -->
-        <article class="article-card" data-category="electronics">
-          <div class="article-image" style="background-image: url('./assets/drone5.jpg')"></div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-category">Electronics</span>
-              <span class="article-date">December 5, 2024</span>
-            </div>
-            <h3>Understanding ESC Protocols</h3>
-            <p>A deep dive into ESC protocols and how they affect your drone's performance. Learn when to use DShot, Multishot, and OneShot.</p>
-            <div class="article-footer">
-              <div class="article-author-mini">
-                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/andAgain.jpg')"></div>
-                <span>andAgainFPV</span>
-              </div>
-              <span class="read-time">10 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Article 4 -->
-        <article class="article-card" data-category="maintenance">
-          <div class="article-image" style="background-image: url('./assets/drone2.jpg')"></div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-category">Maintenance</span>
-              <span class="article-date">December 3, 2024</span>
-            </div>
-            <h3>Motor Maintenance and Replacement</h3>
-            <p>Keep your motors running smooth with proper maintenance techniques and learn when it's time for a replacement.</p>
-            <div class="article-footer">
-              <div class="article-author-mini">
-                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/TOGA.jpg')"></div>
-                <span>ToGa</span>
-              </div>
-              <span class="read-time">7 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Article 5 -->
-        <article class="article-card" data-category="build">
-          <div class="article-image" style="background-image: url('./assets/racingDrone.jpg')"></div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-category">Build Guide</span>
-              <span class="article-date">November 28, 2024</span>
-            </div>
-            <h3>Wiring Your Racing Drone Safely</h3>
-            <p>Learn proper wiring techniques to ensure reliable performance and easy maintenance of your racing drone.</p>
-            <div class="article-footer">
-              <div class="article-author-mini">
-                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Kurt.jpg')"></div>
-                <span>Kurt</span>
-              </div>
-              <span class="read-time">15 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Article 6 -->
-        <article class="article-card" data-category="tuning">
-          <div class="article-image" style="background-image: url('./assets/gates.jpg')"></div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-category">Racing Tips</span>
-              <span class="article-date">November 25, 2024</span>
-            </div>
-            <h3>Camera Angle and Racing Lines</h3>
-            <p>Optimize your camera angle and learn to read racing lines for competitive advantage on the track.</p>
-            <div class="article-footer">
-              <div class="article-author-mini">
-                <div class="author-avatar-mini" style="background-image: url('./assets/pilots/Asylum.jpg')"></div>
-                <span>Asylum</span>
-              </div>
-              <span class="read-time">9 min read</span>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Load More Button -->
-      <div class="load-more-container">
-        <button class="btn load-more-btn">Load More Articles</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Newsletter Signup -->
-  <section id="newsletter-signup">
-    <div class="container">
-      <div class="newsletter-content fade-in">
-        <div class="newsletter-text">
-          <h3>Stay Updated with Latest Tech Guides</h3>
-          <p>Get notified when new tech guides are published. No spam, just valuable FPV content.</p>
-        </div>
-        <form class="newsletter-form">
-          <input type="email" placeholder="Enter your email address" required>
-          <button type="submit" class="btn">Subscribe</button>
-        </form>
       </div>
     </div>
   </section>
@@ -494,10 +169,10 @@
   <!-- Footer -->
   <footer>
     <div class="container">
-      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Multirotor Club" class="footer-logo" />
       <div class="footer-container">
         <div class="footer-col">
-          <h3>West Coast Mulirotor Club</h3>
+          <h3>West Coast Multirotor Club</h3>
           <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
             FPV flight.</p>
           <h3>Sister FPV Racing Club <br>Rotor Cross</h3>
@@ -505,10 +180,25 @@
             <img src="./assets/rotorCross.png" alt="Rotor Cross" class="footer-logo" />
           </a>
           <div class="social-links">
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-discord"></i></a>
+            <a class="social-link social-link--facebook"
+              href="https://www.facebook.com/groups/westcoastmultirotorclub" target="_blank" rel="noopener"
+              aria-label="West Coast Multirotor Club on Facebook">
+              <span class="social-link-icon"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
+              <span class="social-link-copy">
+                <span class="social-link-name">Facebook</span>
+                <span class="social-link-meta">Club group &amp; event updates</span>
+              </span>
+              <i class="fas fa-arrow-right social-link-arrow" aria-hidden="true"></i>
+            </a>
+            <a class="social-link social-link--youtube" href="https://www.youtube.com/@westcoastmultirotorsclub"
+              target="_blank" rel="noopener" aria-label="West Coast Multirotor Club on YouTube">
+              <span class="social-link-icon"><i class="fab fa-youtube" aria-hidden="true"></i></span>
+              <span class="social-link-copy">
+                <span class="social-link-name">YouTube</span>
+                <span class="social-link-meta">Race videos &amp; FPV footage</span>
+              </span>
+              <i class="fas fa-arrow-right social-link-arrow" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
         <div class="footer-col">
@@ -527,10 +217,10 @@
         <div class="footer-col">
           <h3>Tech Guides</h3>
           <ul class="footer-links">
-            <li><a href="#featured-article">Featured Guides</a></li>
-            <li><a href="#categories">Browse Categories</a></li>
-            <li><a href="#articles-grid">All Articles</a></li>
-            <li><a href="#newsletter-signup">Subscribe</a></li>
+            <li><a href="#guide-selector">All Guides</a></li>
+            <li><a href="./members-builds-2026.html">Members Builds 2026</a></li>
+            <li><a href="./capacitors-essential-fpv-builds.html">Capacitors Guide</a></li>
+            <li><a href="./driver-fixer-guide.html">Driver Fixer</a></li>
           </ul>
         </div>
         <div class="footer-col footer-newsletter">
@@ -545,7 +235,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 West Coast Mulirotor Club. All Rights Reserved.</p>
+        <p>&copy; 2026 West Coast Multirotor Club. All Rights Reserved.</p>
       </div>
     </div>
   </footer>
@@ -554,4 +244,4 @@
 
 </body>
 
-</html> 
+</html>

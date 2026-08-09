@@ -1,0 +1,9 @@
+# Scratch images pulled down while hunting for product photos and wiring diagrams.
+assets/builds/inspect/
+tools/inspect/
+tools/review/
+
+# Regenerable caches and scratch output from the tools/ scripts.
+tools/catalog/
+tools/out-*.txt
+tools/asset-report.json

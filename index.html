@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>West Coast Multirotor Club | Drone Racing Club</title>
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="stylesheet" href="./style.css" />
@@ -71,14 +72,7 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-logo-container">
-          <!-- Logo without drone (initially hidden) -->
-          <img src="./assets/wcmrcLogoNoDrone.png" alt="West Coast Multirotor Club" class="hero-logo hero-logo-no-drone"
-            id="heroLogoNoDrone" />
-          <!-- Combined logo with drone (initially visible) -->
-          <img src="./assets/wcmrcLogo.png" alt="West Coast Multirotor Club" class="hero-logo hero-logo-with-drone"
-            id="heroLogoWithDrone" />
-          <!-- Separate drone element for animation -->
-          <img src="./assets/drone.png" alt="Drone" class="hero-drone" id="heroDrone" />
+          <img src="./assets/wcmrcLogo.png" alt="West Coast Multirotor Club" class="hero-logo" />
         </div>
         <h1>Where Speed Meets the Sky</h1>
         <p>Western Australia's premier drone racing club. Technology, skill, and adrenaline soar over our stunning
@@ -90,7 +84,7 @@
       </div>
     </div>
     <div class="scroll-indicator">
-      <p>Scroll Down to Release the Drone</p>
+      <p>Scroll Down to Explore</p>
       <div class="arrow">
         <i class="fas fa-chevron-down"></i>
       </div>
@@ -144,13 +138,17 @@
   <section id="live-streams">
     <div class="container">
       <h2>Latest Live Stream</h2>
-      <p class="text-center mb-5">Catch the replay of our most recent race day action!</p>
+      <p class="text-center mb-5">Highlights from Round 5 of the 2026 Winter Series — tight, fast racing squeezed in between the rain!</p>
       <div class="live-stream-main fade-in">
-        <iframe src="https://www.youtube.com/embed/D9TiQJqB6AM?si=c7EdB2b5Zp5-e7vA"
-          title="Global Drone Solutions 2026 Winter Heat 4 Highlights" frameborder="0"
+        <iframe src="https://www.youtube.com/embed/dqAay6lHK7s"
+          title="Global Drone Solutions 2026 Winter Heat 5 Highlights" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
         </iframe>
+        <button type="button" class="video-share-btn live-stream-share" id="featuredVideoShare"
+          data-share-video-id="dqAay6lHK7s" aria-label="Share this video" title="Share this video">
+          <i class="fas fa-share-nodes" aria-hidden="true"></i><span>Share</span>
+        </button>
       </div>
 
       <div class="video-library fade-in" id="videoLibrary">
@@ -2022,6 +2020,7 @@
             Information</a>
         </div>
       </div>
+    </div>
   </section>
 
   <!-- Resources Section -->
@@ -2030,54 +2029,69 @@
       <h2>Pilot Resources</h2>
       <div class="resources-grid">
         <div class="resource-card fade-in">
-          <div class="resource-icon">
-            <i class="fas fa-book-open"></i>
+          <div class="resource-preview">
+            <img class="resource-preview-poster" src="./assets/previews/handbook.jpg" alt="" aria-hidden="true">
+            <video class="resource-preview-media" src="./assets/previews/handbook.mp4"
+              poster="./assets/previews/handbook.jpg" muted loop playsinline preload="none" tabindex="-1"
+              aria-hidden="true"></video>
+            <span class="resource-tag"><i class="fas fa-file-pdf" aria-hidden="true"></i> PDF</span>
+            <span class="resource-hint"><i class="fas fa-computer-mouse" aria-hidden="true"></i> Hover to preview</span>
           </div>
           <div class="resource-details">
+            <div class="resource-icon"><i class="fas fa-book-open"></i></div>
             <h3>Club Handbook</h3>
             <p>The official WCMRC handbook covering club rules, guidelines, and everything you need to know.</p>
             <a href="./assets/WCMRC Handbook v2.2 2025.pdf" class="btn" target="_blank">Download PDF</a>
           </div>
         </div>
         <div class="resource-card fade-in">
-          <div class="resource-icon">
-            <i class="fas fa-book"></i>
+          <div class="resource-preview">
+            <img class="resource-preview-poster" src="./assets/previews/safety.jpg" alt="" aria-hidden="true">
+            <video class="resource-preview-media" src="./assets/previews/safety.mp4"
+              poster="./assets/previews/safety.jpg" muted loop playsinline preload="none" tabindex="-1"
+              aria-hidden="true"></video>
+            <span class="resource-tag"><i class="fas fa-file-pdf" aria-hidden="true"></i> PDF</span>
+            <span class="resource-hint"><i class="fas fa-computer-mouse" aria-hidden="true"></i> Hover to preview</span>
           </div>
           <div class="resource-details">
-            <h3>Club Safety Management Plan</h3>
-            <p>Safety First.</p>
+            <div class="resource-icon"><i class="fas fa-shield-halved"></i></div>
+            <h3>Safety Management Plan</h3>
+            <p>Safety first — our procedures for flight operations, emergencies, and site management.</p>
             <a href="./assets/WCMRC Safety management Plan - October 2024.pdf" class="btn" target="_blank">Download
               PDF</a>
           </div>
         </div>
         <div class="resource-card fade-in">
-          <div class="resource-icon">
-            <i class="fas fa-tools"></i>
+          <div class="resource-preview">
+            <img class="resource-preview-poster" src="./assets/previews/tech-guides.jpg" alt="" aria-hidden="true">
+            <video class="resource-preview-media" src="./assets/previews/tech-guides.mp4"
+              poster="./assets/previews/tech-guides.jpg" muted loop playsinline preload="none" tabindex="-1"
+              aria-hidden="true"></video>
+            <span class="resource-tag"><i class="fas fa-screwdriver-wrench" aria-hidden="true"></i> Guides</span>
+            <span class="resource-hint"><i class="fas fa-computer-mouse" aria-hidden="true"></i> Hover to preview</span>
           </div>
           <div class="resource-details">
+            <div class="resource-icon"><i class="fas fa-tools"></i></div>
             <h3>Tech Guides</h3>
             <p>Technical guides for building, tuning, and maintaining your racing drones.</p>
             <a href="./tech-guides.html" target="_blank" class="btn">View Guides</a>
           </div>
         </div>
         <div class="resource-card fade-in">
-          <div class="resource-icon">
-            <i class="fas fa-map"></i>
+          <div class="resource-preview">
+            <img class="resource-preview-poster" src="./assets/previews/track-layouts.jpg" alt="" aria-hidden="true">
+            <video class="resource-preview-media" src="./assets/previews/track-layouts.mp4"
+              poster="./assets/previews/track-layouts.jpg" muted loop playsinline preload="none" tabindex="-1"
+              aria-hidden="true"></video>
+            <span class="resource-tag"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Web
+              app</span>
+            <span class="resource-hint"><i class="fas fa-computer-mouse" aria-hidden="true"></i> Hover to preview</span>
           </div>
           <div class="resource-details">
+            <div class="resource-icon"><i class="fas fa-map"></i></div>
             <h3>Track Layouts</h3>
-            <p>Diagrams and specifications for our various race track configurations.</p>
+            <p>Design, review, and share race track layouts to scale before you set up on the field.</p>
             <a href="https://trackdraw.app/" target="_blank" class="btn">Track Layout Builder</a>
-          </div>
-        </div>
-        <div class="resource-card fade-in">
-          <div class="resource-icon">
-            <i class="fas fa-video"></i>
-          </div>
-          <div class="resource-details">
-            <h3>Training Videos</h3>
-            <p>Video tutorials covering everything from basic flight to advanced racing techniques.</p>
-            <a href="#" class="btn">Watch Videos</a>
           </div>
         </div>
       </div>
@@ -2088,10 +2102,10 @@
   <!-- Footer -->
   <footer>
     <div class="container">
-      <img src="./assets/wcmrcLogo.png" alt="West Coast Mulirotor Club" class="footer-logo" />
+      <img src="./assets/wcmrcLogo.png" alt="West Coast Multirotor Club" class="footer-logo" />
       <div class="footer-container">
         <div class="footer-col">
-          <h3>West Coast Mulirotor Club</h3>
+          <h3>West Coast Multirotor Club</h3>
           <p>Where passion meets the sky. Join our community of drone racing enthusiasts and experience the thrill of
             FPV flight.</p>
           <h3>Sister FPV Racing Club <br>Rotor Cross</h3>
@@ -2099,10 +2113,25 @@
             <img src="./assets/rotorCross.png" alt="Rotor Cross" class="footer-logo" />
           </a>
           <div class="social-links">
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-discord"></i></a>
+            <a class="social-link social-link--facebook"
+              href="https://www.facebook.com/groups/westcoastmultirotorclub" target="_blank" rel="noopener"
+              aria-label="West Coast Multirotor Club on Facebook">
+              <span class="social-link-icon"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
+              <span class="social-link-copy">
+                <span class="social-link-name">Facebook</span>
+                <span class="social-link-meta">Club group &amp; event updates</span>
+              </span>
+              <i class="fas fa-arrow-right social-link-arrow" aria-hidden="true"></i>
+            </a>
+            <a class="social-link social-link--youtube" href="https://www.youtube.com/@westcoastmultirotorsclub"
+              target="_blank" rel="noopener" aria-label="West Coast Multirotor Club on YouTube">
+              <span class="social-link-icon"><i class="fab fa-youtube" aria-hidden="true"></i></span>
+              <span class="social-link-copy">
+                <span class="social-link-name">YouTube</span>
+                <span class="social-link-meta">Race videos &amp; FPV footage</span>
+              </span>
+              <i class="fas fa-arrow-right social-link-arrow" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
         <div class="footer-col">
@@ -2118,15 +2147,6 @@
             <li><a href="#resources">Resources</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h3>Legal</h3>
-          <ul class="footer-links">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Safety Guidelines</a></li>
-            <li><a href="#">Liability Waiver</a></li>
-          </ul>
-        </div>
         <div class="footer-col footer-newsletter">
           <h3>Newsletter</h3>
           <p>Subscribe to our newsletter for the latest updates on races, workshops, and drone technology.</p>
@@ -2139,7 +2159,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 West Coast Mulirotor Club. All Rights Reserved.</p>
+        <p>&copy; 2026 West Coast Multirotor Club. All Rights Reserved.</p>
       </div>
     </div>
   </footer>
@@ -2151,21 +2171,42 @@
     Your browser does not support the audio element.
   </audio>
   <!-- Video Modal -->
-  <div class="video-modal-overlay" id="videoModalOverlay">
+  <div class="video-modal-overlay" id="videoModalOverlay" role="dialog" aria-modal="true"
+    aria-labelledby="videoModalTitle" aria-hidden="true">
     <div class="video-modal-container" id="videoModalContainer">
       <div class="video-modal-header">
-        <h3 class="video-modal-title" id="videoModalTitle">Video Title</h3>
-        <button class="video-modal-close" id="videoModalClose">
-          <i class="fas fa-times"></i>
-        </button>
+        <span class="video-modal-grip" aria-hidden="true"></span>
+        <div class="video-modal-heading">
+          <h3 class="video-modal-title" id="videoModalTitle">Video Title</h3>
+          <div class="video-modal-meta">
+            <span class="video-modal-badge">Replay</span>
+            <p class="video-modal-date" id="videoModalDate">Video Date</p>
+          </div>
+        </div>
+        <div class="video-modal-actions">
+          <button type="button" class="video-share-btn video-modal-share" id="videoModalShare"
+            aria-label="Share this video" title="Share this video">
+            <i class="fas fa-share-nodes" aria-hidden="true"></i><span>Share</span>
+          </button>
+          <button type="button" class="video-modal-close" id="videoModalClose" aria-label="Close video"
+            title="Close">
+            <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
       <div class="video-modal-body">
         <div class="video-modal-player">
-          <iframe id="videoModalIframe" src="" frameborder="0" allowfullscreen></iframe>
+          <iframe id="videoModalIframe" src="" title="Video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        <div class="video-modal-info">
-          <p class="video-modal-date" id="videoModalDate">Video Date</p>
-        </div>
+      </div>
+      <div class="video-modal-footer">
+        <p class="video-modal-hint"><kbd>Esc</kbd><span>to close</span></p>
+        <a class="video-modal-youtube" id="videoModalYouTube" href="https://www.youtube.com/@westcoastmultirotorsclub"
+          target="_blank" rel="noopener">
+          <i class="fab fa-youtube" aria-hidden="true"></i><span>Watch on YouTube</span>
+        </a>
       </div>
     </div>
   </div>

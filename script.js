@@ -19,18 +19,6 @@ window.addEventListener('error', function (event) {
     // Prevent the error from crashing the page
     event.preventDefault();
 
-    // Try to recover key animations if needed
-    try {
-        // Check if drone animation needs recovery
-        const heroDrone = document.getElementById('heroDrone');
-        if (heroDrone && heroDrone.style.transform.includes('NaN')) {
-            // Reset drone position
-            heroDrone.style.transform = 'translate(-50%, -50%)';
-        }
-    } catch (recoveryError) {
-        // Silent recovery
-    }
-
     return true;
 }, { passive: true });
 
@@ -742,249 +730,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
 }); // End of Pilot Carousel functionality
 
-// Drone Animation Handler
+// Hide the hero scroll indicator once the visitor starts scrolling
 document.addEventListener('DOMContentLoaded', function () {
-    // Elements
-    const heroLogoContainer = document.querySelector('.hero-logo-container');
-    const heroDrone = document.getElementById('heroDrone');
-    const heroLogoNoDrone = document.getElementById('heroLogoNoDrone');
-    const heroLogoWithDrone = document.getElementById('heroLogoWithDrone');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (!scrollIndicator) return;
 
-    // Check if elements exist before trying to use them
-    if (!heroLogoContainer || !heroDrone || !heroLogoNoDrone || !heroLogoWithDrone) {
-        return;
-    }
+    let hidden = false;
 
-    // Initial setup
-    heroDrone.style.opacity = '0'; // Hidden by default
-    heroDrone.style.position = 'absolute';
-    heroLogoNoDrone.style.opacity = '0'; // Initially hidden
-    heroLogoWithDrone.style.opacity = '1'; // Initially visible
-
-    // State variables
-    let mouseX = 0;
-    let mouseY = 0;
-    let droneLeft = 0;
-    let droneTop = 0;
-    let homeLeft = 0;
-    let homeTop = 0;
-    let isChasing = false;
-    let isOrbiting = false;
-    let orbitAngle = 0;
-    const orbitRadius = 150;
-    const chaseSpeed = 0.1;
-    const orbitSpeed = 0.05;
-    let droneAngle = 0;
-    let lastScrollTime = 0;
-    let scrollThrottleDelay = 100; // ms
-
-    // Throttle function to limit how often a function is called
-    function throttle(callback, delay) {
-        const now = Date.now();
-        if (now - lastScrollTime >= delay) {
-            lastScrollTime = now;
-            callback();
-        }
-    }
-
-    // Safe scroll handler with error protection
-    function handleScroll() {
-        try {
-            if (!heroLogoContainer || !heroDrone || !heroLogoNoDrone || !heroLogoWithDrone) return;
-
-            if (window.scrollY > 100 && !isChasing &&
-                heroLogoWithDrone.style.opacity === '1' &&
-                heroLogoContainer.getBoundingClientRect) {
-
-                // Make the drone "fly out" by showing the version without drone
-                heroLogoNoDrone.style.opacity = '1';
-                heroLogoWithDrone.style.opacity = '0';
-                heroDrone.style.opacity = '1';
-                isChasing = true;
-
-                // Set initial position - with safety checks
-                try {
-                    const parentRect = heroLogoContainer.getBoundingClientRect();
-                    homeLeft = parentRect.width / 2;
-                    homeTop = parentRect.height / 2;
-                    droneLeft = homeLeft;
-                    droneTop = homeTop;
-                } catch (positionError) {
-                    // Use default values if there's an error
-                    homeLeft = homeTop = droneLeft = droneTop = 50;
-                }
-            }
-
-            // Handle scroll indicator
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            if (scrollIndicator && window.scrollY > 100) {
-                scrollIndicator.style.opacity = '0';
-                setTimeout(() => {
-                    if (scrollIndicator.style) {
-                        scrollIndicator.style.display = 'none';
-                    }
-                }, 500);
-            }
-        } catch (err) {
-            // Silent error handling
-        }
-    }
-
-    // Set up throttled scroll handler
     window.addEventListener('scroll', function () {
-        throttle(handleScroll, scrollThrottleDelay);
+        if (hidden || window.scrollY <= 100) return;
+        hidden = true;
+
+        scrollIndicator.style.opacity = '0';
+        setTimeout(() => {
+            scrollIndicator.style.display = 'none';
+        }, 500);
     }, { passive: true });
-
-    // Track mouse position
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-    });
-
-    // Initialize drone position at the center of the logo container
-    function initDrone() {
-        try {
-            if (!heroLogoContainer) return;
-
-            const parentRect = heroLogoContainer.getBoundingClientRect();
-            homeLeft = parentRect.width / 2;
-            homeTop = parentRect.height / 2;
-            droneLeft = homeLeft;
-            droneTop = homeTop;
-
-            // Event listeners
-            heroLogoContainer.addEventListener('mouseleave', () => {
-                if (heroLogoWithDrone.style.opacity === '0') { // Only if drone is already released
-                    isChasing = true;
-                    isOrbiting = false;
-                }
-            });
-
-            heroLogoContainer.addEventListener('click', () => {
-                if (isOrbiting) {
-                    isChasing = false;
-                    isOrbiting = false;
-                }
-            });
-        } catch (error) {
-            // Silent error handling
-        }
-    }
-
-    // Animation loop
-    function animateDrone() {
-        try {
-            if (!heroLogoContainer || !heroDrone) {
-                requestAnimationFrame(animateDrone);
-                return;
-            }
-
-            // Get parent container's position for coordinate conversion
-            // Wrap position calculations in try-catch to handle fast scrolling issues
-            let parentRect;
-            let parentLeft = 0;
-            let parentTop = 0;
-
-            try {
-                parentRect = heroLogoContainer.getBoundingClientRect();
-                if (parentRect) {
-                    parentLeft = parentRect.left + window.scrollX;
-                    parentTop = parentRect.top + window.scrollY;
-                }
-            } catch (rectError) {
-                // Continue with default values
-            }
-
-            // Convert mouse position to parent coordinates
-            const mouseLeft = mouseX - parentLeft;
-            const mouseTop = mouseY - parentTop;
-
-            if (isChasing) {
-                const dx = mouseLeft - droneLeft;
-                const dy = mouseTop - droneTop;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 15 && !isOrbiting) {
-                    isOrbiting = true;
-                    orbitAngle = Math.atan2(dy, dx);
-                }
-
-                if (isOrbiting) {
-                    orbitAngle += orbitSpeed;
-                    // Set position directly to eliminate offset
-                    droneLeft = mouseLeft + Math.cos(orbitAngle) * orbitRadius;
-                    droneTop = mouseTop + Math.sin(orbitAngle) * orbitRadius;
-                    droneAngle = (orbitAngle + Math.PI / 2) * (180 / Math.PI);
-                } else {
-                    droneLeft += dx * chaseSpeed;
-                    droneTop += dy * chaseSpeed;
-                    droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-                }
-            } else {
-                // Return to home
-                const dx = homeLeft - droneLeft;
-                const dy = homeTop - droneTop;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 1) {
-                    droneLeft = homeLeft;
-                    droneTop = homeTop;
-
-                    // Restore original state when drone returns home
-                    // Check if elements exist before accessing
-                    if (heroDrone && heroDrone.style && heroLogoNoDrone && heroLogoWithDrone) {
-                        heroDrone.style.opacity = '0';
-                        heroLogoNoDrone.style.opacity = '0';
-                        heroLogoWithDrone.style.opacity = '1';
-                    }
-                } else {
-                    droneLeft += dx * 0.1;
-                    droneTop += dy * 0.1;
-                    droneAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-                }
-            }
-
-            // Apply position and rotation with error handling
-            if (heroDrone && heroDrone.style) {
-                // Apply position and rotation, with hover in transform
-                const hover = Math.sin(Date.now() / 300) * 2;
-                heroDrone.style.left = `${droneLeft}px`;
-                heroDrone.style.top = `${droneTop}px`;
-                heroDrone.style.transform = `translate(-50%, -50%) translateY(${hover}px) rotate(${droneAngle}deg)`;
-            }
-        } catch (error) {
-            // Don't stop animation loop on error, just continue
-        }
-
-        // Continue animation regardless of errors - use setTimeout to limit
-        // animation updates during fast scrolling on mobile devices
-        if (window.navigator.userAgent.includes('Mobile')) {
-            setTimeout(() => requestAnimationFrame(animateDrone), 16); // Limit to ~60fps on mobile
-        } else {
-            requestAnimationFrame(animateDrone);
-        }
-    }
-
-    // Start the animation
-    try {
-        initDrone();
-        requestAnimationFrame(animateDrone);
-    } catch (error) {
-        // Silent error handling
-    }
 });
 
-// Ultra-simplified cursor for maximum performance
+// Custom cursor: a slowly spinning three-blade propeller
 document.addEventListener('DOMContentLoaded', function () {
     const cursor = document.querySelector('.cursor');
     if (!cursor) return;
 
-    // Remove existing circles if any
-    cursor.innerHTML = '';
+    // A single blade, drawn pointing "up" from the hub at 60,60: narrow root,
+    // widest around mid span, swept back toward a blunt tip. The three blades
+    // are the same geometry rotated 120 degrees apart.
+    function bladeMarkup(rotation) {
+        const body = 'M62.5 52C64.6 45 65.6 36 65.25 30C65 24 62.6 17 59 12' +
+            'C56 7.6 54 5.6 51 5.4C49.6 5.3 48.7 6.2 48.6 8' +
+            'C48.5 13 49 16.5 50 20C51.4 29 54 42 57.5 52Z';
+        const leadingEdge = 'M62.5 52C64.6 45 65.6 36 65.25 30C65 24 62.6 17 59 12C56 7.6 54 5.6 51 5.4';
+        const glint = 'M61.2 49C63.1 43 63.6 36 63.2 30.5C62.9 25 61 19.5 58.2 15.6';
+        const trailingEdge = 'M57.5 52C54 42 51.4 29 50 20C49 16.5 48.5 13 48.6 8';
 
-    // Create just one center circle
-    const centerCircle = document.createElement('div');
-    centerCircle.className = 'circle center-circle';
-    cursor.appendChild(centerCircle);
+        return `
+            <g transform="rotate(${rotation} 60 60)">
+                <path d="${body}" fill="url(#propBladeFace)" />
+                <path d="${trailingEdge}" fill="none" stroke="#000" stroke-opacity="0.4"
+                    stroke-width="1" stroke-linecap="round" />
+                <path d="${leadingEdge}" fill="none" stroke="url(#propBladeEdge)"
+                    stroke-width="1" stroke-linecap="round" />
+                <path d="${glint}" fill="none" stroke="#fff" stroke-opacity="0.09"
+                    stroke-width="2.6" stroke-linecap="round" />
+            </g>`;
+    }
+
+    cursor.innerHTML = `
+        <div class="prop-cursor">
+            <svg class="prop-cursor-blades" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="propBladeFace" x1="1" y1="0.28" x2="0" y2="0.6">
+                        <stop offset="0" stop-color="#8e9aa6" />
+                        <stop offset="0.22" stop-color="#4c5762" />
+                        <stop offset="0.5" stop-color="#262d35" />
+                        <stop offset="0.8" stop-color="#141920" />
+                        <stop offset="1" stop-color="#0a0d11" />
+                    </linearGradient>
+                    <linearGradient id="propBladeEdge" x1="0" y1="1" x2="0" y2="0">
+                        <stop offset="0" stop-color="#fff" stop-opacity="0" />
+                        <stop offset="0.25" stop-color="#e6eef5" stop-opacity="0.6" />
+                        <stop offset="0.7" stop-color="#b9cbd8" stop-opacity="0.55" />
+                        <stop offset="1" stop-color="var(--primary-color)" stop-opacity="0.55" />
+                    </linearGradient>
+                    <radialGradient id="propHubBase" cx="0.34" cy="0.3" r="0.8">
+                        <stop offset="0" stop-color="#5a656f" />
+                        <stop offset="0.55" stop-color="#20262d" />
+                        <stop offset="1" stop-color="#0b0e12" />
+                    </radialGradient>
+                    <radialGradient id="propHubCap" cx="0.32" cy="0.28" r="0.85">
+                        <stop offset="0" stop-color="#828d99" />
+                        <stop offset="0.6" stop-color="#2c333b" />
+                        <stop offset="1" stop-color="#161b21" />
+                    </radialGradient>
+                    <radialGradient id="propShaft" cx="0.35" cy="0.3" r="0.8">
+                        <stop offset="0" stop-color="#6b7683" />
+                        <stop offset="1" stop-color="#20262d" />
+                    </radialGradient>
+                </defs>
+
+                ${bladeMarkup(0)}${bladeMarkup(120)}${bladeMarkup(240)}
+
+                <g>
+                    <circle cx="60" cy="60" r="10.5" fill="url(#propHubBase)" />
+                    <circle cx="60" cy="60" r="10.5" fill="none" stroke="#04070a"
+                        stroke-opacity="0.85" stroke-width="0.9" />
+                    <circle cx="60" cy="60" r="8.8" fill="none" stroke="var(--primary-color)"
+                        stroke-opacity="0.35" stroke-width="0.8" />
+                    <circle cx="60" cy="60" r="7" fill="url(#propHubCap)" />
+                    <circle cx="60" cy="60" r="7" fill="none" stroke="#fff"
+                        stroke-opacity="0.16" stroke-width="0.7" />
+                    <path d="M54.64 55.5A7 7 0 0 1 61.81 53.24" fill="none" stroke="#fff"
+                        stroke-opacity="0.3" stroke-width="1.1" stroke-linecap="round" />
+                    <circle cx="60" cy="60" r="3.2" fill="#05080b" />
+                    <circle cx="60" cy="60" r="3.2" fill="none" stroke="#fff"
+                        stroke-opacity="0.22" stroke-width="0.7" />
+                    <circle cx="60" cy="60" r="1.5" fill="url(#propShaft)" />
+                </g>
+            </svg>
+        </div>`;
 
     // Add option to disable custom cursor
     const cursorToggle = document.createElement('div');
@@ -997,18 +841,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cursorToggle.addEventListener('click', () => {
         cursorEnabled = !cursorEnabled;
-        if (cursorEnabled) {
-            document.body.style.cursor = 'none';
-            cursor.style.display = 'block';
-        } else {
-            document.body.style.cursor = 'auto';
-            cursor.style.display = 'none';
-        }
+        document.body.classList.toggle('propeller-cursor-active', cursorEnabled);
+        cursor.style.display = cursorEnabled ? 'block' : 'none';
         cursorToggle.classList.toggle('cursor-disabled');
     });
 
     if (window.matchMedia('(hover: hover)').matches) {
-        document.body.style.cursor = 'none';
+        document.body.classList.add('propeller-cursor-active');
 
         // Use requestAnimationFrame for optimal performance
         let mouseX = 0;
@@ -1028,16 +867,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         requestAnimationFrame(updateCursor);
 
-        // Interactive elements hover state - simplified
-        const interactiveElements = document.querySelectorAll('a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                if (cursorEnabled) centerCircle.classList.add('active');
-            });
+        // Delegated so dynamically rendered cards and buttons are covered too
+        const interactiveSelector = 'a, button, .btn, input, textarea, select, .hamburger, .logo, .nav-links a, .theme-btn, .theme-toggle, .back-to-top, [role="button"]';
 
-            el.addEventListener('mouseleave', () => {
-                if (cursorEnabled) centerCircle.classList.remove('active');
-            });
+        document.addEventListener('mouseover', e => {
+            if (e.target.closest && e.target.closest(interactiveSelector)) {
+                cursor.classList.add('cursor-hot');
+            }
+        });
+
+        document.addEventListener('mouseout', e => {
+            if (e.target.closest && e.target.closest(interactiveSelector)) {
+                cursor.classList.remove('cursor-hot');
+            }
         });
     }
 });
@@ -1976,12 +1818,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (sponsorsCarousel && sponsorsCarousel.style) {
                 sponsorsCarousel.style.animationPlayState = 'paused';
             }
-
-            // Pause drone animation if active
-            const heroDrone = document.getElementById('heroDrone');
-            if (heroDrone && heroDrone.style) {
-                heroDrone.style.animationPlayState = 'paused';
-            }
         } catch (error) {
             // Silent error handling
         }
@@ -2000,12 +1836,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const sponsorsCarousel = document.querySelector('.sponsors-carousel');
             if (sponsorsCarousel && sponsorsCarousel.style) {
                 sponsorsCarousel.style.animationPlayState = 'running';
-            }
-
-            // Resume drone animation if active
-            const heroDrone = document.getElementById('heroDrone');
-            if (heroDrone && heroDrone.style) {
-                heroDrone.style.animationPlayState = 'running';
             }
         } catch (error) {
             // Silent error handling
@@ -2141,6 +1971,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const videoModalDate = document.getElementById('videoModalDate');
     const videoModalIframe = document.getElementById('videoModalIframe');
     const videoModalClose = document.getElementById('videoModalClose');
+    const videoModalYouTube = document.getElementById('videoModalYouTube');
+    let lastFocusedBeforeModal = null;
 
     // Exit early if modal elements are not found
     if (!videoModalOverlay || !videoModalContainer || !videoModalIframe) {
@@ -2180,6 +2012,13 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     const videoDatabase = [
+        {
+            id: 'dqAay6lHK7s',
+            title: 'Global Drone Solutions 2026 Winter Heat 5 Highlights',
+            date: 'August 8, 2026',
+            description: 'Highlights from Round 5 of the 2026 Winter Series — tight, fast racing squeezed in between the rain!',
+            series: '2026-winter'
+        },
         {
             id: 'D9TiQJqB6AM',
             title: 'Global Drone Solutions 2026 Winter Heat 4 Highlights',
@@ -2366,6 +2205,248 @@ document.addEventListener('DOMContentLoaded', function () {
     function getYouTubeThumbnail(videoId, quality = 'hqdefault') {
         return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
     }
+
+    // ============================================================================
+    // VIDEO SHARING - links point back to the club site, not to YouTube
+    // ============================================================================
+    const CANONICAL_SITE_URL = 'https://westcoastmultirotors.com.au/';
+    const SHARE_PARAM = 'video';
+
+    let shareMenu = null;
+    let shareMenuAnchor = null;
+    let shareToastTimer = null;
+
+    function getVideoById(videoId) {
+        return videoDatabase.find(video => video.id === videoId) || null;
+    }
+
+    function buildVideoShareUrl(videoId) {
+        const servedOverWeb = location.protocol === 'http:' || location.protocol === 'https:';
+        const url = new URL(servedOverWeb ? `${location.origin}${location.pathname}` : CANONICAL_SITE_URL);
+        url.searchParams.set(SHARE_PARAM, videoId);
+        url.hash = 'live-streams';
+        return url.toString();
+    }
+
+    // Keep the address bar in sync so copying it also shares the open video
+    function syncShareUrlInAddressBar(videoId) {
+        if (!window.history || typeof history.replaceState !== 'function') return;
+
+        try {
+            const url = new URL(window.location.href);
+            if (videoId) {
+                url.searchParams.set(SHARE_PARAM, videoId);
+            } else {
+                url.searchParams.delete(SHARE_PARAM);
+            }
+            history.replaceState(history.state, '', url.toString());
+        } catch (error) {
+            // Silent error handling
+        }
+    }
+
+    function copyTextToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+
+        return new Promise((resolve, reject) => {
+            const helper = document.createElement('textarea');
+            helper.value = text;
+            helper.setAttribute('readonly', '');
+            helper.style.position = 'fixed';
+            helper.style.top = '-1000px';
+            helper.style.opacity = '0';
+            document.body.appendChild(helper);
+            helper.select();
+
+            try {
+                if (document.execCommand('copy')) {
+                    resolve();
+                } else {
+                    reject(new Error('Copy command rejected'));
+                }
+            } catch (error) {
+                reject(error);
+            } finally {
+                document.body.removeChild(helper);
+            }
+        });
+    }
+
+    function showShareToast(message, variant = 'success') {
+        let toast = document.getElementById('videoShareToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'videoShareToast';
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+            document.body.appendChild(toast);
+        }
+
+        const icon = variant === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+        toast.className = `share-toast share-toast-${variant}`;
+        toast.innerHTML = `<i class="fas ${icon}" aria-hidden="true"></i><span></span>`;
+        toast.querySelector('span').textContent = message;
+
+        requestAnimationFrame(() => toast.classList.add('visible'));
+
+        clearTimeout(shareToastTimer);
+        shareToastTimer = setTimeout(() => toast.classList.remove('visible'), 3600);
+    }
+
+    function closeShareMenu() {
+        if (!shareMenu) return;
+
+        shareMenu.remove();
+        shareMenu = null;
+        if (shareMenuAnchor) shareMenuAnchor.classList.remove('share-active');
+        shareMenuAnchor = null;
+        document.removeEventListener('click', handleShareMenuOutsideClick, true);
+        window.removeEventListener('resize', closeShareMenu);
+        window.removeEventListener('scroll', closeShareMenu, true);
+    }
+
+    function handleShareMenuOutsideClick(event) {
+        if (!shareMenu) return;
+        if (shareMenu.contains(event.target) || event.target.closest('.video-share-btn')) return;
+        closeShareMenu();
+    }
+
+    function positionShareMenu(anchor) {
+        if (!shareMenu || !anchor) return;
+
+        const margin = 12;
+        const anchorRect = anchor.getBoundingClientRect();
+        const menuRect = shareMenu.getBoundingClientRect();
+
+        const left = Math.max(margin, Math.min(anchorRect.right - menuRect.width, window.innerWidth - menuRect.width - margin));
+        let top = anchorRect.bottom + 8;
+        if (top + menuRect.height > window.innerHeight - margin) {
+            top = Math.max(margin, anchorRect.top - menuRect.height - 8);
+        }
+
+        shareMenu.style.left = `${left}px`;
+        shareMenu.style.top = `${top}px`;
+    }
+
+    function openShareMenu(anchor, videoId) {
+        const video = getVideoById(videoId);
+        if (!video) return;
+
+        closeShareMenu();
+
+        const shareUrl = buildVideoShareUrl(videoId);
+        const shareText = `${video.title} — West Coast Multirotor Club`;
+        const encodedUrl = encodeURIComponent(shareUrl);
+        const encodedText = encodeURIComponent(shareText);
+        const canUseNativeShare = typeof navigator.share === 'function';
+
+        shareMenu = document.createElement('div');
+        shareMenu.className = 'video-share-menu';
+        shareMenu.setAttribute('role', 'dialog');
+        shareMenu.setAttribute('aria-label', `Share ${video.title}`);
+        shareMenu.innerHTML = `
+            <p class="video-share-menu-title">Share this replay</p>
+            <p class="video-share-menu-note">This link plays the video on our website.</p>
+            <div class="video-share-link">
+                <input type="text" class="video-share-url" value="${shareUrl}" readonly aria-label="Shareable link">
+                <button type="button" class="video-share-copy" data-share-action="copy">
+                    <i class="fas fa-copy" aria-hidden="true"></i> Copy
+                </button>
+            </div>
+            <div class="video-share-targets">
+                ${canUseNativeShare ? `
+                    <button type="button" class="video-share-target" data-share-action="native">
+                        <i class="fas fa-share-nodes" aria-hidden="true"></i> Share
+                    </button>
+                ` : ''}
+                <a class="video-share-target" href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}"
+                    target="_blank" rel="noopener">
+                    <i class="fab fa-facebook-f" aria-hidden="true"></i> Facebook
+                </a>
+                <a class="video-share-target" href="https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}"
+                    target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
+                </a>
+                <a class="video-share-target" href="https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}"
+                    target="_blank" rel="noopener">
+                    <i class="fab fa-twitter" aria-hidden="true"></i> X
+                </a>
+                <a class="video-share-target" href="mailto:?subject=${encodedText}&body=${encodedText}%0A%0A${encodedUrl}">
+                    <i class="fas fa-envelope" aria-hidden="true"></i> Email
+                </a>
+            </div>
+        `;
+
+        shareMenu.addEventListener('click', function (event) {
+            const target = event.target.closest('[data-share-action], a');
+            if (!target) return;
+
+            const action = target.getAttribute('data-share-action');
+
+            if (action === 'copy') {
+                copyTextToClipboard(shareUrl)
+                    .then(() => showShareToast('Link copied — it opens the video on our website'))
+                    .catch(() => showShareToast('Could not copy the link. Select it and copy manually.', 'error'));
+            } else if (action === 'native') {
+                navigator.share({ title: video.title, text: shareText, url: shareUrl }).catch(() => { });
+            }
+
+            closeShareMenu();
+        });
+
+        document.body.appendChild(shareMenu);
+        shareMenuAnchor = anchor;
+        anchor.classList.add('share-active');
+        positionShareMenu(anchor);
+
+        const copyButton = shareMenu.querySelector('.video-share-copy');
+        if (copyButton) copyButton.focus();
+
+        document.addEventListener('click', handleShareMenuOutsideClick, true);
+        window.addEventListener('resize', closeShareMenu);
+        window.addEventListener('scroll', closeShareMenu, true);
+    }
+
+    // Capture phase so a share click never reaches the card's "open video" handler
+    document.addEventListener('click', function (event) {
+        const trigger = event.target.closest('.video-share-btn');
+        if (!trigger) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (shareMenuAnchor === trigger) {
+            closeShareMenu();
+            return;
+        }
+
+        openShareMenu(trigger, trigger.getAttribute('data-share-video-id'));
+    }, true);
+
+    function generateShareButtonHTML(video, extraClass = '') {
+        return `
+            <button type="button" class="video-share-btn ${extraClass}" data-share-video-id="${video.id}"
+                aria-label="Share ${video.title}" title="Share this video">
+                <i class="fas fa-share-nodes" aria-hidden="true"></i>
+            </button>
+        `;
+    }
+
+    // Open the video a shared link points at
+    function openSharedVideoFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const videoId = params.get(SHARE_PARAM);
+        if (!videoId || !getVideoById(videoId)) return;
+
+        const liveStreamsSection = document.getElementById('live-streams');
+        if (liveStreamsSection) {
+            liveStreamsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        setTimeout(() => openVideoModal(videoId), 700);
+    }
     
     // Function to update the main showcase video
     function updateShowcaseVideo() {
@@ -2373,9 +2454,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const showcaseContainer = document.querySelector('.live-stream-main iframe');
         
         if (showcaseContainer && showcaseVideo) {
-            const embedUrl = `https://www.youtube.com/embed/${showcaseVideo.id}?si=OosCje1CNRY05Uhu`;
+            const embedUrl = `https://www.youtube.com/embed/${showcaseVideo.id}`;
+            showcaseContainer.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
             showcaseContainer.src = embedUrl;
             showcaseContainer.title = showcaseVideo.title;
+
+            const showcaseShareBtn = document.getElementById('featuredVideoShare');
+            if (showcaseShareBtn) {
+                showcaseShareBtn.setAttribute('data-share-video-id', showcaseVideo.id);
+                showcaseShareBtn.setAttribute('aria-label', `Share ${showcaseVideo.title}`);
+            }
             
             // Update the section title if needed
             const sectionTitle = document.querySelector('#live-streams h2');
@@ -2400,6 +2488,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <img src="${getYouTubeThumbnail(video.id, 'mqdefault')}" alt="" loading="lazy">
                     <span class="replay-card-play" aria-hidden="true"><i class="fas fa-play"></i></span>
                     <span class="replay-card-date">${video.date}</span>
+                    ${generateShareButtonHTML(video, 'replay-card-share')}
                 </div>
                 <h4 class="replay-card-title">${video.title}</h4>
             </article>
@@ -2585,6 +2674,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleVideoCardKeydown(event) {
+        if (event.target.closest('.video-share-btn')) return;
+
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             handleVideoClick(event);
@@ -2663,18 +2754,46 @@ document.addEventListener('DOMContentLoaded', function () {
             if (videoModalTitle) videoModalTitle.textContent = metadata.title;
             if (videoModalDate) videoModalDate.textContent = metadata.date;
 
+            const videoModalShare = document.getElementById('videoModalShare');
+            if (videoModalShare) {
+                videoModalShare.setAttribute('data-share-video-id', videoId);
+                videoModalShare.setAttribute('aria-label', `Share ${metadata.title}`);
+            }
+
+            if (videoModalYouTube) {
+                videoModalYouTube.href = `https://www.youtube.com/watch?v=${videoId}`;
+                videoModalYouTube.setAttribute('aria-label', `Watch ${metadata.title} on YouTube`);
+            }
+
+            if (videoModalIframe) {
+                videoModalIframe.title = metadata.title;
+            }
+
+            syncShareUrlInAddressBar(videoId);
+
             // Set YouTube embed URL with autoplay
             const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            if (videoModalIframe) videoModalIframe.src = embedUrl;
+            if (videoModalIframe) {
+                videoModalIframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+                videoModalIframe.src = embedUrl;
+            }
 
             // Reset modal position to center (remove any previous drag positioning)
             videoModalContainer.style.transform = '';
             videoModalContainer.style.left = '';
             videoModalContainer.style.top = '';
             videoModalContainer.style.position = '';
+            videoModalContainer.style.width = '';
 
             // Show modal
+            lastFocusedBeforeModal = document.activeElement;
             videoModalOverlay.classList.add('visible');
+            videoModalOverlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('video-modal-open');
+
+            if (videoModalClose) {
+                requestAnimationFrame(() => videoModalClose.focus({ preventScroll: true }));
+            }
 
             // Pause any site animations temporarily
             pauseSiteAnimations();
@@ -2686,8 +2805,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to close video modal
     function closeVideoModal() {
         try {
+            closeShareMenu();
+            syncShareUrlInAddressBar(null);
+
             // Hide modal
+            const wasVisible = videoModalOverlay.classList.contains('visible');
             videoModalOverlay.classList.remove('visible');
+            videoModalOverlay.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('video-modal-open');
 
             // Stop video by clearing iframe src
             if (videoModalIframe) {
@@ -2695,6 +2820,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     videoModalIframe.src = '';
                 }, 400); // Wait for transition to complete
             }
+
+            if (wasVisible && lastFocusedBeforeModal && document.contains(lastFocusedBeforeModal)) {
+                lastFocusedBeforeModal.focus({ preventScroll: true });
+            }
+            lastFocusedBeforeModal = null;
 
             // Resume site animations
             resumeSiteAnimations();
@@ -2706,6 +2836,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Drag functionality
     function startDrag(e) {
         if (!videoModalContainer) return;
+        if (e.target.closest('button')) return;
 
         isDragging = true;
         videoModalContainer.classList.add('dragging');
@@ -2721,7 +2852,8 @@ document.addEventListener('DOMContentLoaded', function () {
         dragStartY = clientY - rect.top;
 
         // Switch to absolute positioning while maintaining the same visual position
-        // Remove the transform and set explicit left/top to prevent jumping
+        // Remove the transform and set explicit left/top/width to prevent jumping
+        videoModalContainer.style.width = `${rect.width}px`;
         videoModalContainer.style.transform = 'none';
         videoModalContainer.style.left = `${rect.left}px`;
         videoModalContainer.style.top = `${rect.top}px`;
@@ -2793,9 +2925,41 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('touchend', endDrag);
     }
 
+    // Keep keyboard focus inside the modal while it is open
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
+        if (!videoModalOverlay || !videoModalOverlay.classList.contains('visible')) return;
+        if (shareMenu) return;
+
+        const focusables = Array.from(
+            videoModalContainer.querySelectorAll('button, a[href], iframe, [tabindex]:not([tabindex="-1"])')
+        ).filter(el => !el.hasAttribute('disabled'));
+        if (!focusables.length) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
     // Keyboard event listener for ESC key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && videoModalOverlay && videoModalOverlay.classList.contains('visible')) {
+        if (e.key !== 'Escape') return;
+
+        if (shareMenu) {
+            const anchor = shareMenuAnchor;
+            closeShareMenu();
+            if (anchor) anchor.focus();
+            return;
+        }
+
+        if (videoModalOverlay && videoModalOverlay.classList.contains('visible')) {
             closeVideoModal();
         }
     });
@@ -2856,6 +3020,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     videoModalContainer.style.left = '';
                     videoModalContainer.style.top = '';
                     videoModalContainer.style.position = '';
+                    videoModalContainer.style.width = '';
                 } else {
                     // Just constrain to viewport bounds
                     const maxX = window.innerWidth - videoModalContainer.offsetWidth;
@@ -2880,6 +3045,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize the video system when page loads
     function initializeVideoSystem() {
         updateVideoDisplay();
+        openSharedVideoFromUrl();
         
         // Make functions available globally for easy video management
         window.WCMRCVideoManager = {
@@ -3146,5 +3312,60 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('DOMContentLoaded', initializeGallery);
     } else {
         initializeGallery();
+    }
+})();
+
+/* ============================================
+   Resource Card Scroll Previews
+   ============================================ */
+(function () {
+    'use strict';
+
+    function initResourcePreviews() {
+        const cards = document.querySelectorAll('.resource-card');
+        if (!cards.length) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const canHover = window.matchMedia('(hover: hover)').matches;
+
+        cards.forEach(card => {
+            const preview = card.querySelector('.resource-preview');
+            const video = card.querySelector('.resource-preview-media');
+            const link = card.querySelector('.resource-details .btn');
+
+            if (preview && link) {
+                preview.addEventListener('click', () => link.click());
+            }
+
+            if (!video || !canHover || reduceMotion) return;
+
+            let resetTimer;
+
+            const start = () => {
+                clearTimeout(resetTimer);
+                video.preload = 'auto';
+                const playback = video.play();
+                if (playback) playback.catch(() => { });
+            };
+
+            // Let the video fade back to the poster before rewinding it
+            const stop = () => {
+                resetTimer = setTimeout(() => {
+                    video.pause();
+                    video.currentTime = 0;
+                }, 500);
+            };
+
+            card.addEventListener('mouseenter', start);
+            card.addEventListener('mouseleave', stop);
+            card.addEventListener('focusin', start);
+            card.addEventListener('focusout', stop);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initResourcePreviews);
+    } else {
+        initResourcePreviews();
     }
 })();
