@@ -1918,30 +1918,42 @@
       <h2>Moments from the Track</h2>
       <p class="text-center mb-5">Where the future of racing takes flight – right here on the West Coast.</p>
 
-      <div class="gallery-albums fade-in" id="galleryAlbums" role="tablist" aria-label="Photo albums"></div>
+      <div class="gallery-albums" id="galleryAlbums" role="tablist" aria-label="Photo albums"></div>
 
-      <div class="gallery-album-header fade-in" id="galleryAlbumHeader"></div>
+      <div class="gallery-album-header" id="galleryAlbumHeader"></div>
 
-      <div class="gallery-grid" id="galleryGrid" role="list"></div>
+      <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
 
-      <div class="gallery-load-more fade-in" id="galleryLoadMore"></div>
+      <div class="gallery-load-more" id="galleryLoadMore"></div>
     </div>
 
-    <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-label="Photo viewer">
-      <button class="gallery-lightbox-close" aria-label="Close photo viewer">
-        <i class="fas fa-times"></i>
-      </button>
-      <button class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Previous photo">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Next photo">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-      <div class="gallery-lightbox-content">
-        <img class="gallery-lightbox-img" src="" alt="" />
-        <p class="gallery-lightbox-caption"></p>
-        <span class="gallery-lightbox-counter"></span>
+    <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-modal="true"
+      aria-label="Photo viewer">
+      <div class="gallery-lightbox-bar">
+        <span class="gallery-lightbox-meta">
+          <span class="gallery-lightbox-album"></span>
+          <span class="gallery-lightbox-counter"></span>
+        </span>
+        <button type="button" class="gallery-lightbox-close" aria-label="Close photo viewer">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
       </div>
+
+      <div class="gallery-lightbox-stage">
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Previous photo">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <figure class="gallery-lightbox-figure">
+          <span class="gallery-lightbox-spinner" aria-hidden="true"></span>
+          <img class="gallery-lightbox-img" src="" alt="" />
+          <figcaption class="gallery-lightbox-caption"></figcaption>
+        </figure>
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Next photo">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="gallery-lightbox-filmstrip" id="galleryFilmstrip" aria-label="Photo thumbnails"></div>
     </div>
   </section>
 

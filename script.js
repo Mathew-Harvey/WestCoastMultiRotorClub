@@ -1589,6 +1589,50 @@ document.addEventListener('DOMContentLoaded', function () {
         viewAllEventsBtn.target = "_blank";
     }
 
+    /** Parse "YYYY-MM-DD" as a local date, so no timezone shifts the race day. */
+    function toLocalDate(value) {
+        if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+
+        const isoParts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim());
+        if (isoParts) {
+            return new Date(Number(isoParts[1]), Number(isoParts[2]) - 1, Number(isoParts[3]));
+        }
+
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    // Exposed so other sections (currently the photo gallery) can tie content
+    // back to the race day it came from.
+    window.WCMRCEvents = {
+        events: eventData,
+
+        findByDate(value) {
+            const target = toLocalDate(value);
+            if (!target) return null;
+
+            return eventData.find(event =>
+                event.date.getDate() === target.getDate() &&
+                event.date.getMonth() === target.getMonth() &&
+                event.date.getFullYear() === target.getFullYear()
+            ) || null;
+        },
+
+        focusDate(value) {
+            const target = toLocalDate(value);
+            if (!target || !calendarDaysElement) return false;
+
+            currentMonth = target.getMonth();
+            currentYear = target.getFullYear();
+            renderCalendar();
+            showEventsForDate(target);
+
+            const section = document.getElementById('events');
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return true;
+        }
+    };
+
     // Initialize calendar when the page loads
     if (calendarDaysElement) {
         renderCalendar();
@@ -3053,6 +3097,7 @@ document.addEventListener('DOMContentLoaded', function () {
             getCurrentShowcase: getCurrentShowcaseVideo,
             getHistoricVideos: getHistoricVideos,
             refreshDisplay: updateVideoDisplay,
+            openVideo: openVideoModal,
             videoDatabase: videoDatabase
         };
         
@@ -3096,17 +3141,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ============================================================================
 // PHOTO GALLERY SYSTEM
+// Renders assets/gallery/manifest.json as three linked views: an album rail,
+// a paged mosaic grid, and a lightbox viewer. Adding an album to the manifest
+// is all that is needed for it to appear here.
 // ============================================================================
 (function () {
-    const GALLERY_BASE = './assets/gallery/';
-    const PHOTOS_PER_PAGE = 12;
+    'use strict';
 
-    let manifest = null;
-    let activeAlbum = null;
-    let visibleCount = PHOTOS_PER_PAGE;
-    let lightboxIndex = 0;
+    const GALLERY_BASE = './assets/gallery/';
+    const PAGE_SIZE = 12;
+    const COMBINED_ALBUM_ID = 'all';
+    const SWIPE_THRESHOLD = 50;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const els = {};
+    let albums = [];
+    let activeAlbum = null;
+    let visibleCount = PAGE_SIZE;
+    let lightboxIndex = 0;
+    let lastFocused = null;
+    let swipeStartX = 0;
+    let swipeEnabled = false;
 
     function cacheElements() {
         els.albums = document.getElementById('galleryAlbums');
@@ -3114,82 +3170,260 @@ document.addEventListener('DOMContentLoaded', function () {
         els.grid = document.getElementById('galleryGrid');
         els.loadMore = document.getElementById('galleryLoadMore');
         els.lightbox = document.getElementById('galleryLightbox');
+        els.filmstrip = document.getElementById('galleryFilmstrip');
         if (els.lightbox) {
-            els.lightboxImg = els.lightbox.querySelector('.gallery-lightbox-img');
-            els.lightboxCaption = els.lightbox.querySelector('.gallery-lightbox-caption');
-            els.lightboxCounter = els.lightbox.querySelector('.gallery-lightbox-counter');
-            els.lightboxClose = els.lightbox.querySelector('.gallery-lightbox-close');
-            els.lightboxPrev = els.lightbox.querySelector('.gallery-lightbox-prev');
-            els.lightboxNext = els.lightbox.querySelector('.gallery-lightbox-next');
+            els.figure = els.lightbox.querySelector('.gallery-lightbox-figure');
+            els.image = els.lightbox.querySelector('.gallery-lightbox-img');
+            els.caption = els.lightbox.querySelector('.gallery-lightbox-caption');
+            els.counter = els.lightbox.querySelector('.gallery-lightbox-counter');
+            els.albumLabel = els.lightbox.querySelector('.gallery-lightbox-album');
+            els.close = els.lightbox.querySelector('.gallery-lightbox-close');
+            els.prev = els.lightbox.querySelector('.gallery-lightbox-prev');
+            els.next = els.lightbox.querySelector('.gallery-lightbox-next');
         }
     }
 
-    function photoPath(albumId, file, size) {
-        return `${GALLERY_BASE}${albumId}/${size}/${file}`;
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
     }
 
-    function renderAlbumTabs() {
-        els.albums.innerHTML = manifest.albums.map(album => `
-            <button class="gallery-album-card fade-in${album.id === activeAlbum.id ? ' active' : ''}"
-                    role="tab"
-                    aria-selected="${album.id === activeAlbum.id}"
-                    data-album-id="${album.id}"
-                    style="background-image: url('${GALLERY_BASE}${album.cover}')">
-                <div class="gallery-album-info">
-                    <h3>${album.title}</h3>
-                    <span>${album.date} · ${album.photos.length} photos</span>
-                </div>
-            </button>
-        `).join('');
+    function photoPath(photo, size) {
+        return `${GALLERY_BASE}${photo.albumId}/${size}/${encodeURIComponent(photo.file)}`;
+    }
 
-        els.albums.querySelectorAll('.gallery-album-card').forEach(btn => {
-            btn.addEventListener('click', () => selectAlbum(btn.dataset.albumId));
+    /** Tag every photo with its album so any list of photos is self-describing. */
+    function normalizeAlbums(rawAlbums) {
+        return (Array.isArray(rawAlbums) ? rawAlbums : [])
+            .filter(album => album && album.id && Array.isArray(album.photos) && album.photos.length)
+            .map(album => ({
+                id: album.id,
+                title: album.title || album.id,
+                date: album.date || '',
+                description: album.description || '',
+                cover: album.cover || '',
+                eventDate: album.eventDate || '',
+                videoId: album.videoId || '',
+                photos: album.photos.map(photo => ({
+                    file: photo.file,
+                    caption: photo.caption || '',
+                    albumId: album.id,
+                    albumTitle: album.title || album.id
+                }))
+            }));
+    }
+
+    /** A virtual album spanning every real album, in manifest order. */
+    function buildCombinedAlbum(realAlbums) {
+        return {
+            id: COMBINED_ALBUM_ID,
+            title: 'All Photos',
+            date: 'Every album',
+            description: `The full archive across ${realAlbums.length} albums, newest first.`,
+            covers: realAlbums.map(album => album.cover).filter(Boolean),
+            photos: realAlbums.flatMap(album => album.photos)
+        };
+    }
+
+    /** Real albums show their cover; the combined album gets a 2x2 collage. */
+    function coverStyle(album) {
+        const covers = album.id === COMBINED_ALBUM_ID
+            ? collageCovers(album.covers)
+            : [album.cover].filter(Boolean);
+
+        const layers = covers.map(cover => `url('${GALLERY_BASE}${encodeURI(cover)}')`);
+        if (!layers.length) return '';
+        if (layers.length < 4) return `background-image: ${layers[0]};`;
+
+        return `background-image: ${layers.join(', ')}; background-size: 50% 50%; ` +
+            'background-position: 0 0, 100% 0, 0 100%, 100% 100%; background-repeat: no-repeat;';
+    }
+
+    function collageCovers(covers) {
+        const available = (covers || []).filter(Boolean);
+        if (available.length < 2) return available;
+        return [0, 1, 2, 3].map(slot => available[slot % available.length]);
+    }
+
+    function albumMeta(album) {
+        const count = `${album.photos.length} photo${album.photos.length === 1 ? '' : 's'}`;
+        return album.date ? `${album.date} · ${count}` : count;
+    }
+
+    function renderRail() {
+        els.albums.innerHTML = albums.map(album => {
+            const selected = album.id === activeAlbum.id;
+            return `
+            <button type="button"
+                    class="gallery-album-card${selected ? ' is-selected' : ''}"
+                    role="tab"
+                    aria-selected="${selected}"
+                    tabindex="${selected ? '0' : '-1'}"
+                    data-album-id="${escapeHtml(album.id)}"
+                    style="${coverStyle(album)}">
+                <span class="gallery-album-info">
+                    <span class="gallery-album-title">${escapeHtml(album.title)}</span>
+                    <span class="gallery-album-meta">${escapeHtml(albumMeta(album))}</span>
+                </span>
+            </button>
+        `;
+        }).join('');
+    }
+
+    /** Parse "YYYY-MM-DD" as a local date so no timezone shifts the race day. */
+    function parseAlbumDate(value) {
+        const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim());
+        if (!parts) return null;
+        return new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
+    }
+
+    function linkMarkup({ modifier, icon, title, detail, dataset }) {
+        return `
+            <button type="button" class="gallery-album-link${modifier}" ${dataset}>
+                <i class="${icon}" aria-hidden="true"></i>
+                <span class="gallery-album-link-text">
+                    <span class="gallery-album-link-title">${escapeHtml(title)}</span>
+                    <span class="gallery-album-link-detail">${escapeHtml(detail)}</span>
+                </span>
+            </button>
+        `;
+    }
+
+    /**
+     * Albums point at a race day and a stream by reference, so titles and dates
+     * are resolved from the live events/video data instead of being duplicated.
+     */
+    function eventLink(album) {
+        const date = parseAlbumDate(album.eventDate);
+        if (!date) return '';
+
+        const events = window.WCMRCEvents;
+        const match = events && typeof events.findByDate === 'function'
+            ? events.findByDate(date)
+            : null;
+
+        return linkMarkup({
+            modifier: '',
+            icon: 'fas fa-calendar-day',
+            title: match ? match.title : 'See this race day',
+            detail: date.toLocaleDateString('en-AU', {
+                weekday: 'short', day: 'numeric', month: 'long', year: 'numeric'
+            }),
+            dataset: `data-event-date="${escapeHtml(album.eventDate)}"`
         });
     }
 
-    function renderAlbumHeader() {
+    function replayLink(album) {
+        if (!album.videoId) return '';
+
+        const manager = window.WCMRCVideoManager;
+        const video = manager && Array.isArray(manager.videoDatabase)
+            ? manager.videoDatabase.find(item => item.id === album.videoId)
+            : null;
+
+        return linkMarkup({
+            modifier: ' is-replay',
+            icon: 'fas fa-circle-play',
+            title: 'Watch the replay',
+            detail: video ? video.title : 'Race day livestream',
+            dataset: `data-video-id="${escapeHtml(album.videoId)}"`
+        });
+    }
+
+    function renderHeader() {
+        const links = eventLink(activeAlbum) + replayLink(activeAlbum);
+
         els.header.innerHTML = `
             <div class="gallery-album-header-text">
-                <h3>${activeAlbum.title}</h3>
-                <p>${activeAlbum.description}</p>
+                <h3>${escapeHtml(activeAlbum.title)}</h3>
+                <p>${escapeHtml(activeAlbum.description)}</p>
+                ${links ? `<div class="gallery-album-links">${links}</div>` : ''}
             </div>
             <span class="gallery-album-count">
-                <i class="fas fa-camera"></i> ${activeAlbum.photos.length} photos
+                <i class="fas fa-camera" aria-hidden="true"></i>
+                ${activeAlbum.photos.length} photos
             </span>
         `;
     }
 
-    function renderGrid() {
-        const photos = activeAlbum.photos.slice(0, visibleCount);
+    function openEventDay(isoDate) {
+        const events = window.WCMRCEvents;
+        if (events && typeof events.focusDate === 'function' && events.focusDate(isoDate)) return;
 
-        els.grid.innerHTML = photos.map((photo, i) => {
-            const featured = i === 0 && visibleCount >= PHOTOS_PER_PAGE ? ' featured' : '';
-            const caption = photo.caption
-                ? `<div class="gallery-item-caption">${photo.caption}</div>`
-                : '';
-            return `
-                <div class="gallery-item fade-in${featured}" role="listitem" data-index="${i}" tabindex="0">
-                    <img src="${photoPath(activeAlbum.id, photo.file, 'thumbs')}"
-                         data-full="${photoPath(activeAlbum.id, photo.file, 'full')}"
-                         alt="${photo.caption || activeAlbum.title}"
-                         loading="lazy" />
-                    ${caption}
-                </div>
-            `;
-        }).join('');
+        const section = document.getElementById('events');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-        els.grid.querySelectorAll('.gallery-item').forEach(item => {
-            item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index, 10)));
-            item.addEventListener('keydown', e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openLightbox(parseInt(item.dataset.index, 10));
-                }
+    function openReplay(videoId) {
+        const manager = window.WCMRCVideoManager;
+        if (manager && typeof manager.openVideo === 'function') {
+            manager.openVideo(videoId);
+            return;
+        }
+        // The video system picks this up on load and opens the player itself.
+        window.location.href = `?video=${encodeURIComponent(videoId)}#live-streams`;
+    }
+
+    function tileMarkup(photo, index) {
+        const showAlbum = activeAlbum.id === COMBINED_ALBUM_ID;
+        const label = photo.caption || `${photo.albumTitle}, photo ${index + 1}`;
+        return `
+            <button type="button"
+                    class="gallery-item${index === 0 ? ' is-hero' : ''}"
+                    data-index="${index}"
+                    aria-label="${escapeHtml(label)} — open larger view">
+                <img src="${photoPath(photo, 'thumbs')}" alt="${escapeHtml(label)}" loading="lazy" decoding="async" />
+                <span class="gallery-item-zoom" aria-hidden="true"><i class="fas fa-expand"></i></span>
+                <span class="gallery-item-overlay">
+                    ${showAlbum ? `<span class="gallery-item-album">${escapeHtml(photo.albumTitle)}</span>` : ''}
+                    ${photo.caption ? `<span class="gallery-item-caption">${escapeHtml(photo.caption)}</span>` : ''}
+                </span>
+            </button>
+        `;
+    }
+
+    /** Appending keeps already-loaded tiles untouched when paging through an album. */
+    function renderGrid({ append = false } = {}) {
+        const start = append ? els.grid.children.length : 0;
+        const markup = activeAlbum.photos
+            .slice(start, visibleCount)
+            .map((photo, offset) => tileMarkup(photo, start + offset))
+            .join('');
+
+        els.grid.classList.remove('is-message');
+        if (append) {
+            els.grid.insertAdjacentHTML('beforeend', markup);
+        } else {
+            els.grid.innerHTML = markup;
+        }
+
+        revealTiles(start);
+        renderLoadMore();
+    }
+
+    function revealTiles(from) {
+        const tiles = Array.from(els.grid.children).slice(from);
+        if (reduceMotion) {
+            tiles.forEach(tile => tile.classList.add('is-revealed'));
+            return;
+        }
+        requestAnimationFrame(() => {
+            tiles.forEach((tile, offset) => {
+                setTimeout(() => tile.classList.add('is-revealed'), Math.min(offset * 45, 400));
             });
         });
+    }
 
-        renderLoadMore();
-        triggerFadeIn(els.grid);
+    function renderSkeletons(count = 8) {
+        els.grid.classList.remove('is-message');
+        els.grid.innerHTML = Array.from({ length: count }, (_, index) =>
+            `<span class="gallery-skeleton${index === 0 ? ' is-hero' : ''}" aria-hidden="true"></span>`
+        ).join('');
     }
 
     function renderLoadMore() {
@@ -3199,112 +3433,273 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         els.loadMore.innerHTML = `
-            <button class="btn gallery-load-more-btn">
-                Load ${Math.min(remaining, PHOTOS_PER_PAGE)} more photos
-                <span style="opacity:0.7;margin-left:6px">(${remaining} remaining)</span>
+            <button type="button" class="btn gallery-load-more-btn">
+                Load ${Math.min(remaining, PAGE_SIZE)} more
+                <span class="gallery-load-more-count">${remaining} left</span>
             </button>
+            <button type="button" class="gallery-show-all">Show all ${activeAlbum.photos.length} photos</button>
         `;
-        els.loadMore.querySelector('.gallery-load-more-btn').addEventListener('click', () => {
-            visibleCount += PHOTOS_PER_PAGE;
-            renderGrid();
+    }
+
+    function selectAlbum(albumId, { focusRail = false } = {}) {
+        const album = albums.find(candidate => candidate.id === albumId);
+        if (!album) return;
+
+        activeAlbum = album;
+        visibleCount = PAGE_SIZE;
+        renderRail();
+        renderHeader();
+        renderGrid();
+        renderFilmstrip();
+
+        if (focusRail) {
+            const selected = els.albums.querySelector('.gallery-album-card.is-selected');
+            if (selected) selected.focus();
+        }
+    }
+
+    function renderFilmstrip() {
+        if (!els.filmstrip) return;
+        els.filmstrip.innerHTML = activeAlbum.photos.map((photo, index) => `
+            <button type="button" class="gallery-film-thumb" data-index="${index}" tabindex="-1"
+                    aria-label="Show photo ${index + 1}">
+                <img src="${photoPath(photo, 'thumbs')}" alt="" loading="lazy" decoding="async" />
+            </button>
+        `).join('');
+    }
+
+    function highlightFilmstrip() {
+        if (!els.filmstrip) return;
+        els.filmstrip.querySelectorAll('.gallery-film-thumb').forEach(thumb => {
+            const isActive = Number(thumb.dataset.index) === lightboxIndex;
+            thumb.classList.toggle('is-active', isActive);
+            if (isActive) {
+                thumb.scrollIntoView({
+                    inline: 'center',
+                    block: 'nearest',
+                    behavior: reduceMotion ? 'auto' : 'smooth'
+                });
+            }
         });
     }
 
-    function selectAlbum(albumId) {
-        activeAlbum = manifest.albums.find(a => a.id === albumId);
-        visibleCount = PHOTOS_PER_PAGE;
-        renderAlbumTabs();
-        renderAlbumHeader();
-        renderGrid();
-    }
-
     function openLightbox(index) {
+        lastFocused = document.activeElement;
         lightboxIndex = index;
-        updateLightbox();
+        showPhoto();
         els.lightbox.classList.add('active');
         els.lightbox.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('gallery-lightbox-open');
+        els.close.focus();
     }
 
     function closeLightbox() {
         els.lightbox.classList.remove('active');
         els.lightbox.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        els.lightboxImg.src = '';
+        document.body.classList.remove('gallery-lightbox-open');
+        els.image.removeAttribute('src');
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
     }
 
-    function updateLightbox() {
+    function showPhoto() {
         const photo = activeAlbum.photos[lightboxIndex];
-        const item = els.grid.querySelector(`[data-index="${lightboxIndex}"] img`);
-        els.lightboxImg.src = item ? item.dataset.full : photoPath(activeAlbum.id, photo.file, 'full');
-        els.lightboxCaption.textContent = photo.caption || '';
-        els.lightboxCaption.style.display = photo.caption ? 'block' : 'none';
-        els.lightboxCounter.textContent = `${lightboxIndex + 1} / ${activeAlbum.photos.length}`;
+        if (!photo) return;
+
+        const done = () => els.figure.classList.remove('is-loading');
+        els.figure.classList.add('is-loading');
+        els.image.onload = done;
+        els.image.onerror = done;
+        els.image.src = photoPath(photo, 'full');
+        els.image.alt = photo.caption || `${photo.albumTitle}, photo ${lightboxIndex + 1}`;
+
+        els.albumLabel.textContent = photo.albumTitle;
+        els.counter.textContent = `${lightboxIndex + 1} of ${activeAlbum.photos.length}`;
+        els.caption.textContent = photo.caption;
+        els.caption.hidden = !photo.caption;
+
+        highlightFilmstrip();
+        preloadNeighbours();
     }
 
-    function navigateLightbox(direction) {
-        lightboxIndex = (lightboxIndex + direction + activeAlbum.photos.length) % activeAlbum.photos.length;
-        updateLightbox();
+    /** Warm the next and previous photo so arrow navigation feels instant. */
+    function preloadNeighbours() {
+        const total = activeAlbum.photos.length;
+        if (total < 2) return;
+        [-1, 1].forEach(offset => {
+            const neighbour = activeAlbum.photos[(lightboxIndex + offset + total) % total];
+            const warm = new Image();
+            warm.src = photoPath(neighbour, 'full');
+        });
+    }
+
+    function step(direction) {
+        const total = activeAlbum.photos.length;
+        lightboxIndex = (lightboxIndex + direction + total) % total;
+        showPhoto();
+    }
+
+    function jumpTo(index) {
+        lightboxIndex = index;
+        showPhoto();
+    }
+
+    /** Keep Tab cycling inside the viewer while it is open. */
+    function trapFocus(event) {
+        const stops = els.lightbox.querySelectorAll('button:not([tabindex="-1"])');
+        if (!stops.length) return;
+
+        const first = stops[0];
+        const last = stops[stops.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
+    function bindRailEvents() {
+        els.albums.addEventListener('click', event => {
+            const card = event.target.closest('.gallery-album-card');
+            if (card) selectAlbum(card.dataset.albumId);
+        });
+
+        els.albums.addEventListener('keydown', event => {
+            const current = albums.findIndex(album => album.id === activeAlbum.id);
+            let target = null;
+
+            if (event.key === 'ArrowRight') target = (current + 1) % albums.length;
+            else if (event.key === 'ArrowLeft') target = (current - 1 + albums.length) % albums.length;
+            else if (event.key === 'Home') target = 0;
+            else if (event.key === 'End') target = albums.length - 1;
+            else return;
+
+            event.preventDefault();
+            selectAlbum(albums[target].id, { focusRail: true });
+        });
+    }
+
+    function bindHeaderEvents() {
+        els.header.addEventListener('click', event => {
+            const link = event.target.closest('.gallery-album-link');
+            if (!link) return;
+
+            if (link.dataset.videoId) openReplay(link.dataset.videoId);
+            else if (link.dataset.eventDate) openEventDay(link.dataset.eventDate);
+        });
+    }
+
+    function bindGridEvents() {
+        els.grid.addEventListener('click', event => {
+            const tile = event.target.closest('.gallery-item');
+            if (tile) openLightbox(Number(tile.dataset.index));
+        });
+
+        els.loadMore.addEventListener('click', event => {
+            if (event.target.closest('.gallery-load-more-btn')) {
+                visibleCount += PAGE_SIZE;
+            } else if (event.target.closest('.gallery-show-all')) {
+                visibleCount = activeAlbum.photos.length;
+            } else {
+                return;
+            }
+            renderGrid({ append: true });
+        });
     }
 
     function bindLightboxEvents() {
-        els.lightboxClose.addEventListener('click', closeLightbox);
-        els.lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
-        els.lightboxNext.addEventListener('click', () => navigateLightbox(1));
+        els.close.addEventListener('click', closeLightbox);
+        els.prev.addEventListener('click', () => step(-1));
+        els.next.addEventListener('click', () => step(1));
 
-        els.lightbox.addEventListener('click', e => {
-            if (e.target === els.lightbox) closeLightbox();
+        if (els.filmstrip) {
+            els.filmstrip.addEventListener('click', event => {
+                const thumb = event.target.closest('.gallery-film-thumb');
+                if (thumb) jumpTo(Number(thumb.dataset.index));
+            });
+        }
+
+        // Clicking empty space around the photo dismisses the viewer.
+        els.lightbox.addEventListener('click', event => {
+            const backdrop = ['gallery-lightbox', 'gallery-lightbox-stage', 'gallery-lightbox-figure']
+                .some(name => event.target.classList.contains(name));
+            if (backdrop) closeLightbox();
         });
 
-        document.addEventListener('keydown', e => {
+        document.addEventListener('keydown', event => {
             if (!els.lightbox.classList.contains('active')) return;
-            if (e.key === 'Escape') closeLightbox();
-            if (e.key === 'ArrowLeft') navigateLightbox(-1);
-            if (e.key === 'ArrowRight') navigateLightbox(1);
+
+            if (event.key === 'Tab') {
+                trapFocus(event);
+                return;
+            }
+
+            if (event.key === 'Escape') closeLightbox();
+            else if (event.key === 'ArrowLeft') step(-1);
+            else if (event.key === 'ArrowRight') step(1);
+            else if (event.key === 'Home') jumpTo(0);
+            else if (event.key === 'End') jumpTo(activeAlbum.photos.length - 1);
+            else return;
+
+            event.preventDefault();
         });
 
-        let touchStartX = 0;
-        els.lightbox.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
+        els.lightbox.addEventListener('touchstart', event => {
+            swipeEnabled = !event.target.closest('.gallery-lightbox-filmstrip');
+            swipeStartX = event.changedTouches[0].screenX;
         }, { passive: true });
 
-        els.lightbox.addEventListener('touchend', e => {
-            const diff = e.changedTouches[0].screenX - touchStartX;
-            if (Math.abs(diff) > 50) navigateLightbox(diff > 0 ? -1 : 1);
+        els.lightbox.addEventListener('touchend', event => {
+            if (!swipeEnabled) return;
+            const distance = event.changedTouches[0].screenX - swipeStartX;
+            if (Math.abs(distance) > SWIPE_THRESHOLD) step(distance > 0 ? -1 : 1);
         }, { passive: true });
     }
 
-    function triggerFadeIn(container) {
-        requestAnimationFrame(() => {
-            container.querySelectorAll('.fade-in:not(.active)').forEach(el => {
-                el.classList.add('active');
-            });
-        });
+    function showFallback() {
+        els.grid.classList.add('is-message');
+        els.grid.innerHTML = '<p class="gallery-empty">Gallery photos are loading soon. Check back after the next race day!</p>';
+        els.loadMore.innerHTML = '';
     }
 
     async function initializeGallery() {
         cacheElements();
-        if (!els.grid) return;
+        if (!els.grid || !els.albums || !els.lightbox) return;
+
+        renderSkeletons();
 
         try {
             const response = await fetch(`${GALLERY_BASE}manifest.json`);
-            if (!response.ok) throw new Error('Failed to load gallery manifest');
-            manifest = await response.json();
-            activeAlbum = manifest.albums.find(a => a.featured) || manifest.albums[0];
+            if (!response.ok) throw new Error(`manifest responded ${response.status}`);
 
-            renderAlbumTabs();
-            renderAlbumHeader();
+            const realAlbums = normalizeAlbums((await response.json()).albums);
+            if (!realAlbums.length) throw new Error('manifest contains no photos');
+
+            // With more than one album, the combined view leads and the rest filter it.
+            albums = realAlbums.length > 1
+                ? [buildCombinedAlbum(realAlbums), ...realAlbums]
+                : realAlbums;
+            activeAlbum = albums[0];
+
+            renderRail();
+            renderHeader();
             renderGrid();
+            renderFilmstrip();
+            bindRailEvents();
+            bindHeaderEvents();
+            bindGridEvents();
             bindLightboxEvents();
 
             window.WCMRCGallery = {
-                manifest,
+                get albums() { return albums; },
+                get activeAlbum() { return activeAlbum; },
                 selectAlbum,
                 refresh: () => selectAlbum(activeAlbum.id)
             };
-        } catch (err) {
-            els.grid.innerHTML = '<p class="text-center">Gallery photos are loading soon. Check back after the next race day!</p>';
-            console.warn('Gallery init failed:', err);
+        } catch (error) {
+            showFallback();
+            console.warn('Gallery init failed:', error);
         }
     }
 
