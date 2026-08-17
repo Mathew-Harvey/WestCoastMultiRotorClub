@@ -894,6 +894,31 @@ header {
     opacity: 0.5;
 }
 
+.pilots-builds-cta {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin: -28px auto 36px;
+}
+
+.pilots-builds-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(41, 167, 223, 0.35);
+    padding-bottom: 3px;
+    transition: border-color 0.2s ease, gap 0.2s ease;
+}
+
+.pilots-builds-cta a:hover {
+    border-bottom-color: var(--primary-color);
+    gap: 12px;
+}
+
 /* ============================================================
    Gallery
    Three linked views driven by assets/gallery/manifest.json:
