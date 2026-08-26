@@ -3771,3 +3771,55 @@ document.addEventListener('DOMContentLoaded', function () {
         initResourcePreviews();
     }
 })();
+
+/* ============================================
+   Sponsorship enquiry form (FormSubmit)
+   ============================================ */
+(function () {
+    'use strict';
+
+    function initSponsorshipEnquiry() {
+        const form = document.getElementById('sponsorshipEnquiryForm');
+        const nextField = document.getElementById('enquiryNext');
+        const success = document.getElementById('enquirySuccess');
+        const intro = document.querySelector('#contact .enquiry-intro');
+        const emailField = document.getElementById('enquiryEmail');
+
+        if (nextField && window.location.protocol !== 'file:') {
+            const nextUrl = new URL(window.location.href);
+            nextUrl.searchParams.set('enquiry', 'sent');
+            nextUrl.hash = 'contact';
+            nextField.value = nextUrl.toString();
+        }
+
+        if (form && emailField) {
+            form.addEventListener('submit', () => {
+                let replyTo = form.querySelector('input[name="_replyto"]');
+                if (!replyTo) {
+                    replyTo = document.createElement('input');
+                    replyTo.type = 'hidden';
+                    replyTo.name = '_replyto';
+                    form.appendChild(replyTo);
+                }
+                replyTo.value = emailField.value;
+            });
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('enquiry') === 'sent' && success) {
+            success.hidden = false;
+            if (form) {
+                form.hidden = true;
+            }
+            if (intro) {
+                intro.hidden = true;
+            }
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSponsorshipEnquiry);
+    } else {
+        initSponsorshipEnquiry();
+    }
+})();

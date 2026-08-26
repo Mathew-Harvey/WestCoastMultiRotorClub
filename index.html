@@ -57,8 +57,8 @@
           <li><a href="#membership">Pilots</a></li>
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="#sponsors">Sponsors</a></li>
-          <li><a href="#contact">Contact</a></li>
           <li><a href="#resources">Resources</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="hamburger">
           <i class="fas fa-bars"></i>
@@ -2093,7 +2093,7 @@
           <h3>Become a Partner</h3>
           <p>Join leading brands in supporting West Coast Multirotor Club. Showcase your commitment to innovation while
             connecting with our passionate community of pilots and tech enthusiasts.</p>
-          <a href="mailto:president@westcoastmultirotors.com.au" class="btn btn-sponsor">Request Partnership
+          <a href="#contact" class="btn btn-sponsor">Request Partnership
             Information</a>
         </div>
       </div>
@@ -2175,7 +2175,57 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Sponsorship Enquires -->
+  <section id="contact">
+    <div class="container">
+      <h2>Sponsorship Enquires</h2>
+      <p class="enquiry-intro">Interested in partnering with West Coast Multirotor Club? Send us a few details and the
+        president will get back to you.</p>
+
+      <div class="enquiry-success" id="enquirySuccess" hidden>
+        <p>Thanks — your sponsorship enquiry has been sent. We will be in touch shortly.</p>
+      </div>
+
+      <form class="enquiry-form" id="sponsorshipEnquiryForm"
+        action="https://formsubmit.co/President@westcoastmultirotors.com.au" method="POST">
+        <input type="hidden" name="_subject" value="Sponsorship enquiry — West Coast Multirotor Club">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" id="enquiryNext"
+          value="https://westcoastmultirotors.com.au/?enquiry=sent#contact">
+        <input type="hidden" name="_autoresponse"
+          value="Thanks for your sponsorship enquiry. The West Coast Multirotor Club president will be in touch shortly.">
+        <input type="text" name="_honey" class="enquiry-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="form-group">
+          <label for="enquiryFirstName">First Name <span class="required" aria-hidden="true">*</span></label>
+          <input type="text" id="enquiryFirstName" name="First Name" class="form-control" placeholder="John"
+            autocomplete="given-name" required>
+        </div>
+        <div class="form-group">
+          <label for="enquiryLastName">Last Name <span class="required" aria-hidden="true">*</span></label>
+          <input type="text" id="enquiryLastName" name="Last Name" class="form-control" placeholder="Doe"
+            autocomplete="family-name" required>
+        </div>
+        <div class="form-group">
+          <label for="enquiryEmail">Email <span class="required" aria-hidden="true">*</span></label>
+          <input type="email" id="enquiryEmail" name="email" class="form-control" placeholder="example@mail.com"
+            autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="enquiryOrganisation">Organisation / Brand</label>
+          <input type="text" id="enquiryOrganisation" name="Organisation" class="form-control"
+            placeholder="Your company or brand" autocomplete="organization">
+        </div>
+        <div class="form-group">
+          <label for="enquiryMessage">Message <span class="required" aria-hidden="true">*</span></label>
+          <textarea id="enquiryMessage" name="Message" class="form-control" rows="6"
+            placeholder="Enter your message" required></textarea>
+        </div>
+        <button type="submit" class="btn enquiry-submit">Submit</button>
+      </form>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="container">
@@ -2220,8 +2270,8 @@
             <li><a href="#membership">Pilots</a></li>
             <li><a href="#gallery">Gallery</a></li>
             <li><a href="#sponsors">Sponsors</a></li>
-            <li><a href="#contact">Contact</a></li>
             <li><a href="#resources">Resources</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col footer-newsletter">
