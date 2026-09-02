@@ -1271,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', function () {
             image: "./assets/drone6.jpg"
         },
         {
-            title: "2026 AWA WA State Drone Racing Championships",
+            title: "2026 FlyIQ WA State Drone Racing Championships",
             date: new Date(2026, 9, 17, 8, 0), // October 17-18, 2026
             link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"

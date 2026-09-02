@@ -9,6 +9,14 @@
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <noscript>
+    <style>
+      /* No JS means nothing decides between the canvas and the still, so show the still. */
+      .champs .champs-canvas-fallback {
+        display: block;
+      }
+    </style>
+  </noscript>
   <!-- Basic Open Graph tags -->
   <meta property="og:title" content="West Coast Multirotor Club | Drone Racing Club" />
   <meta property="og:description"
@@ -80,9 +88,8 @@
         <span class="champs-streaks"></span>
       </div>
       <canvas id="champsQuad" class="champs-canvas" aria-hidden="true"></canvas>
-      <!-- Shown in place of the canvas when WebGL is unavailable. Same quad, same pose. -->
-      <img class="champs-canvas-fallback" src="./assets/champs-quad-hero.png" width="900" height="850" alt=""
-        aria-hidden="true" />
+      <!-- Stands in for the canvas when WebGL is unavailable, or when JS never runs. -->
+      <span class="champs-canvas-fallback" aria-hidden="true"></span>
       <span class="champs-numeral" aria-hidden="true">26</span>
 
       <div class="champs-layout">
@@ -141,33 +148,33 @@
           <div class="champs-marquee-track">
             <ul class="champs-marquee-set">
               <li><img src="./assets/sponsors/champs/row-light/diwa-group.png" width="600" height="220"
-                  alt="DIWA Group" loading="lazy" /></li>
+                  alt="DIWA Group" /></li>
               <li><img src="./assets/sponsors/champs/row-light/bms-racing.png" width="600" height="220"
-                  alt="BMS Racing" loading="lazy" /></li>
+                  alt="BMS Racing" /></li>
               <li><img src="./assets/sponsors/champs/row-light/mantis-fpv.png" width="600" height="220"
-                  alt="Mantis FPV" loading="lazy" /></li>
+                  alt="Mantis FPV" /></li>
               <li><img src="./assets/sponsors/champs/row-light/energy-matrix-group.png" width="600" height="220"
-                  alt="Energy Matrix Group" loading="lazy" /></li>
+                  alt="Energy Matrix Group" /></li>
               <li><img src="./assets/sponsors/champs/row-light/tm-ceilings.png" width="600" height="220"
-                  alt="T.M Ceilings" loading="lazy" /></li>
+                  alt="T.M Ceilings" /></li>
               <li><img src="./assets/sponsors/champs/row-light/bigfella.png" width="600" height="220"
-                  alt="Bigfella Industry Gear" loading="lazy" /></li>
+                  alt="Bigfella Industry Gear" /></li>
               <li><img src="./assets/sponsors/champs/row-light/mandurah-drone-services.png" width="600" height="220"
-                  alt="Mandurah Drone Services" loading="lazy" /></li>
+                  alt="Mandurah Drone Services" /></li>
               <li><img src="./assets/sponsors/champs/row-light/rox-rotorcross.png" width="600" height="220"
-                  alt="ROX Rotorcross" loading="lazy" /></li>
+                  alt="ROX Rotorcross" /></li>
               <li><img src="./assets/sponsors/champs/row-light/t-motor.png" width="600" height="220" alt="T-Motor"
-                  loading="lazy" /></li>
+                  /></li>
               <li><img src="./assets/sponsors/champs/row-light/betafpv.png" width="600" height="220" alt="BetaFPV"
-                  loading="lazy" /></li>
+                  /></li>
               <li><img src="./assets/sponsors/champs/row-light/gemfan.png" width="600" height="220" alt="Gemfan"
-                  loading="lazy" /></li>
+                  /></li>
               <li><img src="./assets/sponsors/champs/row-light/ovonic.png" width="600" height="220" alt="Ovonic"
-                  loading="lazy" /></li>
+                  /></li>
               <li><img src="./assets/sponsors/champs/row-light/radiomaster.png" width="600" height="220"
-                  alt="RadioMaster" loading="lazy" /></li>
+                  alt="RadioMaster" /></li>
               <li><img src="./assets/sponsors/champs/row-light/vci.png" width="600" height="220"
-                  alt="VCI Vision Systems" loading="lazy" /></li>
+                  alt="VCI Vision Systems" /></li>
             </ul>
           </div>
         </div>

@@ -256,6 +256,26 @@ header.is-over-hero:has(.nav-links.active) {
     font-weight: 500;
     font-size: 1rem;
     padding: 5px 0;
+    white-space: nowrap;
+}
+
+/*
+   The hamburger only takes over below 993px, so between there and about 1200px the
+   bar has to hold nine labels itself. Tighten the gap rather than let a label wrap
+   and push the nav out of the 80px header.
+*/
+@media (min-width: 993px) and (max-width: 1200px) {
+    .nav-links {
+        gap: clamp(13px, 2.1vw, 40px);
+    }
+
+    .nav-links a {
+        font-size: 0.92rem;
+    }
+
+    .logo img {
+        height: 50px;
+    }
 }
 
 .nav-links a::after {
@@ -379,9 +399,10 @@ header {
     margin: -59vmax 0 0 -59vmax;
     background: radial-gradient(closest-side,
             rgba(46, 142, 224, 0.50) 0%,
-            rgba(28, 92, 158, 0.26) 38%,
-            rgba(16, 46, 84, 0.10) 60%,
-            rgba(11, 22, 32, 0) 78%);
+            rgba(28, 92, 158, 0.26) 34%,
+            rgba(16, 46, 84, 0.09) 58%,
+            rgba(16, 46, 84, 0.02) 80%,
+            rgba(16, 46, 84, 0) 100%);
     transform: translate3d(0, 0, 0);
     will-change: transform, opacity;
     transition: none;
@@ -431,22 +452,27 @@ header {
     transition: none;
 }
 
-/* The still stands in for the canvas only when WebGL is off the table. */
+/*
+   The still stands in for the canvas only when WebGL is off the table. It is a
+   background-image rather than an <img> so browsers never fetch it on the common
+   path — a display:none <img> is still downloaded.
+*/
 .champs-canvas-fallback {
     display: none;
-}
-
-.champs.no-quad .champs-canvas-fallback {
-    display: block;
     position: absolute;
     z-index: 1;
     left: var(--champs-fallback-x, 70%);
     top: var(--champs-fallback-y, 46%);
     width: var(--champs-fallback-w, 42%);
-    height: auto;
+    aspect-ratio: 900 / 850;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    background: url('./assets/champs-quad-hero.png') center / contain no-repeat;
     filter: drop-shadow(0 26px 60px rgba(2, 8, 16, 0.55));
+}
+
+.champs.no-quad .champs-canvas-fallback {
+    display: block;
 }
 
 /* --- layout ----------------------------------------------------------- */
@@ -562,7 +588,7 @@ a.champs-plaque:hover {
     font-weight: 600;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: #7c8894;
+    color: #67727e;
     line-height: 1;
 }
 
@@ -751,7 +777,7 @@ a.champs-plaque:hover {
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: #93a1ae;
+    color: var(--secondary-color);
     line-height: 1;
 }
 
@@ -1085,7 +1111,7 @@ body.champs-in-view .back-to-top {
     font-size: 0.72rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: #17739f;
     margin-bottom: 10px;
 }
 
@@ -7881,8 +7907,8 @@ textarea:focus-visible,
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(80% 60% at 18% 0%, rgba(41, 167, 223, 0.13), transparent 62%),
-        radial-gradient(70% 60% at 92% 100%, rgba(55, 125, 213, 0.10), transparent 60%);
+        radial-gradient(farthest-corner at 18% 0%, rgba(41, 167, 223, 0.15) 0%, rgba(41, 167, 223, 0.04) 34%, rgba(41, 167, 223, 0) 72%),
+        radial-gradient(farthest-corner at 92% 100%, rgba(55, 125, 213, 0.12) 0%, rgba(55, 125, 213, 0.03) 30%, rgba(55, 125, 213, 0) 66%);
     pointer-events: none;
 }
 
@@ -8015,9 +8041,13 @@ textarea:focus-visible,
     margin: 0;
     border: 1px solid rgba(124, 198, 238, 0.14);
     border-radius: 14px;
-    background:
-        radial-gradient(120% 90% at 50% 12%, rgba(41, 167, 223, 0.1), transparent 62%),
-        #0a1420;
+    /*
+       Flat, not a gradient: a low-alpha radial over this dark a ground rasterises with
+       a visible seam where the SVG above it composites. An inset highlight gives the
+       card its lift instead.
+    */
+    background: #0a1420;
+    box-shadow: inset 0 1px 0 rgba(124, 198, 238, 0.09);
     padding: clamp(12px, 2vw, 22px);
 }
 
@@ -8249,7 +8279,7 @@ text.jsy-sleeve-type--alt {
 
 .jersey-swatch b {
     padding-top: 2px;
-    color: #6c7c8a;
+    color: #8496a5;
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
     opacity: 0;
