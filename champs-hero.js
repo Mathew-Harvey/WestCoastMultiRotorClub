@@ -54,30 +54,45 @@
     (function countdown() {
         const el = document.getElementById('champsCountdown');
         if (!el) return;
-        const value = el.querySelector('.champs-countdown-value');
-        const label = el.querySelector('.champs-countdown-label');
+        const clock = el.querySelector('.champs-countdown-clock');
+        const state = el.querySelector('.champs-countdown-state');
+        const cells = {};
+        el.querySelectorAll('[data-unit]').forEach(c => { cells[c.dataset.unit] = c; });
         const start = new Date(el.dataset.eventStart);
         const end = new Date(el.dataset.eventEnd);
         if (isNaN(start) || isNaN(end)) return;
 
-        const tick = () => {
-            const now = Date.now();
-            if (now >= end.getTime()) {
-                value.textContent = 'Wrapped';
-                label.textContent = 'the 2026 titles are done';
-                return;
-            }
-            if (now >= start.getTime()) {
-                value.textContent = 'Racing now';
-                label.textContent = 'live at Thomas Kelly Pavilion';
-                return;
-            }
-            const days = Math.ceil((start.getTime() - now) / 86400000);
-            value.textContent = days + (days === 1 ? ' day' : ' days');
-            label.textContent = 'to the first gate';
+        const pad = n => (n < 10 ? '0' : '') + n;
+
+        const show = (text) => {
+            clock.hidden = true;
+            state.hidden = false;
+            state.textContent = text;
         };
+
+        let timer = null;
+        const tick = () => {
+            const left = start.getTime() - Date.now();
+            if (left <= 0) {
+                window.clearInterval(timer);
+                show(Date.now() < end.getTime()
+                    ? 'Racing now at Thomas Kelly Pavilion.'
+                    : 'The 2026 state champs are done.');
+                return;
+            }
+            const s = Math.floor(left / 1000);
+            cells.days.textContent = Math.floor(s / 86400);
+            cells.hours.textContent = pad(Math.floor(s / 3600) % 24);
+            cells.minutes.textContent = pad(Math.floor(s / 60) % 60);
+            cells.seconds.textContent = pad(s % 60);
+        };
+
+        if (Date.now() >= start.getTime()) {
+            tick();
+            return;
+        }
         tick();
-        window.setInterval(tick, 60000);
+        timer = window.setInterval(tick, 1000);
     })();
 
     /* ----------------------------------------------------------- header state */
