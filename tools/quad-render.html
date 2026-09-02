@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>quad render</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style></head>
+<body>
+<canvas id="c"></canvas>
+<script src="../champs-quad.js"></script>
+<script>
+const p = new URLSearchParams(location.search);
+const size = +(p.get('size') || 1200);
+const c = document.getElementById('c');
+c.style.width = size + 'px'; c.style.height = size + 'px';
+const q = WCMRCQuad.create(c);
+q.resize(size, size, 1);
+q.draw({ framing: {
+  x: 0, y: 0, span: +(p.get('span') || 0.92),
+  tilt: +(p.get('tilt') || 0), yaw: +(p.get('yaw') || 0), roll: +(p.get('roll') || 0),
+  spin: +(p.get('spin') || 0), blur: 0, depth: 0,
+  rim: [0.16, 0.52, 0.95],
+}});
+document.title = 'ready';
+</script>
+</body></html>

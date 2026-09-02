@@ -22,6 +22,7 @@
     --logo-filter: brightness(1.15) contrast(1.2) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     --text-shadow: none;
     --hero-bg-gradient: linear-gradient(135deg, rgba(36, 57, 73, 0.92), rgba(41, 167, 223, 0.85));
+    --champs-band: clamp(58px, 8.5vh, 96px);
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
@@ -189,6 +190,35 @@ header {
     -webkit-backdrop-filter: blur(10px);
 }
 
+/*
+   Over the navy hero the slate bar reads as a slab across the flyer, so it drops
+   to a scrim: dark enough at the top edge to keep the links legible, gone by the
+   time it reaches the headline.
+*/
+header.is-over-hero {
+    background-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+header.is-over-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(var(--header-height) + 34px);
+    background: linear-gradient(180deg, rgba(5, 12, 21, 0.88) 0%, rgba(5, 12, 21, 0.45) 52%, rgba(5, 12, 21, 0) 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* The open mobile panel needs a solid ground whatever is behind the header. */
+header.is-over-hero:has(.nav-links.active) {
+    background-color: rgba(93, 107, 119, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -249,128 +279,1056 @@ header {
     font-size: 1.5rem;
 }
 
-/* Hero Section */
-#hero {
-    min-height: 100vh;
+/* =====================================================================
+   State Championships hero
+   ---------------------------------------------------------------------
+   The 2026 flyer, rebuilt as a scroll stage. #hero is taller than the
+   viewport; .champs-pin sticks to the top while the quad flies in, then
+   the whole thing releases into the light supporter band and the page.
+   ===================================================================== */
+
+.champs {
+    /* One viewport of stage plus the travel the fly-in is choreographed over. */
+    --champs-travel: 82vh;
+    --champs-navy: #0b1620;
+    --champs-navy-lift: #0d2137;
+    --champs-blue: #29a7df;
+    --champs-blue-hi: #7cc6ee;
+    --champs-ink: #f2f4f7;
+    --champs-band: clamp(58px, 8.5vh, 96px);
+
+    position: relative;
+    min-height: calc(100svh + var(--champs-travel));
+    padding: 0;
+    background: var(--champs-navy);
+    color: #fff;
+    isolation: isolate;
+}
+
+/* Without the stage (no sticky support, reduced motion, short screens) the hero
+   collapses to a single, static, still-correct viewport. */
+.champs.is-static {
     min-height: 100svh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    background: var(--hero-bg-gradient),
-        url('./assets/drone2.jpg') center/cover no-repeat;
-    color: white;
-    padding-top: calc(var(--header-height) + 24px);
-    padding-bottom: clamp(48px, 12vh, 100px);
-    overflow: hidden;
 }
 
-/* Hero Logo Animation Styles */
-.hero-logo-container {
-    position: relative;
-    width: min(100%, clamp(160px, 40vh, 400px));
-    margin-bottom: clamp(16px, 4vh, 40px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/*
+   The global `* { transition: all .3s }` rule would smear every per-frame write in
+   this section through 300ms of easing, so the whole hero opts out and then hands
+   back only the transitions that are actually wanted.
+*/
+.champs,
+.champs *,
+.champs *::before,
+.champs *::after {
+    transition: none;
 }
 
-/* Create a subtle radial gradient behind the logo for better contrast */
-.hero-logo-container::before {
-    content: '';
-    position: absolute;
+.champs a,
+.champs .btn,
+.champs .btn::before {
+    transition: background-color var(--animation-speed) ease, color var(--animation-speed) ease,
+        border-color var(--animation-speed) ease, box-shadow var(--animation-speed) ease,
+        opacity var(--animation-speed) ease, transform var(--animation-speed) ease,
+        width var(--animation-speed) ease;
+}
+
+header {
+    transition: background-color var(--animation-speed) ease, box-shadow var(--animation-speed) ease;
+}
+
+.champs-pin {
+    position: sticky;
     top: 0;
-    left: 0;
+    height: 100svh;
+    min-height: 30rem;
+    overflow: hidden;
+    display: block;
+}
+
+.champs.is-static .champs-pin {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+}
+
+/* --- ground ----------------------------------------------------------- */
+
+/* The flyer's navy field: a deep base, a blue bloom behind the quad, and a
+   faint diagonal streak field for the sense of speed. */
+.champs-sky {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(168deg, #0e2340 0%, #0a1729 46%, #070e18 100%);
+    transition: none;
+}
+
+/*
+   The blue bloom the quad flies out of. It is a fixed-size gradient moved with a
+   transform rather than a repainted background-position, so tracking the quad
+   every frame costs a composite and nothing else.
+*/
+.champs-bloom {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 118vmax;
+    height: 118vmax;
+    margin: -59vmax 0 0 -59vmax;
+    background: radial-gradient(closest-side,
+            rgba(46, 142, 224, 0.50) 0%,
+            rgba(28, 92, 158, 0.26) 38%,
+            rgba(16, 46, 84, 0.10) 60%,
+            rgba(11, 22, 32, 0) 78%);
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+    transition: none;
+}
+
+/* Speed streaks. They lift while the quad is still travelling and settle once it lands. */
+.champs-streaks {
+    position: absolute;
+    inset: -20%;
+    background-image: repeating-linear-gradient(102deg,
+            rgba(124, 198, 238, 0.06) 0px,
+            rgba(124, 198, 238, 0.06) 1px,
+            rgba(124, 198, 238, 0) 1px,
+            rgba(124, 198, 238, 0) 84px);
+    opacity: 0.85;
+    transform: translate3d(0, 0, 0);
+    will-change: opacity;
+    transition: none;
+}
+
+/* The oversized ghost year, bleeding off the left edge exactly as on the flyer. */
+.champs-numeral {
+    position: absolute;
+    z-index: 0;
+    left: clamp(-0.16em, -6vw, -0.05em);
+    top: calc(var(--header-height) - 0.14em);
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(11rem, 34vh, 30rem);
+    line-height: 0.78;
+    letter-spacing: -0.04em;
+    color: rgba(126, 180, 240, 0.12);
+    pointer-events: none;
+    user-select: none;
+    transition: none;
+    will-change: transform;
+}
+
+.champs-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+    display: block;
+    pointer-events: none;
+    transition: none;
+}
+
+/* The still stands in for the canvas only when WebGL is off the table. */
+.champs-canvas-fallback {
+    display: none;
+}
+
+.champs.no-quad .champs-canvas-fallback {
+    display: block;
+    position: absolute;
     z-index: 1;
-    opacity: 0.8;
+    left: var(--champs-fallback-x, 70%);
+    top: var(--champs-fallback-y, 46%);
+    width: var(--champs-fallback-w, 42%);
+    height: auto;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: drop-shadow(0 26px 60px rgba(2, 8, 16, 0.55));
+}
+
+/* --- layout ----------------------------------------------------------- */
+
+/*
+   Deliberately not .container: the site's responsive `.container { padding: 0 20px }`
+   shorthand would reset this grid's vertical padding out from under it.
+*/
+.champs-layout {
+    position: relative;
+    z-index: 2;
+    margin-inline: auto;
+    height: 100%;
+    display: grid;
+    /*
+       The quad's row is the only elastic one. Whatever is left after the type has
+       taken what it needs goes to the quad, so the composition can shrink onto a
+       small phone without ever overflowing the viewport it is pinned to.
+    */
+    align-content: stretch;
+    gap: clamp(0.4rem, 1.3vh, 1.1rem);
+    padding-top: calc(var(--header-height) + clamp(6px, 1.6vh, 24px));
+    padding-bottom: calc(var(--champs-band) + clamp(34px, 5.5vh, 64px));
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        'eyebrow'
+        'plaques'
+        'quad'
+        'copy';
+    /* Wider than the site container: the flyer is an edge-to-edge composition. */
+    width: 100%;
+    max-width: 1520px;
+    padding-left: clamp(20px, 3.4vw, 56px);
+    padding-right: clamp(20px, 3.4vw, 56px);
+}
+
+/*
+   The headline is sized against this column, not the viewport, so "CHAMPIONSHIPS"
+   can never grow past the space beside the quad however wide the window gets.
+*/
+.champs-copy {
+    grid-area: copy;
+    display: grid;
+    align-content: center;
+    gap: clamp(0.5rem, 1.4vh, 1.1rem);
+    min-width: 0;
+}
+
+@supports (container-type: inline-size) {
+    .champs-copy {
+        container-type: inline-size;
+        container-name: champscopy;
+    }
+}
+
+.champs-eyebrow {
+    grid-area: eyebrow;
+    margin: 0;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.6rem, 1.05vw, 0.76rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--champs-blue-hi);
+    display: flex;
+    align-items: center;
+    gap: 0.9em;
+    line-height: 1.3;
+}
+
+.champs-eyebrow i {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+    opacity: 0.75;
+}
+
+/* --- presented by / gold sponsor plaques ------------------------------- */
+
+.champs-plaques {
+    grid-area: plaques;
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1.2vw, 14px);
+    align-items: stretch;
+}
+
+.champs-plaque {
+    background: #fff;
+    border-radius: 10px;
+    padding: clamp(6px, 1vh, 10px) clamp(10px, 1.4vw, 18px) clamp(7px, 1.1vh, 12px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+a.champs-plaque:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+.champs-plaque-label {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: clamp(0.44rem, 1vw, 0.56rem);
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #7c8894;
+    line-height: 1;
+}
+
+.champs-plaque img {
+    width: auto;
+    height: clamp(24px, 4.4vh, 42px);
+    max-width: min(42vw, 220px);
+    object-fit: contain;
+}
+
+/* --- the slot the quad flies into ------------------------------------- */
+
+/*
+   The renderer measures this box and lands the quad inside it, so the flight
+   path is defined by the layout rather than by per-breakpoint magic numbers.
+*/
+.champs-quad-slot {
+    grid-area: quad;
+    min-height: clamp(96px, 22vh, 300px);
     pointer-events: none;
 }
 
-.hero-logo {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: auto;
-    filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    transition: filter 0.5s ease, transform 0.5s ease;
-    z-index: 2;
+/* --- headline --------------------------------------------------------- */
+
+.champs-title {
+    margin: 0;
+    display: grid;
+    gap: 0;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    text-shadow: 0 6px 30px rgba(4, 12, 22, 0.55);
 }
 
-.hero-logo:hover {
-    filter: brightness(1.2) contrast(1.25) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
-    transform: translateY(-2px);
+.champs-year {
+    font-weight: 700;
+    font-size: clamp(2.7rem, 11.5vw, 5.2rem);
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    color: #2f7ff0;
+    background: linear-gradient(103deg, #3d8bf7 0%, #29a7df 62%, #7cc6ee 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width: max-content;
+    max-width: 100%;
 }
 
-.hero-content {
-    max-width: 800px;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.2s forwards;
+.champs-kicker {
+    font-weight: 600;
+    font-size: clamp(0.78rem, 3.1vw, 1.28rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.5;
 }
 
-.hero-content h1 {
-    margin-bottom: clamp(12px, 2.5vh, 24px);
-    font-size: clamp(2.2rem, 7vh, 4.5rem);
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    line-height: 1.1;
+.champs-headline {
+    font-weight: 700;
+    font-size: clamp(2rem, 8.6vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: 0.004em;
+    text-transform: uppercase;
+    color: #fff;
 }
 
-.hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: clamp(20px, 4vh, 40px);
-    opacity: 0.95;
-    max-width: 600px;
-    line-height: 1.8;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+.champs-headline--alt {
+    color: #a8cdf0;
 }
 
-.hero-btns {
+/* --- detail lines ------------------------------------------------------ */
+
+.champs-meta {
+    display: grid;
+    gap: clamp(0.35rem, 0.9vh, 0.7rem);
+    max-width: 46ch;
+}
+
+.champs-when {
+    margin: 0;
     display: flex;
-    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35em 0.9em;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.66rem, 1.7vw, 0.86rem);
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: rgba(232, 242, 250, 0.82);
+    line-height: 1.4;
 }
 
-.hero-btns .btn {
-    padding: 16px 32px;
-    font-size: 1rem;
+.champs-when span+span {
+    position: relative;
+    padding-left: 1.15em;
 }
 
-.hero-btns .btn:nth-child(2) {
+.champs-when span+span::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 3px;
+    height: 3px;
+    margin-top: -1.5px;
+    border-radius: 50%;
+    background: var(--champs-blue);
+}
+
+.champs-lede {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.94rem, 2.5vw, 1.24rem);
+    line-height: 1.4;
+    color: #6fbfea;
+    text-shadow: 0 2px 14px rgba(4, 12, 22, 0.5);
+}
+
+/*
+   Prize money, stated rather than tabulated. One sentence, two numbers, no
+   ladder graphic — the full schedule lives in the detail band below.
+*/
+.champs-purse {
+    margin: 0;
+    border-left: 2px solid rgba(41, 167, 223, 0.7);
+    padding-left: clamp(12px, 1.4vw, 18px);
+    font-size: clamp(0.82rem, 2vw, 0.96rem);
+    line-height: 1.6;
+    color: rgba(219, 233, 245, 0.8);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- calls to action --------------------------------------------------- */
+
+.champs-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1.4vw, 16px);
+    margin-top: clamp(0.2rem, 1vh, 0.6rem);
+}
+
+.champs-cta .btn {
+    padding: clamp(11px, 1.6vh, 15px) clamp(18px, 3vw, 30px);
+    font-size: clamp(0.72rem, 1.7vw, 0.85rem);
+}
+
+.btn-ghost {
     background: transparent;
-    border: 2px solid white;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    color: #fff;
 }
 
-.hero-btns .btn:nth-child(2):hover {
-    background: white;
+.btn-ghost:hover {
+    color: var(--champs-navy);
+}
+
+.btn-ghost::before {
+    background: #fff;
+}
+
+/* --- supporter band ---------------------------------------------------- */
+
+/*
+   The flyer ends on a light supporter strip. Reused here it does two jobs at
+   once: it is the event's sponsor row, and it is the seam that hands the dark
+   hero over to the light page below.
+*/
+.champs-support {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    background: var(--champs-ink);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: clamp(6px, 1vh, 10px) 0 clamp(7px, 1.1vh, 12px);
+    box-shadow: 0 -22px 44px rgba(4, 10, 18, 0.45);
+}
+
+.champs-support-label {
+    margin: 0 0 clamp(3px, 0.5vh, 6px);
+    text-align: center;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #93a1ae;
+    line-height: 1;
+}
+
+.champs-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+.champs-marquee-track {
+    display: flex;
+    width: max-content;
+    transition: none;
+    animation: champsMarquee var(--champs-marquee-duration, 54s) linear infinite;
+}
+
+.champs-marquee:hover .champs-marquee-track,
+.champs-marquee:focus-within .champs-marquee-track {
+    animation-play-state: paused;
+}
+
+.champs-marquee-set {
+    display: flex;
+    align-items: center;
+    gap: clamp(26px, 4.5vw, 58px);
+    padding-right: clamp(26px, 4.5vw, 58px);
+    margin: 0;
+    list-style: none;
+}
+
+.champs-marquee-set li {
+    flex: none;
+    display: flex;
+    align-items: center;
+}
+
+.champs-marquee-set img {
+    width: auto;
+    height: clamp(21px, 3.1vh, 34px);
+    max-width: 152px;
+    object-fit: contain;
+    opacity: 0.86;
+    transition: none;
+}
+
+@keyframes champsMarquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+/* --- landscape and up: the flyer's two-column composition -------------- */
+
+@media (min-width: 820px) {
+    .champs-layout {
+        grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: clamp(24px, 3.4vw, 60px);
+        align-content: stretch;
+        grid-template-areas:
+            'eyebrow plaques'
+            'copy    quad';
+    }
+
+    .champs-eyebrow {
+        align-self: start;
+    }
+
+    .champs-plaques {
+        justify-content: flex-end;
+        align-self: start;
+    }
+
+    .champs-quad-slot {
+        min-height: clamp(200px, 46vh, 620px);
+        align-self: stretch;
+    }
+
+    .champs-copy {
+        margin-top: clamp(6px, 2.5vh, 34px);
+    }
+
+    /* Conservative viewport-based sizes for engines without container queries. */
+    .champs-year {
+        font-size: clamp(3rem, 5.4vw, 4.9rem);
+    }
+
+    .champs-headline {
+        font-size: clamp(2.2rem, 4.05vw, 3.7rem);
+    }
+
+    .champs-kicker {
+        font-size: clamp(0.86rem, 1.25vw, 1.2rem);
+    }
+}
+
+/*
+   With container queries the headline is tied to its own column rather than to the
+   viewport: "CHAMPIONSHIPS" is the widest line at roughly 8.4em, so 10.5cqw always
+   leaves it air. The rem ceilings are what stop a full-width stacked column (a
+   portrait tablet) from blowing the type up to poster size.
+*/
+@container champscopy (min-width: 300px) {
+    .champs-year {
+        font-size: min(13.6cqw, 4rem);
+    }
+
+    .champs-kicker {
+        font-size: min(3.3cqw, 1.1rem);
+    }
+
+    .champs-headline {
+        font-size: min(10.5cqw, 3.1rem);
+    }
+}
+
+/* Beside the quad, the column is narrow enough to let the ceilings go up. */
+@media (min-width: 820px) {
+    @container champscopy (min-width: 300px) {
+        .champs-year {
+            font-size: min(15cqw, 6.2rem);
+        }
+
+        .champs-kicker {
+            font-size: min(3.5cqw, 1.42rem);
+        }
+
+        .champs-headline {
+            font-size: min(11.2cqw, 4.7rem);
+        }
+    }
+}
+
+/* Portrait tablets: single column, but with room for a proper quad. */
+@media (min-width: 600px) and (max-width: 819px) {
+    .champs-quad-slot {
+        min-height: clamp(190px, 27vh, 340px);
+    }
+
+    .champs-plaque img {
+        height: clamp(30px, 4vh, 44px);
+    }
+
+    @container champscopy (min-width: 300px) {
+        .champs-year {
+            font-size: min(13.6cqw, 4.6rem);
+        }
+
+        .champs-kicker {
+            font-size: min(3.3cqw, 1.26rem);
+        }
+
+        .champs-headline {
+            font-size: min(10.5cqw, 3.5rem);
+        }
+    }
+}
+
+/*
+   Short viewports. A pinned stage is worst exactly where there is least room, so
+   below this height the hero stops pinning, becomes an ordinary section that is at
+   least one viewport tall, and grows rather than clipping if the type needs it.
+   The fly-in gives way to the landed composition; champs-hero.js reads the pin's
+   computed position and switches itself over.
+*/
+@media (max-height: 680px) {
+    .champs {
+        min-height: 0;
+        --champs-band: 52px;
+    }
+
+    .champs-pin {
+        position: static;
+        height: auto;
+        min-height: 100svh;
+    }
+
+    .champs-layout {
+        height: auto;
+        min-height: 100svh;
+        padding-top: calc(var(--header-height) + 10px);
+        padding-bottom: calc(var(--champs-band) + 24px);
+    }
+
+    .champs-quad-slot {
+        min-height: clamp(110px, 24vh, 200px);
+    }
+
+    .champs-numeral {
+        font-size: clamp(7rem, 30vh, 16rem);
+    }
+
+    /* The strapline says the same thing as the detail band twenty pixels below. */
+    .champs-lede {
+        display: none;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+@media (max-height: 560px) and (max-width: 819px) {
+    .champs-eyebrow {
+        display: none;
+    }
+
+    .champs-quad-slot {
+        min-height: 96px;
+    }
+}
+
+/* Narrow phones: pull the letterspacing in so nothing has to wrap awkwardly. */
+@media (max-width: 460px) {
+    .champs-eyebrow {
+        letter-spacing: 0.15em;
+        font-size: 0.6rem;
+    }
+
+    .champs-when {
+        letter-spacing: 0.13em;
+    }
+
+    .champs-plaque img {
+        height: clamp(22px, 3.4vh, 30px);
+    }
+
+    .champs-lede {
+        font-size: 1rem;
+    }
+}
+
+/* Below the two-column breakpoint the indicator is just the chevron: the wording
+   costs vertical room the composition needs more. */
+@media (max-width: 819px) {
+    .scroll-indicator p {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .champs-marquee {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .champs-marquee-track {
+        animation: none !important;
+    }
+
+    .champs-marquee-set[aria-hidden='true'] {
+        display: none;
+    }
+
+    .champs-streaks {
+        opacity: 0.5;
+    }
+}
+
+/* Anchor jumps must clear the fixed header. */
+section[id] {
+    scroll-margin-top: calc(var(--header-height) + 14px);
+}
+
+.champs {
+    scroll-margin-top: 0;
+}
+
+/* While the hero owns the viewport the supporter band owns the bottom edge. */
+body.champs-in-view .back-to-top {
+    bottom: calc(var(--champs-band) + 22px);
+}
+
+/* Print: the flyer as a flat page, no stage, no canvas. */
+@media print {
+
+    .champs-canvas,
+    .champs-sky,
+    .scroll-indicator {
+        display: none;
+    }
+
+    .champs,
+    .champs-pin {
+        min-height: 0;
+        height: auto;
+        position: static;
+        background: #fff;
+        color: #000;
+    }
+}
+
+/* =====================================================================
+   Championship detail band
+   ===================================================================== */
+
+.champs-detail {
+    background: linear-gradient(180deg, #f2f4f7 0%, #ffffff 100%);
+    padding: clamp(56px, 9vh, 104px) 0;
+    position: relative;
+}
+
+.champs-detail::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.045'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.champs-detail-grid {
+    display: grid;
+    gap: clamp(28px, 5vw, 64px);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+}
+
+@media (min-width: 900px) {
+    .champs-detail-grid {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+}
+
+.champs-detail-kicker {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.champs-detail-lead h2 {
+    text-align: left;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+}
+
+.champs-detail-lead h2::after {
+    left: 0;
+    transform: none;
+}
+
+.champs-detail-lead p {
+    margin-bottom: 18px;
+    max-width: 62ch;
+}
+
+/*
+   The prize money again: a sentence with two figures in it. Set apart with a
+   rule and a little air so it carries weight, but never rendered as a table.
+*/
+.champs-detail-purse {
+    border-left: 3px solid var(--primary-color);
+    padding: 4px 0 4px 20px;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--secondary-color);
+}
+
+.champs-detail-purse {
+    font-variant-numeric: tabular-nums;
+}
+
+.champs-detail-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
     color: var(--primary-color);
 }
 
-/* Hexagonal overlay on hero */
-#hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 1;
-    opacity: 0.5;
-    animation: slowMove 60s linear infinite alternate;
+.btn-outline:hover {
+    color: #fff;
 }
 
-@keyframes slowMove {
-    0% {
-        background-position: 0 0;
-    }
+/* --- facts card -------------------------------------------------------- */
 
-    100% {
-        background-position: 100px 100px;
+.champs-detail-facts {
+    background: #fff;
+    border: 1px solid rgba(41, 167, 223, 0.16);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.champs-countdown {
+    background: linear-gradient(135deg, #0d2137 0%, #133a5f 100%);
+    color: #fff;
+    padding: clamp(18px, 3vh, 28px) 24px;
+    text-align: center;
+}
+
+.champs-countdown-value {
+    display: block;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: #7cc6ee;
+    font-variant-numeric: tabular-nums;
+}
+
+.champs-countdown-label {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: rgba(226, 240, 250, 0.7);
+}
+
+.champs-facts {
+    margin: 0;
+    padding: 0;
+}
+
+.champs-facts>div {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(93, 107, 119, 0.12);
+}
+
+.champs-facts>div:first-child {
+    border-top: 0;
+}
+
+.champs-facts dt {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+    padding-top: 3px;
+}
+
+.champs-facts dd {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--secondary-color);
+}
+
+@media (max-width: 420px) {
+    .champs-facts>div {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+        padding: 14px 18px;
     }
+}
+
+/* =====================================================================
+   Club intro — the club's own line, handed back after the event's pitch
+   ===================================================================== */
+
+/*
+   A tinted band so the club's own line does not dissolve into the white About
+   section that follows it.
+*/
+.club-intro {
+    background: linear-gradient(180deg, #ffffff 0%, #eaf2f9 100%);
+    border-top: 1px solid rgba(41, 167, 223, 0.14);
+    padding: clamp(44px, 7vh, 80px) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.club-intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.04'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.club-intro-inner {
+    display: grid;
+    gap: clamp(22px, 4vw, 52px);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+}
+
+@media (min-width: 820px) {
+    .club-intro-inner {
+        grid-template-columns: minmax(200px, 300px) minmax(0, 1fr);
+    }
+}
+
+.club-intro-mark {
+    display: flex;
+    justify-content: center;
+}
+
+.club-intro-mark .hero-logo {
+    width: min(100%, 280px);
+    height: auto;
+    filter: none;
+}
+
+.club-intro-copy h2 {
+    text-align: left;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.club-intro-copy h2::after {
+    left: 0;
+    transform: none;
+}
+
+.club-intro-copy p {
+    max-width: 62ch;
+    margin-bottom: 26px;
+}
+
+/*
+   script.js injects the Watch Video button into .hero-btns, which now lives on a
+   light band rather than the old dark hero — so it gets the light treatment here.
+*/
+.club-intro .watch-video-btn {
+    background-color: transparent;
+    border-color: var(--primary-color);
+    color: var(--primary-dark);
+    padding: 15px 30px;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.club-intro .watch-video-btn::before {
+    background: var(--primary-color);
+}
+
+.club-intro .watch-video-btn:hover {
+    color: #fff;
+}
+
+/* Kept as a class because the video modal injects its Watch Video button here. */
+.hero-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.hero-btns .btn {
+    padding: 15px 30px;
+    font-size: 0.9rem;
+}
+
+/* Two equally-filled buttons read as a tie; the second one is the quieter ask. */
+.club-intro .hero-btns .btn:nth-child(2) {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-dark);
+}
+
+.club-intro .hero-btns .btn:nth-child(2):hover {
+    color: #fff;
 }
 
 @keyframes fadeInUp {
@@ -387,7 +1345,7 @@ header {
 
 .scroll-indicator {
     position: absolute;
-    bottom: 40px;
+    bottom: calc(var(--champs-band, 72px) + clamp(12px, 2.5vh, 26px));
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -4334,10 +5292,6 @@ body.gallery-lightbox-open {
             font-size: 2.2rem;
         }
     
-        .hero-logo-container {
-            max-width: 350px;
-        }
-    
         .stats-grid {
             grid-template-columns: repeat(3, 1fr);
         }
@@ -4359,10 +5313,6 @@ body.gallery-lightbox-open {
     
         h2 {
             font-size: 2rem;
-        }
-    
-        .hero-logo-container {
-            max-width: 300px;
         }
     
         .about-content,
@@ -4434,12 +5384,6 @@ body.gallery-lightbox-open {
             --section-padding: 80px 0;
         }
         
-        #hero {
-            padding-top: calc(var(--header-height) + 30px);
-            min-height: 100vh;
-            min-height: 100svh;
-        }
-    
         h1 {
             font-size: 2.5rem;
         }
@@ -4449,19 +5393,11 @@ body.gallery-lightbox-open {
             margin-bottom: 40px;
         }
     
-        .hero-logo-container {
-            margin-top: 20px; /* Add space above the logo */
-        }
-    
-        .hero-content h1 {
-            font-size: 2.8rem;
-        }
-
         /* Fix for the scroll indicator tooltip */
     .scroll-indicator {
-        bottom: 80px; /* Position higher up from the bottom */
-        padding: 8px 15px;
-        background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
+        bottom: calc(var(--champs-band, 72px) + 10px);
+        padding: 4px 12px;
+        background-color: rgba(0, 0, 0, 0.35);
         border-radius: 20px;
         width: auto;
         max-width: 80%;
@@ -4624,18 +5560,6 @@ body.gallery-lightbox-open {
     
         h2 {
             font-size: 1.6rem;
-        }
-    
-        .hero-content h1 {
-            font-size: 2.2rem;
-        }
-    
-        .hero-content p {
-            font-size: 1rem;
-        }
-    
-        .hero-logo-container {
-            max-width: 200px;
         }
     
         .gallery-grid {
@@ -6769,31 +7693,6 @@ body.video-modal-open {
 /* Short viewports (landscape phones, small desktop windows) — must stay after the
    width-based hero rules so the tighter spacing wins. */
 @media (max-height: 700px) {
-    #hero {
-        padding-top: calc(var(--header-height) + 16px);
-        padding-bottom: 40px;
-    }
-
-    .hero-logo-container {
-        margin-top: 0;
-        margin-bottom: 12px;
-    }
-
-    .hero-content h1 {
-        font-size: clamp(1.8rem, 6vh, 2.6rem);
-        margin-bottom: 10px;
-    }
-
-    .hero-content p {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 18px;
-    }
-
-    .hero-btns .btn {
-        padding: 12px 24px;
-    }
-
     .scroll-indicator {
         display: none;
     }
@@ -6819,6 +7718,12 @@ textarea:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
+
+    .fade-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 
     .sponsors-carousel,
     .pilot-carousel {
@@ -6951,5 +7856,557 @@ textarea:focus-visible,
 
     .enquiry-submit {
         width: 100%;
+    }
+}
+
+
+/* =====================================================================
+   Club Kit — the 2026/27 race jersey
+   ---------------------------------------------------------------------
+   The page's second dark beat, sitting between the gallery and the
+   partners. Read as a tech pack, not a merch banner: flat garment, spec
+   chips, corner ticks, and no price anywhere.
+   ===================================================================== */
+
+.jersey {
+    background: #0b1620;
+    color: #dbe7f0;
+    padding: clamp(64px, 10vh, 116px) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.jersey::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(80% 60% at 18% 0%, rgba(41, 167, 223, 0.13), transparent 62%),
+        radial-gradient(70% 60% at 92% 100%, rgba(55, 125, 213, 0.10), transparent 60%);
+    pointer-events: none;
+}
+
+/* Every per-frame and hover write in here would otherwise be smeared by the
+   global `* { transition: all .3s }`. */
+.jersey svg,
+.jersey svg *,
+.jersey-spread {
+    transition: none;
+}
+
+/* Not display:none — that breaks cross-root url(#id) references in some engines. */
+.jersey-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* --- heading ---------------------------------------------------------- */
+
+.jersey-head {
+    max-width: 74ch;
+    margin-bottom: clamp(28px, 4.5vh, 52px);
+    position: relative;
+    z-index: 1;
+}
+
+.jersey-kicker {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+
+.jersey-kicker i {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+.jersey h2 {
+    color: #fff;
+    text-align: left;
+    font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.jersey h2::after {
+    left: 0;
+    transform: none;
+}
+
+.jersey-deck {
+    color: rgba(203, 222, 236, 0.78);
+    font-size: 1.02rem;
+    line-height: 1.75;
+    margin-bottom: 24px;
+}
+
+.jersey-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jersey-specs li {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 7px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 198, 238, 0.28);
+    background: rgba(41, 167, 223, 0.1);
+    color: #a9cfe6;
+}
+
+/* --- layout ----------------------------------------------------------- */
+
+.jersey-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 1024px) {
+    .jersey-body {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+        align-items: stretch;
+    }
+
+    /* Pin the colourway to the bottom of its column so the two columns finish level. */
+    .jersey-figures {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .jersey-figures .jersey-colourway {
+        margin-top: auto;
+        padding-top: clamp(18px, 3vh, 34px);
+    }
+}
+
+.jersey-spread {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 32px);
+}
+
+/* --- the garment card ------------------------------------------------- */
+
+.jersey-view {
+    position: relative;
+    margin: 0;
+    border: 1px solid rgba(124, 198, 238, 0.14);
+    border-radius: 14px;
+    background:
+        radial-gradient(120% 90% at 50% 12%, rgba(41, 167, 223, 0.1), transparent 62%),
+        #0a1420;
+    padding: clamp(12px, 2vw, 22px);
+}
+
+/* Tech-pack corner ticks: the strongest single signal that this is a spec sheet
+   rather than a product shot. */
+.jersey-view::before,
+.jersey-view::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid rgba(124, 198, 238, 0.35);
+    pointer-events: none;
+}
+
+.jersey-view::before {
+    top: 9px;
+    left: 9px;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.jersey-view::after {
+    bottom: 9px;
+    right: 9px;
+    border-left: 0;
+    border-top: 0;
+}
+
+.jersey-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.jersey-view figcaption {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #93a1ae;
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* --- garment paint ----------------------------------------------------- */
+
+.jsy-fill {
+    fill: #0b1620;
+}
+
+.jsy-panel {
+    fill: #0e1d2a;
+}
+
+/* Topstitching along the raglan seam. Non-scaling so it stays a hairline at any
+   rendered size. */
+.jsy-seam {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.jsy-edge {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
+}
+
+.jsy-cuff {
+    fill: #29a7df;
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 0.8;
+    vector-effect: non-scaling-stroke;
+}
+
+.jsy-collar {
+    fill: none;
+    stroke: #29a7df;
+    stroke-width: 6;
+    stroke-linecap: round;
+}
+
+.jsy-rule {
+    fill: rgba(255, 255, 255, 0.55);
+}
+
+.jsy-name-rule {
+    fill: #29a7df;
+}
+
+.jsy-panel-plate {
+    fill: #ffffff;
+}
+
+/* Blade rake. geometricPrecision stops the 6px bars shimmering at small sizes. */
+#jerseyRake {
+    shape-rendering: geometricPrecision;
+}
+
+.rk-a {
+    fill: rgba(41, 167, 223, 0.55);
+}
+
+.rk-b {
+    fill: rgba(93, 107, 119, 0.4);
+}
+
+.rk-c {
+    fill: rgba(41, 167, 223, 0.85);
+}
+
+/* --- garment type ------------------------------------------------------ */
+
+.jersey-svg text {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.jsy-yoke {
+    fill: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.jsy-micro {
+    fill: #7fb6e0;
+    font-size: 7.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+}
+
+.jsy-name {
+    fill: #ffffff;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
+.jsy-sleeve-type text {
+    fill: #ffffff;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.jsy-sleeve-type--alt text,
+text.jsy-sleeve-type--alt {
+    fill: #29a7df;
+}
+
+/* --- colourway rail ---------------------------------------------------- */
+
+.jersey-colourway {
+    margin-top: clamp(18px, 3vh, 30px);
+}
+
+.jersey-colourway-label {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #93a1ae;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.jersey-colourway-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(124, 198, 238, 0.18);
+}
+
+/*
+   Segments are sized by how much of the garment each colour actually is, which is
+   what makes this a colourway rather than a pasted brand sheet. The bar rounds its
+   own ends rather than being clipped by the list, so the names below stay visible.
+*/
+.jersey-swatches {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jersey-swatch {
+    flex: var(--share) 1 0;
+    min-width: 0;
+}
+
+.jersey-swatch-chip {
+    display: block;
+    height: clamp(26px, 3.4vw, 34px);
+    background: var(--swatch);
+    /* An inset hairline so the race-navy segment still reads on a navy ground. */
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.jersey-swatch:first-child .jersey-swatch-chip {
+    border-radius: 999px 0 0 999px;
+}
+
+.jersey-swatch:last-child .jersey-swatch-chip {
+    border-radius: 0 999px 999px 0;
+}
+
+.jersey-swatch-name,
+.jersey-swatch b {
+    display: block;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #93a1ae;
+    padding: 8px 6px 0 0;
+    line-height: 1.3;
+}
+
+.jersey-swatch b {
+    padding-top: 2px;
+    color: #6c7c8a;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.jersey-swatch:hover b,
+.jersey-swatch:focus-within b {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .jersey-swatch b {
+        opacity: 0.55;
+    }
+}
+
+/* --- the legend column -------------------------------------------------- */
+
+.jersey-tiers {
+    list-style: none;
+    margin: 0 0 26px;
+    padding: 0;
+    display: grid;
+    gap: 22px;
+}
+
+.jersey-tiers li {
+    border-left: 3px solid var(--primary-color);
+    padding: 2px 0 2px 18px;
+}
+
+.jersey-tiers li:nth-child(2) {
+    border-left-color: rgba(41, 167, 223, 0.55);
+}
+
+.jersey-tiers li:nth-child(3) {
+    border-left-color: rgba(41, 167, 223, 0.3);
+}
+
+.jersey-tier-label {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #7fb6e0;
+    margin-bottom: 6px;
+}
+
+.jersey-tiers p:last-child {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: rgba(200, 217, 231, 0.78);
+}
+
+.jersey-handoff {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(178, 197, 213, 0.7);
+    border-top: 1px solid rgba(124, 198, 238, 0.14);
+    padding-top: 20px;
+    margin-bottom: 24px;
+}
+
+.jersey-handoff a {
+    color: var(--primary-color);
+    border-bottom: 1px solid rgba(41, 167, 223, 0.4);
+}
+
+.jersey-handoff a:hover {
+    color: #7cc6ee;
+}
+
+.jersey-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.jersey-cta .btn {
+    padding: 13px 22px;
+    font-size: 0.78rem;
+}
+
+.btn-outline-light {
+    background: transparent;
+    border: 2px solid rgba(124, 198, 238, 0.5);
+    color: #cfe6f5;
+}
+
+.btn-outline-light:hover {
+    color: #0b1620;
+}
+
+.btn-outline-light::before {
+    background: #7cc6ee;
+}
+
+.jersey-note {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: rgba(147, 161, 174, 0.85);
+    margin: 0;
+}
+
+/* --- tablet ------------------------------------------------------------- */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .jersey-tiers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px 28px;
+    }
+
+    .jersey-tiers li:first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* --- phone: a snap track, not two unreadable thumbnails ------------------ */
+
+@media (max-width: 639px) {
+    .jersey-spread {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 20px;
+        margin-inline: -20px;
+        padding-inline: 20px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .jersey-spread::-webkit-scrollbar {
+        display: none;
+    }
+
+    .jersey-view {
+        flex: 0 0 min(84vw, 340px);
+        scroll-snap-align: center;
+    }
+
+    .jersey-swatch-name {
+        font-size: 0.52rem;
+        letter-spacing: 0.06em;
+    }
+
+    .jersey-swatch b {
+        display: none;
+    }
+}
+
+@media (max-height: 520px) {
+    .jersey {
+        padding-block: 44px;
     }
 }
