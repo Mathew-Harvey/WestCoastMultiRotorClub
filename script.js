@@ -2057,6 +2057,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const videoDatabase = [
         {
+            id: 'NHtXgSiddBU',
+            title: 'Global Drone Solutions 2026 Winter Heat 7 Highlights',
+            date: 'September 5, 2026',
+            description: 'Highlights from Round 7 of the 2026 Winter Series — the run home to the Grand Final!',
+            series: '2026-winter'
+        },
+        {
             id: 'JcWh4YHr_Fc',
             title: 'Global Drone Solutions 2026 Winter Heat 6 Highlights',
             date: 'August 22, 2026',
