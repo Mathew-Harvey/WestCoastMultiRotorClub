@@ -9,14 +9,6 @@
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <noscript>
-    <style>
-      /* No JS means nothing decides between the canvas and the still, so show the still. */
-      .champs .champs-canvas-fallback {
-        display: block;
-      }
-    </style>
-  </noscript>
   <!-- Basic Open Graph tags -->
   <meta property="og:title" content="West Coast Multirotor Club | Drone Racing Club" />
   <meta property="og:description"
@@ -77,19 +69,16 @@
   </header>
 
   <!--
-    Hero: the 2026 State Championships flyer, rebuilt as a scroll stage. The stage is
-    taller than the viewport; the inner .champs-pin sticks while the quad flies in from
-    the back of the scene and locks into the slot the layout has reserved for it.
+    Hero: the 2026 State Championships flyer, one viewport tall. It is always
+    .is-static: there is no scroll stage left, so nothing pins and nothing flies in.
+    The State Champs track, flown on WebFPV, has the slot the layout reserves for it.
   -->
-  <section id="hero" class="champs" aria-labelledby="champsTitle">
+  <section id="hero" class="champs is-static" aria-labelledby="champsTitle">
     <div class="champs-pin">
       <div class="champs-sky" aria-hidden="true">
         <span class="champs-bloom"></span>
         <span class="champs-streaks"></span>
       </div>
-      <canvas id="champsQuad" class="champs-canvas" aria-hidden="true"></canvas>
-      <!-- Stands in for the canvas when WebGL is unavailable, or when JS never runs. -->
-      <span class="champs-canvas-fallback" aria-hidden="true"></span>
       <span class="champs-numeral" aria-hidden="true">26</span>
 
       <div class="champs-layout">
@@ -108,7 +97,34 @@
           </a>
         </div>
 
-        <div class="champs-quad-slot" aria-hidden="true"></div>
+        <!--
+          The State Champs track, flown on WebFPV, where the quad used to land. The
+          video has no autoplay attribute on purpose: champs-hero.js starts it, so
+          with no JS, or under reduced motion, the poster frame is the whole picture.
+          The big link is for the pointer; the button is the one a keyboard and a
+          screen reader meet.
+        -->
+        <figure class="champs-track">
+          <div class="champs-track-frame">
+            <a class="champs-track-media" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
+              target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+              <video class="champs-track-video" muted loop playsinline preload="metadata"
+                poster="./assets/webfpv/champs-track-poster.jpg" width="1024" height="1024">
+                <source src="./assets/webfpv/champs-track.mp4" type='video/mp4; codecs="avc1.640020"' />
+                <source src="./assets/webfpv/champs-track.webm" type='video/webm; codecs="vp9"' />
+              </video>
+            </a>
+            <figcaption class="champs-track-tag">
+              <span class="champs-track-new">New on</span>
+              <img src="./assets/webfpv/webfpv-wordmark.png" width="929" height="218" alt="WebFPV" />
+              <span class="champs-track-title">Fly the State Champs track</span>
+            </figcaption>
+            <a class="btn btn-fly champs-track-go" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
+              target="_blank" rel="noopener">Fly it now <i class="fas fa-arrow-up-right-from-square"
+                aria-hidden="true"></i><span class="visually-hidden">: the WA State Champs 2026 track on WebFPV,
+                opens in a new tab</span></a>
+          </div>
+        </figure>
 
         <div class="champs-copy">
           <h1 id="champsTitle" class="champs-title">
@@ -178,13 +194,6 @@
           </div>
         </div>
       </div>
-
-      <div class="scroll-indicator">
-        <p>Scroll Down to Explore</p>
-        <div class="arrow">
-          <i class="fas fa-chevron-down"></i>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -237,6 +246,82 @@
             </div>
           </dl>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    WebFPV partnership. Race navy, so the page gets a dark beat between the light
+    event details and the club intro, and the WEBFPV wordmark sits on a ground it
+    reads on. Every link to WebFPV carries utm_source=wcmrc, which WebFPV's board
+    counts as the club's on its partner dashboard.
+  -->
+  <section id="webfpv" class="webfpv" aria-labelledby="webfpvHeading">
+    <div class="container">
+      <div class="webfpv-grid">
+        <div class="webfpv-copy fade-in">
+          <p class="webfpv-kicker">Official club partner</p>
+          <div class="webfpv-lockup">
+            <img src="./assets/sponsors/champs/on-dark/wcmrc-club-logo.png" width="600" height="220"
+              alt="West Coast Multirotor Club" />
+            <span class="webfpv-x" aria-hidden="true">&times;</span>
+            <img src="./assets/webfpv/webfpv-wordmark.png" width="929" height="218" alt="WebFPV" />
+          </div>
+          <h2 id="webfpvHeading">Fly the State Champs track before race day</h2>
+          <p class="webfpv-lede">WCMRC is the official club partner of WebFPV, the free FPV drone racing simulator
+            that runs in your browser. The 2026 FlyIQ WA State Championships track is on it now, so you can learn
+            the lines before 17 October.</p>
+          <ol class="webfpv-steps">
+            <li><b aria-hidden="true">01</b>
+              <p><strong>Open the track.</strong> It opens on Tracks and Times, WebFPV's board of tracks and lap
+                times.</p>
+            </li>
+            <li><b aria-hidden="true">02</b>
+              <p><strong>Press Fly this track.</strong> Plug in a radio or a game controller. No install, no
+                account.</p>
+            </li>
+            <li><b aria-hidden="true">03</b>
+              <p><strong>Post a lap.</strong> Your time goes on the board under your name.</p>
+            </li>
+          </ol>
+          <div class="webfpv-cta">
+            <a class="btn btn-fly" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
+              target="_blank" rel="noopener">Fly the champs track <i class="fas fa-arrow-up-right-from-square"
+                aria-hidden="true"></i><span class="visually-hidden"> on WebFPV, opens in a new tab</span></a>
+            <a class="btn btn-outline-light" href="https://webfpv.org/?utm_source=wcmrc" target="_blank"
+              rel="noopener">About WebFPV<span class="visually-hidden">, opens in a new tab</span></a>
+          </div>
+        </div>
+
+        <figure class="webfpv-card fade-in">
+          <a class="webfpv-card-media" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
+            target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+            <img src="./assets/webfpv/champs-track-card.jpg" width="1200" height="630" loading="lazy"
+              decoding="async" alt="" />
+          </a>
+          <figcaption>
+            <p class="webfpv-card-title">WA State Champs 2026</p>
+            <p class="webfpv-card-by">Built by club pilot DukeGod (Terry)</p>
+            <dl class="webfpv-card-facts">
+              <div>
+                <dt>Gates</dt>
+                <dd>38</dd>
+              </div>
+              <div>
+                <dt>Field</dt>
+                <dd>70 &times; 50 m</dd>
+              </div>
+              <div>
+                <dt>Flown on</dt>
+                <dd>Five inch</dd>
+              </div>
+              <div>
+                <dt>Cost</dt>
+                <dd>Free</dd>
+              </div>
+            </dl>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -2329,6 +2414,11 @@
                 <img src="./assets/sponsors/torvol.png" alt="Torvol">
               </a>
             </div>
+            <div class="sponsor-item">
+              <a href="https://webfpv.org/?utm_source=wcmrc" target="_blank" rel="noopener">
+                <img src="./assets/webfpv/webfpv-wordmark.png" alt="WebFPV">
+              </a>
+            </div>
 
           </div>
         </div>
@@ -2541,7 +2631,6 @@
     </div>
   </footer>
 
-  <script src="./champs-quad.js"></script>
   <script src="./script.js"></script>
   <script src="./champs-hero.js"></script>
   <!-- Audio elements for card sounds -->

@@ -302,13 +302,16 @@ header.is-over-hero:has(.nav-links.active) {
 /* =====================================================================
    State Championships hero
    ---------------------------------------------------------------------
-   The 2026 flyer, rebuilt as a scroll stage. #hero is taller than the
-   viewport; .champs-pin sticks to the top while the quad flies in, then
-   the whole thing releases into the light supporter band and the page.
+   The 2026 flyer. #hero is one viewport tall and always .is-static: there
+   is no scroll stage left, so nothing pins and nothing flies in. The State
+   Champs track plays in the slot the layout reserves for it, and the hero
+   hands over to the light supporter band and the page. The stage rules
+   below are what it was built on; .is-static overrides them.
    ===================================================================== */
 
 .champs {
-    /* One viewport of stage plus the travel the fly-in is choreographed over. */
+    /* From the scroll stage: one viewport plus this travel. .is-static, which
+       the markup always carries now, takes the travel back off. */
     --champs-travel: 82vh;
     --champs-navy: #0b1620;
     --champs-navy-lift: #0d2137;
@@ -325,8 +328,8 @@ header.is-over-hero:has(.nav-links.active) {
     isolation: isolate;
 }
 
-/* Without the stage (no sticky support, reduced motion, short screens) the hero
-   collapses to a single, static, still-correct viewport. */
+/* The hero's only mode now: a single, static viewport. The markup carries the
+   class, so no script has to decide it and the first paint is already right. */
 .champs.is-static {
     min-height: 100svh;
 }
@@ -373,7 +376,7 @@ header {
 
 /* --- ground ----------------------------------------------------------- */
 
-/* The flyer's navy field: a deep base, a blue bloom behind the quad, and a
+/* The flyer's navy field: a deep base, a blue bloom behind the track, and a
    faint diagonal streak field for the sense of speed. */
 .champs-sky {
     position: absolute;
@@ -386,9 +389,9 @@ header {
 }
 
 /*
-   The blue bloom the quad flies out of. It is a fixed-size gradient moved with a
-   transform rather than a repainted background-position, so tracking the quad
-   every frame costs a composite and nothing else.
+   The blue bloom behind the track. It is a fixed-size gradient, and nothing moves
+   it any more: .is-static places it (see the track rules below). The transform and
+   will-change are left from when the quad's flight dragged it about every frame.
 */
 .champs-bloom {
     position: absolute;
@@ -408,7 +411,7 @@ header {
     transition: none;
 }
 
-/* Speed streaks. They lift while the quad is still travelling and settle once it lands. */
+/* Speed streaks, at a steady opacity now that nothing is travelling. */
 .champs-streaks {
     position: absolute;
     inset: -20%;
@@ -441,40 +444,6 @@ header {
     will-change: transform;
 }
 
-.champs-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-    transition: none;
-}
-
-/*
-   The still stands in for the canvas only when WebGL is off the table. It is a
-   background-image rather than an <img> so browsers never fetch it on the common
-   path — a display:none <img> is still downloaded.
-*/
-.champs-canvas-fallback {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    left: var(--champs-fallback-x, 70%);
-    top: var(--champs-fallback-y, 46%);
-    width: var(--champs-fallback-w, 42%);
-    aspect-ratio: 900 / 850;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    background: url('./assets/champs-quad-hero.png') center / contain no-repeat;
-    filter: drop-shadow(0 26px 60px rgba(2, 8, 16, 0.55));
-}
-
-.champs.no-quad .champs-canvas-fallback {
-    display: block;
-}
-
 /* --- layout ----------------------------------------------------------- */
 
 /*
@@ -483,14 +452,15 @@ header {
 */
 .champs-layout {
     position: relative;
-    z-index: 2;
+    /* No z-index, on purpose: it would make a stacking context, and the track
+       video's mix-blend-mode would blend against nothing. See .champs-track-video. */
     margin-inline: auto;
     height: 100%;
     display: grid;
     /*
-       The quad's row is the only elastic one. Whatever is left after the type has
-       taken what it needs goes to the quad, so the composition can shrink onto a
-       small phone without ever overflowing the viewport it is pinned to.
+       The track's row is the only elastic one. Whatever is left after the type has
+       taken what it needs goes to the track, so the composition can shrink onto a
+       small phone before the hero has to grow past one viewport.
     */
     align-content: stretch;
     gap: clamp(0.4rem, 1.3vh, 1.1rem);
@@ -512,7 +482,7 @@ header {
 
 /*
    The headline is sized against this column, not the viewport, so "CHAMPIONSHIPS"
-   can never grow past the space beside the quad however wide the window gets.
+   can never grow past the space beside the track however wide the window gets.
 */
 .champs-copy {
     grid-area: copy;
@@ -599,16 +569,218 @@ a.champs-plaque:hover {
     object-fit: contain;
 }
 
-/* --- the slot the quad flies into ------------------------------------- */
+/* --- the State Champs track, in the slot the quad used to fly into ------ */
 
 /*
-   The renderer measures this box and lands the quad inside it, so the flight
-   path is defined by the layout rather than by per-breakpoint magic numbers.
+   No scroll stage any more: the hero is always .is-static, one viewport tall,
+   and grows rather than clipping if the type needs the room. The min-height on
+   the grid is what lets the track's row take whatever the type leaves.
 */
-.champs-quad-slot {
+.champs.is-static .champs-layout {
+    height: auto;
+    min-height: 100svh;
+}
+
+/* The bloom used to follow the quad. It sits behind the track now. */
+.champs.is-static .champs-bloom {
+    left: 74%;
+    top: 56%;
+}
+
+/*
+   The track's area is sized by the grid, and the frame inside it is the largest
+   square that fits: container units read the area's own width and height, so the
+   square is right at every viewport without a breakpoint per shape.
+*/
+.champs-track {
     grid-area: quad;
-    min-height: clamp(96px, 22vh, 300px);
+    position: relative;
+    margin: 0;
+    min-height: clamp(220px, 40vh, 620px);
+    container-type: size;
+}
+
+.champs-track-frame {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    /* Engines without container units get a square sized off the viewport. */
+    width: min(100%, 60vh);
+    aspect-ratio: 1;
+    width: min(100cqw, 100cqh);
+    height: min(100cqw, 100cqh);
+}
+
+.champs-track-media {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+/*
+   The render's ground is near black (#0e1a10) and the hero is navy. `lighten`
+   keeps the brighter of the two per channel, so the ground drops out and the
+   field, the gates and the ribbon stay as rendered. The mask feathers the
+   square's edges, so no box edge shows where the field runs off the frame.
+   This only works because .champs-layout no longer sets a z-index: a stacking
+   context there would hand the blend an empty backdrop instead of the sky.
+*/
+.champs-track-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: lighten;
+    -webkit-mask-image:
+        linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%),
+        linear-gradient(180deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+        linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%),
+        linear-gradient(180deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+    mask-composite: intersect;
+}
+
+/* The tag sits in the render's empty corner, top left, above the field's edge. */
+.champs-track-tag {
+    position: absolute;
+    left: 4%;
+    top: 4.5%;
+    max-width: 42%;
+    display: grid;
+    justify-items: start;
+    gap: 0.9cqw;
     pointer-events: none;
+    text-shadow: 0 2px 12px rgba(4, 12, 22, 0.7);
+}
+
+.champs-track-new {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    font-size: max(10px, 1.9cqw);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #e8a8b8;
+    line-height: 1;
+}
+
+.champs-track-tag img {
+    width: 150px;
+    width: 27cqw;
+    height: auto;
+    margin-left: -0.6cqw;
+}
+
+.champs-track-title {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    font-size: max(13px, 3.3cqw);
+    line-height: 1.08;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+/* The call to action takes the other empty corner, bottom right. */
+.champs-track-go {
+    position: absolute;
+    right: 3.5%;
+    bottom: 4%;
+    padding: 12px 18px;
+    padding: max(9px, 1.7cqw) max(14px, 3cqw);
+    font-size: 12px;
+    font-size: max(11px, 1.95cqw);
+    box-shadow: 0 10px 30px rgba(2, 8, 16, 0.45);
+}
+
+/*
+   Mint, because the board's own Fly this track button is mint: the click and the
+   page it lands on are the same colour. Only ever on a link to WebFPV.
+*/
+.btn-fly {
+    background: #7dffb4;
+    color: #0b1116;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+.btn-fly::before {
+    background: #b6ffd5;
+}
+
+.btn-fly i {
+    font-size: 0.82em;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/*
+   Below the two column breakpoint the frame is driven by the column's width, and
+   a 4:3 crop of the square keeps the field and both empty corners while giving
+   the type back a quarter of the height.
+*/
+@media (max-width: 819px) {
+    .champs.is-static .champs-bloom {
+        left: 50%;
+        top: 34%;
+    }
+
+    .champs-track {
+        container-type: inline-size;
+        min-height: 0;
+        /* Room for the button, which hangs half off the frame's bottom edge. */
+        margin-bottom: 18px;
+    }
+
+    .champs-track-frame {
+        position: relative;
+        inset: auto;
+        width: min(100%, 560px);
+        height: auto;
+        margin: 0 auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .champs-track-video {
+        object-position: 50% 40%;
+    }
+
+    .champs-track-tag {
+        top: 5%;
+        left: 3%;
+        gap: 1.2cqw;
+    }
+
+    .champs-track-tag img {
+        width: 22cqw;
+    }
+
+    .champs-track-title {
+        font-size: max(12px, 3.5cqw);
+    }
+
+    /* The crop has no empty corner at the bottom right, and the FlyIQ mark sits
+       there, so the button hangs off the feathered bottom edge instead. */
+    .champs-track-go {
+        right: 2%;
+        bottom: -16px;
+        padding: 9px 14px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+    }
 }
 
 /* --- headline --------------------------------------------------------- */
@@ -855,11 +1027,6 @@ a.champs-plaque:hover {
         align-self: start;
     }
 
-    .champs-quad-slot {
-        min-height: clamp(200px, 46vh, 620px);
-        align-self: stretch;
-    }
-
     .champs-copy {
         margin-top: clamp(6px, 2.5vh, 34px);
     }
@@ -898,7 +1065,7 @@ a.champs-plaque:hover {
     }
 }
 
-/* Beside the quad, the column is narrow enough to let the ceilings go up. */
+/* Beside the track, the column is narrow enough to let the ceilings go up. */
 @media (min-width: 820px) {
     @container champscopy (min-width: 300px) {
         .champs-year {
@@ -915,12 +1082,8 @@ a.champs-plaque:hover {
     }
 }
 
-/* Portrait tablets: single column, but with room for a proper quad. */
+/* Portrait tablets: single column, with the plaques and the type given a little more room. */
 @media (min-width: 600px) and (max-width: 819px) {
-    .champs-quad-slot {
-        min-height: clamp(190px, 27vh, 340px);
-    }
-
     .champs-plaque img {
         height: clamp(30px, 4vh, 44px);
     }
@@ -941,11 +1104,10 @@ a.champs-plaque:hover {
 }
 
 /*
-   Short viewports. A pinned stage is worst exactly where there is least room, so
-   below this height the hero stops pinning, becomes an ordinary section that is at
-   least one viewport tall, and grows rather than clipping if the type needs it.
-   The fly-in gives way to the landed composition; champs-hero.js reads the pin's
-   computed position and switches itself over.
+   Short viewports. There is least room here, so the supporter band shrinks, the
+   padding tightens and the strapline goes, and the layout grows rather than
+   clipping if the type needs the height. The unpinning in this block was for the
+   old scroll stage; .is-static does that everywhere now.
 */
 @media (max-height: 680px) {
     .champs {
@@ -966,10 +1128,6 @@ a.champs-plaque:hover {
         padding-bottom: calc(var(--champs-band) + 24px);
     }
 
-    .champs-quad-slot {
-        min-height: clamp(110px, 24vh, 200px);
-    }
-
     .champs-numeral {
         font-size: clamp(7rem, 30vh, 16rem);
     }
@@ -987,10 +1145,6 @@ a.champs-plaque:hover {
 @media (max-height: 560px) and (max-width: 819px) {
     .champs-eyebrow {
         display: none;
-    }
-
-    .champs-quad-slot {
-        min-height: 96px;
     }
 }
 
@@ -1055,10 +1209,9 @@ body.champs-in-view .back-to-top {
     bottom: calc(var(--champs-band) + 22px);
 }
 
-/* Print: the flyer as a flat page, no stage, no canvas. */
+/* Print: the flyer as a flat page, no stage. */
 @media print {
 
-    .champs-canvas,
     .champs-sky,
     .scroll-indicator {
         display: none;
@@ -1071,6 +1224,233 @@ body.champs-in-view .back-to-top {
         position: static;
         background: #fff;
         color: #000;
+    }
+}
+
+/* =====================================================================
+   WebFPV partnership band
+   ---------------------------------------------------------------------
+   Race navy like the jersey band, with one sakura beat for WebFPV (the
+   kicker, the heading's bar and the card's labels) so the partner's colour
+   is present without the section turning into their page.
+   ===================================================================== */
+
+.webfpv {
+    background: #0b1620;
+    color: #dbe7f0;
+    padding: clamp(64px, 10vh, 116px) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.webfpv::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(farthest-corner at 85% 10%, rgba(232, 168, 184, 0.10) 0%, rgba(232, 168, 184, 0.02) 36%, rgba(232, 168, 184, 0) 70%),
+        radial-gradient(farthest-corner at 10% 100%, rgba(41, 167, 223, 0.14) 0%, rgba(41, 167, 223, 0.03) 34%, rgba(41, 167, 223, 0) 70%);
+    pointer-events: none;
+}
+
+.webfpv-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+}
+
+.webfpv-kicker {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #e8a8b8;
+    margin-bottom: 14px;
+}
+
+.webfpv-lockup {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.webfpv-lockup img:first-child {
+    height: 50px;
+    width: auto;
+}
+
+.webfpv-lockup img:last-child {
+    height: 40px;
+    width: auto;
+}
+
+.webfpv-x {
+    color: rgba(219, 233, 245, 0.45);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.webfpv h2 {
+    color: #fff;
+    text-align: left;
+    font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.webfpv h2::after {
+    left: 0;
+    transform: none;
+    background: #e8a8b8;
+}
+
+.webfpv-lede {
+    color: rgba(203, 222, 236, 0.82);
+    font-size: 1.04rem;
+    line-height: 1.75;
+    margin-bottom: 26px;
+    max-width: 52ch;
+}
+
+.webfpv-steps {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    margin: 0 0 32px;
+    padding: 0;
+}
+
+.webfpv-steps li {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: baseline;
+    padding: 14px 0 0;
+    border-top: 1px solid rgba(124, 198, 238, 0.14);
+}
+
+.webfpv-steps b {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: #7cc6ee;
+}
+
+.webfpv-steps p {
+    margin: 0;
+    color: rgba(203, 222, 236, 0.78);
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
+.webfpv-steps strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.webfpv-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.webfpv-card {
+    margin: 0;
+    background: #0d2137;
+    border: 1px solid rgba(124, 198, 238, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(2, 8, 16, 0.5);
+}
+
+.webfpv-card-media {
+    display: block;
+}
+
+.webfpv-card-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.webfpv-card figcaption {
+    padding: 20px 24px 22px;
+}
+
+.webfpv-card-title {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.1;
+    margin: 0 0 4px;
+}
+
+.webfpv-card-by {
+    margin: 0 0 16px;
+    color: rgba(203, 222, 236, 0.7);
+    font-size: 0.9rem;
+}
+
+.webfpv-card-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid rgba(124, 198, 238, 0.14);
+}
+
+.webfpv-card-facts dt {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #e8a8b8;
+    margin-bottom: 2px;
+}
+
+.webfpv-card-facts dd {
+    margin: 0;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.98rem;
+}
+
+/* One column: the card goes first, so a phone sees the track before the words. */
+@media (max-width: 900px) {
+    .webfpv-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .webfpv-card {
+        order: -1;
+    }
+}
+
+@media (max-width: 460px) {
+    .webfpv-lockup img:first-child {
+        height: 40px;
+    }
+
+    .webfpv-lockup img:last-child {
+        height: 30px;
+    }
+
+    .webfpv-card-facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .webfpv-cta .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
     }
 }
 
