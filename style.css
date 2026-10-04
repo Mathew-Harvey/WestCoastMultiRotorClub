@@ -1853,7 +1853,9 @@ body.champs-in-view .back-to-top {
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     height: 450px;
-    background: url('./assets/club1.jpg') center/cover no-repeat;
+    /* Cropped to the members. The 75% keeps the whole group in frame when the box is
+       a short wide strip (tablets); on the desktop box there is no height to spare. */
+    background: url('./assets/club-group.jpg') center 75% / cover no-repeat;
     position: relative;
     transform: perspective(1000px) rotateY(-5deg);
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
