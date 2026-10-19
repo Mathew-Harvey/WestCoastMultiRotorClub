@@ -1275,6 +1275,30 @@ document.addEventListener('DOMContentLoaded', function () {
             date: new Date(2026, 9, 17, 8, 0), // October 17-18, 2026
             link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
             image: "./assets/drone5.jpg"
+        },
+        {
+            title: "FlyIQ Summer Series Round 1",
+            date: new Date(2026, 10, 15, 8, 0), // November 15, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "FlyIQ Summer Series Round 2",
+            date: new Date(2026, 10, 29, 8, 0), // November 29, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
+        },
+        {
+            title: "FlyIQ Summer Series Round 3",
+            date: new Date(2026, 11, 13, 8, 0), // December 13, 2026
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone6.jpg"
+        },
+        {
+            title: "FlyIQ Summer Series Round 4",
+            date: new Date(2027, 0, 17, 8, 0), // January 17, 2027
+            link: "https://www.facebook.com/groups/westcoastmultirotorclub/events", // placeholder - to be updated with specific event link
+            image: "./assets/drone5.jpg"
         }
     ];
 
@@ -2029,6 +2053,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // All others will be historic videos
     // ============================================================================
     const SERIES_LABELS = {
+        'state-champs-2026': 'WA State Championships 2026',
         '2026-winter': '2026 Winter Series',
         '2026-summer': '2026 Summer Series',
         '2025-summer': '2025/26 Summer Series',
@@ -2038,15 +2063,17 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const SERIES_FILTER_LABELS = {
+        'state-champs-2026': 'State Champs 2026',
         '2026-winter': '2026 Winter',
         '2026-summer': '2026 Summer',
         '2025-summer': '2025/26 Summer',
-        'state-champs-2025': 'State Champs',
+        'state-champs-2025': 'State Champs 2025',
         '2025-winter': '2025 Winter',
         '2024-summer': '2024 Summer'
     };
 
     const SERIES_ORDER = [
+        'state-champs-2026',
         '2026-winter',
         '2026-summer',
         '2025-summer',
@@ -2056,6 +2083,27 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     const videoDatabase = [
+        {
+            id: 'gV03Q2zDAzE',
+            title: 'FlyIQ 2026 WA State Championship Open Class',
+            date: 'October 18, 2026',
+            description: 'Day 2 of the 2026 FlyIQ WA State Championships: Open Class, live racing.',
+            series: 'state-champs-2026'
+        },
+        {
+            id: '8qChGK3KE2E',
+            title: 'FlyIQ 2026 WA State Championship Whoops',
+            date: 'October 17, 2026',
+            description: 'Day 1 of the 2026 FlyIQ WA State Championships: whoop racing.',
+            series: 'state-champs-2026'
+        },
+        {
+            id: 'VVTw7f4SkzM',
+            title: 'FlyIQ 2026 WA State Championship Qualifiers',
+            date: 'October 17, 2026',
+            description: 'Day 1 of the 2026 FlyIQ WA State Championships: qualifying.',
+            series: 'state-champs-2026'
+        },
         {
             id: '56Au2xq02PQ',
             title: 'Global Drone Solutions 2026 Winter Grand Final Highlights',
@@ -3723,7 +3771,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 get albums() { return albums; },
                 get activeAlbum() { return activeAlbum; },
                 selectAlbum,
-                refresh: () => selectAlbum(activeAlbum.id)
+                refresh: () => selectAlbum(activeAlbum.id),
+                // Open one photo in the viewer, inside its own album, so the arrows
+                // carry on through that album. Used by the State Champs tiles up top.
+                openPhoto(albumId, file) {
+                    const album = albums.find(candidate => candidate.id === albumId);
+                    const index = album ? album.photos.findIndex(photo => photo.file === file) : -1;
+                    if (index < 0) return false;
+                    if (activeAlbum !== album) selectAlbum(albumId);
+                    openLightbox(index);
+                    return true;
+                }
             };
         } catch (error) {
             showFallback();

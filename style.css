@@ -300,419 +300,16 @@ header.is-over-hero:has(.nav-links.active) {
 }
 
 /* =====================================================================
-   State Championships hero
+   Hero: the 2026 State Championships wrap-up
    ---------------------------------------------------------------------
-   The 2026 flyer. #hero is one viewport tall and always .is-static: there
-   is no scroll stage left, so nothing pins and nothing flies in. The State
-   Champs track plays in the slot the layout reserves for it, and the hero
-   hands over to the light supporter band and the page. The stage rules
-   below are what it was built on; .is-static overrides them.
+   The group shot runs full width with nothing laid over the faces, and the
+   words sit on race navy beneath it. That navy carries on through the
+   replays, so the top of the page is one dark ground down to the sponsors'
+   thank-you.
    ===================================================================== */
-
-.champs {
-    /* From the scroll stage: one viewport plus this travel. .is-static, which
-       the markup always carries now, takes the travel back off. */
-    --champs-travel: 82vh;
-    --champs-navy: #0b1620;
-    --champs-navy-lift: #0d2137;
-    --champs-blue: #29a7df;
-    --champs-blue-hi: #7cc6ee;
-    --champs-ink: #f2f4f7;
-    --champs-band: clamp(58px, 8.5vh, 96px);
-
-    position: relative;
-    min-height: calc(100svh + var(--champs-travel));
-    padding: 0;
-    background: var(--champs-navy);
-    color: #fff;
-    isolation: isolate;
-}
-
-/* The hero's only mode now: a single, static viewport. The markup carries the
-   class, so no script has to decide it and the first paint is already right. */
-.champs.is-static {
-    min-height: 100svh;
-}
-
-/*
-   The global `* { transition: all .3s }` rule would smear every per-frame write in
-   this section through 300ms of easing, so the whole hero opts out and then hands
-   back only the transitions that are actually wanted.
-*/
-.champs,
-.champs *,
-.champs *::before,
-.champs *::after {
-    transition: none;
-}
-
-.champs a,
-.champs .btn,
-.champs .btn::before {
-    transition: background-color var(--animation-speed) ease, color var(--animation-speed) ease,
-        border-color var(--animation-speed) ease, box-shadow var(--animation-speed) ease,
-        opacity var(--animation-speed) ease, transform var(--animation-speed) ease,
-        width var(--animation-speed) ease;
-}
 
 header {
     transition: background-color var(--animation-speed) ease, box-shadow var(--animation-speed) ease;
-}
-
-.champs-pin {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    min-height: 30rem;
-    overflow: hidden;
-    display: block;
-}
-
-.champs.is-static .champs-pin {
-    position: relative;
-    height: auto;
-    min-height: 100svh;
-}
-
-/* --- ground ----------------------------------------------------------- */
-
-/* The flyer's navy field: a deep base, a blue bloom behind the track, and a
-   faint diagonal streak field for the sense of speed. */
-.champs-sky {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-    background: linear-gradient(168deg, #0e2340 0%, #0a1729 46%, #070e18 100%);
-    transition: none;
-}
-
-/*
-   The blue bloom behind the track. It is a fixed-size gradient, and nothing moves
-   it any more: .is-static places it (see the track rules below). The transform and
-   will-change are left from when the quad's flight dragged it about every frame.
-*/
-.champs-bloom {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 118vmax;
-    height: 118vmax;
-    margin: -59vmax 0 0 -59vmax;
-    background: radial-gradient(closest-side,
-            rgba(46, 142, 224, 0.50) 0%,
-            rgba(28, 92, 158, 0.26) 34%,
-            rgba(16, 46, 84, 0.09) 58%,
-            rgba(16, 46, 84, 0.02) 80%,
-            rgba(16, 46, 84, 0) 100%);
-    transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
-    transition: none;
-}
-
-/* Speed streaks, at a steady opacity now that nothing is travelling. */
-.champs-streaks {
-    position: absolute;
-    inset: -20%;
-    background-image: repeating-linear-gradient(102deg,
-            rgba(124, 198, 238, 0.06) 0px,
-            rgba(124, 198, 238, 0.06) 1px,
-            rgba(124, 198, 238, 0) 1px,
-            rgba(124, 198, 238, 0) 84px);
-    opacity: 0.85;
-    transform: translate3d(0, 0, 0);
-    will-change: opacity;
-    transition: none;
-}
-
-/* The oversized ghost year, bleeding off the left edge exactly as on the flyer. */
-.champs-numeral {
-    position: absolute;
-    z-index: 0;
-    left: clamp(-0.16em, -6vw, -0.05em);
-    top: calc(var(--header-height) - 0.14em);
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: clamp(11rem, 34vh, 30rem);
-    line-height: 0.78;
-    letter-spacing: -0.04em;
-    color: rgba(126, 180, 240, 0.12);
-    pointer-events: none;
-    user-select: none;
-    transition: none;
-    will-change: transform;
-}
-
-/* --- layout ----------------------------------------------------------- */
-
-/*
-   Deliberately not .container: the site's responsive `.container { padding: 0 20px }`
-   shorthand would reset this grid's vertical padding out from under it.
-*/
-.champs-layout {
-    position: relative;
-    /* No z-index, on purpose: it would make a stacking context, and the track
-       video's mix-blend-mode would blend against nothing. See .champs-track-video. */
-    margin-inline: auto;
-    height: 100%;
-    display: grid;
-    /*
-       The track's row is the only elastic one. Whatever is left after the type has
-       taken what it needs goes to the track, so the composition can shrink onto a
-       small phone before the hero has to grow past one viewport.
-    */
-    align-content: stretch;
-    gap: clamp(0.4rem, 1.3vh, 1.1rem);
-    padding-top: calc(var(--header-height) + clamp(6px, 1.6vh, 24px));
-    padding-bottom: calc(var(--champs-band) + clamp(34px, 5.5vh, 64px));
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    grid-template-areas:
-        'eyebrow'
-        'plaques'
-        'quad'
-        'copy';
-    /* Wider than the site container: the flyer is an edge-to-edge composition. */
-    width: 100%;
-    max-width: 1520px;
-    padding-left: clamp(20px, 3.4vw, 56px);
-    padding-right: clamp(20px, 3.4vw, 56px);
-}
-
-/*
-   The headline is sized against this column, not the viewport, so "CHAMPIONSHIPS"
-   can never grow past the space beside the track however wide the window gets.
-*/
-.champs-copy {
-    grid-area: copy;
-    display: grid;
-    align-content: center;
-    gap: clamp(0.5rem, 1.4vh, 1.1rem);
-    min-width: 0;
-}
-
-@supports (container-type: inline-size) {
-    .champs-copy {
-        container-type: inline-size;
-        container-name: champscopy;
-    }
-}
-
-.champs-eyebrow {
-    grid-area: eyebrow;
-    margin: 0;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: clamp(0.6rem, 1.05vw, 0.76rem);
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--champs-blue-hi);
-    display: flex;
-    align-items: center;
-    gap: 0.9em;
-    line-height: 1.3;
-}
-
-.champs-eyebrow i {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: currentColor;
-    flex: none;
-    opacity: 0.75;
-}
-
-/* --- presented by / gold sponsor plaques ------------------------------- */
-
-.champs-plaques {
-    grid-area: plaques;
-    display: flex;
-    flex-wrap: wrap;
-    gap: clamp(8px, 1.2vw, 14px);
-    align-items: stretch;
-}
-
-.champs-plaque {
-    background: #fff;
-    border-radius: 10px;
-    padding: clamp(6px, 1vh, 10px) clamp(10px, 1.4vw, 18px) clamp(7px, 1.1vh, 12px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-    flex: 0 1 auto;
-    min-width: 0;
-}
-
-a.champs-plaque:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
-}
-
-.champs-plaque-label {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-size: clamp(0.44rem, 1vw, 0.56rem);
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: #67727e;
-    line-height: 1;
-}
-
-.champs-plaque img {
-    width: auto;
-    height: clamp(24px, 4.4vh, 42px);
-    max-width: min(42vw, 220px);
-    object-fit: contain;
-}
-
-/* --- the State Champs track, in the slot the quad used to fly into ------ */
-
-/*
-   No scroll stage any more: the hero is always .is-static, one viewport tall,
-   and grows rather than clipping if the type needs the room. The min-height on
-   the grid is what lets the track's row take whatever the type leaves.
-*/
-.champs.is-static .champs-layout {
-    height: auto;
-    min-height: 100svh;
-}
-
-/* The bloom used to follow the quad. It sits behind the track now. */
-.champs.is-static .champs-bloom {
-    left: 74%;
-    top: 56%;
-}
-
-/*
-   The track's area is sized by the grid, and the frame inside it is the largest
-   square that fits: container units read the area's own width and height, so the
-   square is right at every viewport without a breakpoint per shape.
-*/
-.champs-track {
-    grid-area: quad;
-    position: relative;
-    margin: 0;
-    min-height: clamp(220px, 40vh, 620px);
-    container-type: size;
-}
-
-.champs-track-frame {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    /* Engines without container units get a square sized off the viewport. */
-    width: min(100%, 60vh);
-    aspect-ratio: 1;
-    width: min(100cqw, 100cqh);
-    height: min(100cqw, 100cqh);
-}
-
-.champs-track-media {
-    position: absolute;
-    inset: 0;
-    display: block;
-}
-
-/*
-   The render's ground is near black (#0e1a10) and the hero is navy. `lighten`
-   keeps the brighter of the two per channel, so the ground drops out and the
-   field, the gates and the ribbon stay as rendered. The mask feathers the
-   square's edges, so no box edge shows where the field runs off the frame.
-   This only works because .champs-layout no longer sets a z-index: a stacking
-   context there would hand the blend an empty backdrop instead of the sky.
-*/
-.champs-track-video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    mix-blend-mode: lighten;
-    -webkit-mask-image:
-        linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%),
-        linear-gradient(180deg, transparent 0, #000 9%, #000 91%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-        linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%),
-        linear-gradient(180deg, transparent 0, #000 9%, #000 91%, transparent 100%);
-    mask-composite: intersect;
-}
-
-/* The tag sits in the render's empty corner, top left, above the field's edge. */
-.champs-track-tag {
-    position: absolute;
-    left: 4%;
-    top: 4.5%;
-    max-width: 42%;
-    display: grid;
-    justify-items: start;
-    gap: 0.9cqw;
-    pointer-events: none;
-    text-shadow: 0 2px 12px rgba(4, 12, 22, 0.7);
-}
-
-.champs-track-new {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    font-size: max(10px, 1.9cqw);
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: #e8a8b8;
-    line-height: 1;
-}
-
-.champs-track-tag img {
-    width: 150px;
-    width: 27cqw;
-    height: auto;
-    margin-left: -0.6cqw;
-}
-
-.champs-track-title {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    font-size: max(13px, 3.3cqw);
-    line-height: 1.08;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #fff;
-}
-
-/* The call to action takes the other empty corner, bottom right. */
-.champs-track-go {
-    position: absolute;
-    right: 3.5%;
-    bottom: 4%;
-    padding: 12px 18px;
-    padding: max(9px, 1.7cqw) max(14px, 3cqw);
-    font-size: 12px;
-    font-size: max(11px, 1.95cqw);
-    box-shadow: 0 10px 30px rgba(2, 8, 16, 0.45);
-}
-
-/*
-   Mint, because the board's own Fly this track button is mint: the click and the
-   page it lands on are the same colour. Only ever on a link to WebFPV.
-*/
-.btn-fly {
-    background: #7dffb4;
-    color: #0b1116;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6em;
-}
-
-.btn-fly::before {
-    background: #b6ffd5;
-}
-
-.btn-fly i {
-    font-size: 0.82em;
 }
 
 .visually-hidden {
@@ -727,185 +324,119 @@ a.champs-plaque:hover {
     border: 0;
 }
 
-/*
-   Below the two column breakpoint the frame is driven by the column's width, and
-   a 4:3 crop of the square keeps the field and both empty corners while giving
-   the type back a quarter of the height.
-*/
-@media (max-width: 819px) {
-    .champs.is-static .champs-bloom {
-        left: 50%;
-        top: 34%;
-    }
-
-    .champs-track {
-        container-type: inline-size;
-        min-height: 0;
-        /* Room for the button, which hangs half off the frame's bottom edge. */
-        margin-bottom: 18px;
-    }
-
-    .champs-track-frame {
-        position: relative;
-        inset: auto;
-        width: min(100%, 560px);
-        height: auto;
-        margin: 0 auto;
-        aspect-ratio: 4 / 3;
-    }
-
-    .champs-track-video {
-        object-position: 50% 40%;
-    }
-
-    .champs-track-tag {
-        top: 5%;
-        left: 3%;
-        gap: 1.2cqw;
-    }
-
-    .champs-track-tag img {
-        width: 22cqw;
-    }
-
-    .champs-track-title {
-        font-size: max(12px, 3.5cqw);
-    }
-
-    /* The crop has no empty corner at the bottom right, and the FlyIQ mark sits
-       there, so the button hangs off the feathered bottom edge instead. */
-    .champs-track-go {
-        right: 2%;
-        bottom: -16px;
-        padding: 9px 14px;
-        font-size: 11px;
-        letter-spacing: 0.08em;
-    }
+/* The page-wide `* { transition: all }` would ease every resize of these photos. */
+.wrap-hero img,
+.replays img,
+.champs-photos img,
+.webfpv img {
+    transition: transform 0.5s ease;
 }
 
-/* --- headline --------------------------------------------------------- */
-
-.champs-title {
-    margin: 0;
-    display: grid;
-    gap: 0;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    text-shadow: 0 6px 30px rgba(4, 12, 22, 0.55);
+.wrap-hero {
+    padding: 0;
+    background: #0b1620;
+    color: #dbe7f0;
 }
 
-.champs-year {
-    font-weight: 700;
-    font-size: clamp(2.7rem, 11.5vw, 5.2rem);
-    line-height: 0.92;
-    letter-spacing: -0.015em;
-    color: #2f7ff0;
-    background: linear-gradient(103deg, #3d8bf7 0%, #29a7df 62%, #7cc6ee 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    width: max-content;
-    max-width: 100%;
-}
-
-.champs-kicker {
-    font-weight: 600;
-    font-size: clamp(0.78rem, 3.1vw, 1.28rem);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #fff;
-    line-height: 1.5;
-}
-
-.champs-headline {
-    font-weight: 700;
-    font-size: clamp(2rem, 8.6vw, 4rem);
-    line-height: 0.98;
-    letter-spacing: 0.004em;
-    text-transform: uppercase;
-    color: #fff;
-}
-
-.champs-headline--alt {
-    color: #a8cdf0;
-}
-
-/* --- detail lines ------------------------------------------------------ */
-
-.champs-meta {
-    display: grid;
-    gap: clamp(0.35rem, 0.9vh, 0.7rem);
-    max-width: 46ch;
-}
-
-.champs-when {
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.35em 0.9em;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: clamp(0.66rem, 1.7vw, 0.86rem);
-    letter-spacing: 0.19em;
-    text-transform: uppercase;
-    color: rgba(232, 242, 250, 0.82);
-    line-height: 1.4;
-}
-
-.champs-when span+span {
+.wrap-hero-photo {
     position: relative;
-    padding-left: 1.15em;
+    margin: 0;
+    height: clamp(320px, 64vh, 760px);
+    overflow: hidden;
+    background: #0d2137;
 }
 
-.champs-when span+span::before {
+.wrap-hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Low enough to keep the whole group and the DIWA gate's lower banner. */
+    object-position: 50% 82%;
+}
+
+/* A little shade under the header, and the grass fading into the navy below. */
+.wrap-hero-photo::after {
     content: '';
     position: absolute;
-    left: 0;
-    top: 50%;
-    width: 3px;
-    height: 3px;
-    margin-top: -1.5px;
-    border-radius: 50%;
-    background: var(--champs-blue);
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 22, 32, 0.3) 0%, rgba(11, 22, 32, 0) 20%,
+            rgba(11, 22, 32, 0) 84%, #0b1620 100%);
+    pointer-events: none;
 }
 
-.champs-lede {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
+.wrap-hero-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: end;
+    padding-top: clamp(16px, 3vh, 36px);
+    padding-bottom: clamp(48px, 8vh, 88px);
+}
+
+.wrap-kicker,
+.band-kicker,
+.wrap-plaque-label,
+.wrap-next-label,
+.replay-tile-day,
+.replays-thanks-label,
+.webfpv-kicker,
+.webfpv-card-label {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: clamp(0.94rem, 2.5vw, 1.24rem);
-    line-height: 1.4;
-    color: #6fbfea;
-    text-shadow: 0 2px 14px rgba(4, 12, 22, 0.5);
-}
-
-/*
-   Prize money, stated rather than tabulated. One sentence, two numbers, no
-   ladder graphic — the full schedule lives in the detail band below.
-*/
-.champs-purse {
+    text-transform: uppercase;
     margin: 0;
-    border-left: 2px solid rgba(41, 167, 223, 0.7);
-    padding-left: clamp(12px, 1.4vw, 18px);
-    font-size: clamp(0.82rem, 2vw, 0.96rem);
-    line-height: 1.6;
-    color: rgba(219, 233, 245, 0.8);
-    font-weight: 400;
-    font-variant-numeric: tabular-nums;
 }
 
-/* --- calls to action --------------------------------------------------- */
+.wrap-kicker {
+    font-size: clamp(0.78rem, 1.4vw, 0.95rem);
+    letter-spacing: 0.24em;
+    color: #7cc6ee;
+    margin-bottom: 12px;
+}
 
-.champs-cta {
+.wrap-title {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(3.2rem, 8vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: #f2f4f7;
+    margin: 0;
+}
+
+.wrap-lede {
+    margin: 18px 0 0;
+    max-width: 38rem;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.65;
+    color: #dbe7f0;
+}
+
+.wrap-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(8px, 1.4vw, 16px);
-    margin-top: clamp(0.2rem, 1vh, 0.6rem);
+    gap: 12px;
+    margin-top: 28px;
 }
 
-.champs-cta .btn {
-    padding: clamp(11px, 1.6vh, 15px) clamp(18px, 3vw, 30px);
-    font-size: clamp(0.72rem, 1.7vw, 0.85rem);
+.wrap-cta .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+/* Navy on the club blue, and a lighter blue on hover, so the label stays legible. */
+.btn-play {
+    background: #29a7df;
+    color: #0b1620;
+}
+
+.btn-play::before {
+    background: #7cc6ee;
+}
+
+.btn-play i {
+    font-size: 0.8em;
 }
 
 .btn-ghost {
@@ -915,331 +446,377 @@ a.champs-plaque:hover {
 }
 
 .btn-ghost:hover {
-    color: var(--champs-navy);
+    color: #0b1620;
 }
 
 .btn-ghost::before {
     background: #fff;
 }
 
-/* --- supporter band ---------------------------------------------------- */
-
-/*
-   The flyer ends on a light supporter strip. Reused here it does two jobs at
-   once: it is the event's sponsor row, and it is the seam that hands the dark
-   hero over to the light page below.
-*/
-.champs-support {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 3;
-    background: var(--champs-ink);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding: clamp(6px, 1vh, 10px) 0 clamp(7px, 1.1vh, 12px);
-    box-shadow: 0 -22px 44px rgba(4, 10, 18, 0.45);
-}
-
-.champs-support-label {
-    margin: 0 0 clamp(3px, 0.5vh, 6px);
-    text-align: center;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-size: 0.56rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--secondary-color);
-    line-height: 1;
-}
-
-.champs-marquee {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-}
-
-.champs-marquee-track {
+.wrap-side {
     display: flex;
-    width: max-content;
-    transition: none;
-    animation: champsMarquee var(--champs-marquee-duration, 54s) linear infinite;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.champs-marquee:hover .champs-marquee-track,
-.champs-marquee:focus-within .champs-marquee-track {
-    animation-play-state: paused;
-}
-
-.champs-marquee-set {
+.wrap-plaque,
+.wrap-next {
     display: flex;
-    align-items: center;
-    gap: clamp(26px, 4.5vw, 58px);
-    padding-right: clamp(26px, 4.5vw, 58px);
-    margin: 0;
-    list-style: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(124, 198, 238, 0.22);
+    background: rgba(13, 33, 55, 0.6);
+    color: #dbe7f0;
 }
 
-.champs-marquee-set li {
-    flex: none;
-    display: flex;
-    align-items: center;
+.wrap-plaque:hover,
+.wrap-next:hover,
+.wrap-plaque:focus-visible,
+.wrap-next:focus-visible {
+    border-color: rgba(124, 198, 238, 0.6);
+    background: #0d2137;
 }
 
-.champs-marquee-set img {
+.wrap-next[hidden] {
+    display: none;
+}
+
+.wrap-plaque img {
+    height: 30px;
     width: auto;
-    height: clamp(21px, 3.1vh, 34px);
-    max-width: 152px;
-    object-fit: contain;
-    opacity: 0.86;
-    transition: none;
+    align-self: flex-start;
 }
 
-@keyframes champsMarquee {
-    from {
-        transform: translate3d(0, 0, 0);
-    }
-
-    to {
-        transform: translate3d(-50%, 0, 0);
-    }
+.wrap-plaque-label,
+.wrap-next-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: #9fb3c4;
 }
 
-/* --- landscape and up: the flyer's two-column composition -------------- */
+.wrap-next-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #f2f4f7;
+}
 
-@media (min-width: 820px) {
-    .champs-layout {
-        grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr);
-        grid-template-rows: auto minmax(0, 1fr);
-        column-gap: clamp(24px, 3.4vw, 60px);
-        align-content: stretch;
-        grid-template-areas:
-            'eyebrow plaques'
-            'copy    quad';
+.wrap-next-date {
+    font-size: 0.9rem;
+    color: #9fb3c4;
+}
+
+@media (max-width: 860px) {
+    .wrap-hero-body {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .champs-eyebrow {
-        align-self: start;
+    .wrap-side {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
-    .champs-plaques {
-        justify-content: flex-end;
-        align-self: start;
-    }
-
-    .champs-copy {
-        margin-top: clamp(6px, 2.5vh, 34px);
-    }
-
-    /* Conservative viewport-based sizes for engines without container queries. */
-    .champs-year {
-        font-size: clamp(3rem, 5.4vw, 4.9rem);
-    }
-
-    .champs-headline {
-        font-size: clamp(2.2rem, 4.05vw, 3.7rem);
-    }
-
-    .champs-kicker {
-        font-size: clamp(0.86rem, 1.25vw, 1.2rem);
+    .wrap-plaque,
+    .wrap-next {
+        flex: 1 1 220px;
     }
 }
 
-/*
-   With container queries the headline is tied to its own column rather than to the
-   viewport: "CHAMPIONSHIPS" is the widest line at roughly 8.4em, so 10.5cqw always
-   leaves it air. The rem ceilings are what stop a full-width stacked column (a
-   portrait tablet) from blowing the type up to poster size.
-*/
-@container champscopy (min-width: 300px) {
-    .champs-year {
-        font-size: min(13.6cqw, 4rem);
+/* Phones: the photo keeps its own shape, below the header, so nobody is cropped out. */
+@media (max-width: 700px) {
+    .wrap-hero {
+        padding-top: var(--header-height);
     }
 
-    .champs-kicker {
-        font-size: min(3.3cqw, 1.1rem);
-    }
-
-    .champs-headline {
-        font-size: min(10.5cqw, 3.1rem);
-    }
-}
-
-/* Beside the track, the column is narrow enough to let the ceilings go up. */
-@media (min-width: 820px) {
-    @container champscopy (min-width: 300px) {
-        .champs-year {
-            font-size: min(15cqw, 6.2rem);
-        }
-
-        .champs-kicker {
-            font-size: min(3.5cqw, 1.42rem);
-        }
-
-        .champs-headline {
-            font-size: min(11.2cqw, 4.7rem);
-        }
-    }
-}
-
-/* Portrait tablets: single column, with the plaques and the type given a little more room. */
-@media (min-width: 600px) and (max-width: 819px) {
-    .champs-plaque img {
-        height: clamp(30px, 4vh, 44px);
-    }
-
-    @container champscopy (min-width: 300px) {
-        .champs-year {
-            font-size: min(13.6cqw, 4.6rem);
-        }
-
-        .champs-kicker {
-            font-size: min(3.3cqw, 1.26rem);
-        }
-
-        .champs-headline {
-            font-size: min(10.5cqw, 3.5rem);
-        }
-    }
-}
-
-/*
-   Short viewports. There is least room here, so the supporter band shrinks, the
-   padding tightens and the strapline goes, and the layout grows rather than
-   clipping if the type needs the height. The unpinning in this block was for the
-   old scroll stage; .is-static does that everywhere now.
-*/
-@media (max-height: 680px) {
-    .champs {
-        min-height: 0;
-        --champs-band: 52px;
-    }
-
-    .champs-pin {
-        position: static;
+    .wrap-hero-photo {
         height: auto;
-        min-height: 100svh;
+        aspect-ratio: 1600 / 1067;
     }
 
-    .champs-layout {
-        height: auto;
-        min-height: 100svh;
-        padding-top: calc(var(--header-height) + 10px);
-        padding-bottom: calc(var(--champs-band) + 24px);
+    .wrap-hero-photo::after {
+        background: linear-gradient(180deg, rgba(11, 22, 32, 0) 80%, #0b1620 100%);
     }
 
-    .champs-numeral {
-        font-size: clamp(7rem, 30vh, 16rem);
-    }
-
-    /* The strapline says the same thing as the detail band twenty pixels below. */
-    .champs-lede {
-        display: none;
-    }
-
-    .scroll-indicator {
-        display: none;
-    }
-}
-
-@media (max-height: 560px) and (max-width: 819px) {
-    .champs-eyebrow {
-        display: none;
-    }
-}
-
-/* Narrow phones: pull the letterspacing in so nothing has to wrap awkwardly. */
-@media (max-width: 460px) {
-    .champs-eyebrow {
-        letter-spacing: 0.15em;
-        font-size: 0.6rem;
-    }
-
-    .champs-when {
-        letter-spacing: 0.13em;
-    }
-
-    .champs-plaque img {
-        height: clamp(22px, 3.4vh, 30px);
-    }
-
-    .champs-lede {
-        font-size: 1rem;
-    }
-}
-
-/* Below the two-column breakpoint the indicator is just the chevron: the wording
-   costs vertical room the composition needs more. */
-@media (max-width: 819px) {
-    .scroll-indicator p {
-        display: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .champs-marquee {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .champs-marquee-track {
-        animation: none !important;
-    }
-
-    .champs-marquee-set[aria-hidden='true'] {
-        display: none;
-    }
-
-    .champs-streaks {
-        opacity: 0.5;
-    }
-}
-
-/* Anchor jumps must clear the fixed header. */
-section[id] {
-    scroll-margin-top: calc(var(--header-height) + 14px);
-}
-
-.champs {
-    scroll-margin-top: 0;
-}
-
-/* While the hero owns the viewport the supporter band owns the bottom edge. */
-body.champs-in-view .back-to-top {
-    bottom: calc(var(--champs-band) + 22px);
-}
-
-/* Print: the flyer as a flat page, no stage. */
-@media print {
-
-    .champs-sky,
-    .scroll-indicator {
-        display: none;
-    }
-
-    .champs,
-    .champs-pin {
-        min-height: 0;
-        height: auto;
-        position: static;
-        background: #fff;
-        color: #000;
+    .wrap-cta .btn {
+        flex: 1 1 auto;
+        justify-content: center;
     }
 }
 
 /* =====================================================================
-   WebFPV partnership band
+   Band headings, shared by the replays and the photos
+   ===================================================================== */
+
+.band-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-bottom: 28px;
+}
+
+.band-kicker {
+    font-size: 0.82rem;
+    letter-spacing: 0.24em;
+    color: #7cc6ee;
+    margin-bottom: 6px;
+}
+
+.band-head h2,
+.webfpv h2 {
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    font-weight: 700;
+    line-height: 1;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.band-head h2 {
+    font-size: clamp(2.1rem, 4vw, 2.9rem);
+    color: #f2f4f7;
+}
+
+.band-head h2::after,
+.webfpv h2::after {
+    display: none;
+}
+
+.band-link {
+    color: #7cc6ee;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.band-link:hover {
+    color: #bfe3f6;
+}
+
+/* =====================================================================
+   State Champs replays
+   ===================================================================== */
+
+.replays {
+    background: #0b1620;
+    color: #dbe7f0;
+    padding: 0 0 clamp(64px, 10vh, 104px);
+}
+
+.replays-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2.4vw, 28px);
+}
+
+.replay-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #f2f4f7;
+    border-radius: 12px;
+}
+
+.replay-tile:focus-visible {
+    outline: 3px solid #7cc6ee;
+    outline-offset: 4px;
+}
+
+.replay-tile-media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0d2137;
+    margin-bottom: 10px;
+}
+
+.replay-tile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.replay-tile-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    background: rgba(242, 244, 247, 0.92);
+    color: #0b1620;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 4px;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.replay-tile:hover .replay-tile-media img,
+.replay-tile:focus-visible .replay-tile-media img {
+    transform: scale(1.04);
+}
+
+.replay-tile:hover .replay-tile-play,
+.replay-tile:focus-visible .replay-tile-play {
+    background: #29a7df;
+}
+
+.replay-tile-day {
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    color: #9fb3c4;
+}
+
+.replay-tile-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.replays-thanks {
+    margin-top: clamp(48px, 8vh, 72px);
+    padding-top: 28px;
+    border-top: 1px solid rgba(124, 198, 238, 0.16);
+}
+
+.replays-thanks-label {
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    color: #9fb3c4;
+    margin-bottom: 16px;
+}
+
+/* A centred wrap, so a short last row sits in the middle rather than hanging left. */
+.replays-thanks-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 14px;
+}
+
+.replays-thanks-logos li {
+    width: 120px;
+}
+
+.replays-thanks-logos img {
+    width: 100%;
+    height: auto;
+    opacity: 0.88;
+}
+
+@media (max-width: 700px) {
+    .replays-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .replays-thanks-logos li {
+        width: calc((100% - 28px) / 3);
+    }
+}
+
+/* =====================================================================
+   State Champs photos: a first look at the album
+   ===================================================================== */
+
+.champs-photos {
+    background: #f5f7fa;
+    padding: clamp(72px, 11vh, 112px) 0;
+}
+
+.champs-photos .band-kicker {
+    color: #1a6d96;
+}
+
+.champs-photos .band-head h2 {
+    color: #0b1620;
+}
+
+.btn-dark {
+    background: #0b1620;
+    color: #f2f4f7;
+}
+
+.btn-dark::before {
+    background: #1a7fb0;
+}
+
+.pits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: clamp(150px, 16vw, 220px);
+    gap: 12px;
+}
+
+.pits-tile a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #dfe6ec;
+}
+
+.pits-tile a:focus-visible {
+    outline: 3px solid #29a7df;
+    outline-offset: 3px;
+}
+
+.pits-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pits-tile a:hover img,
+.pits-tile a:focus-visible img {
+    transform: scale(1.04);
+}
+
+.pits-tile--big {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.pits-tile--tall {
+    grid-row: span 2;
+}
+
+.pits-tile--wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 760px) {
+    .pits-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 40vw;
+        gap: 8px;
+    }
+
+    .pits-tile--big {
+        grid-row: span 1;
+    }
+}
+
+/* =====================================================================
+   WebFPV, the club's official simulator
    ---------------------------------------------------------------------
-   Race navy like the jersey band, with one sakura beat for WebFPV (the
-   kicker, the heading's bar and the card's labels) so the partner's colour
-   is present without the section turning into their page.
+   Race navy with WebFPV's own colours on the partner's parts: sakura for
+   its chrome and the button, cream for the heading, mint for a lap time.
    ===================================================================== */
 
 .webfpv {
     background: #0b1620;
     color: #dbe7f0;
-    padding: clamp(64px, 10vh, 116px) 0;
-    position: relative;
+    padding: clamp(72px, 11vh, 116px) 0;
     overflow: hidden;
 }
 
@@ -1248,203 +825,173 @@ body.champs-in-view .back-to-top {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(farthest-corner at 85% 10%, rgba(232, 168, 184, 0.10) 0%, rgba(232, 168, 184, 0.02) 36%, rgba(232, 168, 184, 0) 70%),
-        radial-gradient(farthest-corner at 10% 100%, rgba(41, 167, 223, 0.14) 0%, rgba(41, 167, 223, 0.03) 34%, rgba(41, 167, 223, 0) 70%);
+        radial-gradient(farthest-corner at 85% 10%, rgba(232, 168, 184, 0.1) 0%, rgba(232, 168, 184, 0) 60%),
+        radial-gradient(farthest-corner at 10% 100%, rgba(41, 167, 223, 0.12) 0%, rgba(41, 167, 223, 0) 60%);
     pointer-events: none;
 }
 
 .webfpv-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: clamp(32px, 5vw, 72px);
     align-items: center;
 }
 
-.webfpv-kicker {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: #e8a8b8;
-    margin-bottom: 14px;
-}
-
-.webfpv-lockup {
+.webfpv-partner {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 26px;
+    margin-bottom: 24px;
 }
 
-.webfpv-lockup img:first-child {
-    height: 50px;
-    width: auto;
+.webfpv-badge {
+    width: 84px;
+    height: 84px;
+    flex: none;
 }
 
-.webfpv-lockup img:last-child {
-    height: 40px;
-    width: auto;
+.webfpv-kicker {
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.26em;
+    color: #e8a8b8;
 }
 
-.webfpv-x {
-    color: rgba(219, 233, 245, 0.45);
-    font-size: 1.5rem;
-    line-height: 1;
+.webfpv-pair {
+    margin: 2px 0 0;
+    font-size: 0.95rem;
+    color: #9fb3c4;
 }
 
 .webfpv h2 {
-    color: #fff;
-    text-align: left;
-    font-size: clamp(1.7rem, 3.6vw, 2.6rem);
-    padding-bottom: 16px;
-    margin-bottom: 20px;
-}
-
-.webfpv h2::after {
-    left: 0;
-    transform: none;
-    background: #e8a8b8;
+    font-size: clamp(2.4rem, 4.6vw, 3.5rem);
+    color: #f3ead4;
 }
 
 .webfpv-lede {
-    color: rgba(203, 222, 236, 0.82);
-    font-size: 1.04rem;
-    line-height: 1.75;
-    margin-bottom: 26px;
-    max-width: 52ch;
-}
-
-.webfpv-steps {
-    list-style: none;
-    display: grid;
-    gap: 14px;
-    margin: 0 0 32px;
-    padding: 0;
-}
-
-.webfpv-steps li {
-    display: grid;
-    grid-template-columns: 46px minmax(0, 1fr);
-    align-items: baseline;
-    padding: 14px 0 0;
-    border-top: 1px solid rgba(124, 198, 238, 0.14);
-}
-
-.webfpv-steps b {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 0.12em;
-    color: #7cc6ee;
-}
-
-.webfpv-steps p {
-    margin: 0;
-    color: rgba(203, 222, 236, 0.78);
-    font-size: 0.96rem;
-    line-height: 1.6;
-}
-
-.webfpv-steps strong {
-    color: #fff;
-    font-weight: 600;
+    margin: 18px 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
 }
 
 .webfpv-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn-sim {
+    background: #e8a8b8;
+    color: #0b1620;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+.btn-sim::before {
+    background: #f3ead4;
+}
+
+.btn-sim i {
+    font-size: 0.82em;
+}
+
+.btn-outline-cream {
+    background: transparent;
+    border: 2px solid rgba(243, 234, 212, 0.5);
+    color: #f3ead4;
+}
+
+.btn-outline-cream:hover {
+    color: #0b1620;
+}
+
+.btn-outline-cream::before {
+    background: #f3ead4;
 }
 
 .webfpv-card {
     margin: 0;
-    background: #0d2137;
-    border: 1px solid rgba(124, 198, 238, 0.18);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 30px 70px rgba(2, 8, 16, 0.5);
+    background: #0d2137;
+    border: 1px solid rgba(232, 168, 184, 0.28);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
 }
 
 .webfpv-card-media {
     display: block;
+    overflow: hidden;
 }
 
 .webfpv-card-media img {
     width: 100%;
-    height: auto;
-    display: block;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
 }
 
-.webfpv-card figcaption {
-    padding: 20px 24px 22px;
+.webfpv-card-media:hover img {
+    transform: scale(1.03);
 }
 
-.webfpv-card-title {
+.webfpv-card-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px 24px;
+    padding: 20px 24px 24px;
+}
+
+.webfpv-card-body p {
+    margin: 0;
+}
+
+.webfpv-card-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: #9fb3c4;
+}
+
+.webfpv-card-body .webfpv-card-name {
+    margin-top: 4px;
+}
+
+.webfpv-card-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f3ead4;
+}
+
+.webfpv-card-facts,
+.webfpv-card-pilot {
+    font-size: 0.88rem;
+    color: #9fb3c4;
+}
+
+.webfpv-card-best {
+    text-align: right;
+}
+
+.webfpv-card-time {
     font-family: 'Rajdhani', 'Montserrat', sans-serif;
     font-weight: 700;
-    font-size: 1.35rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #fff;
+    font-size: 2rem;
     line-height: 1.1;
-    margin: 0 0 4px;
+    color: #8ff0c2;
 }
 
-.webfpv-card-by {
-    margin: 0 0 16px;
-    color: rgba(203, 222, 236, 0.7);
-    font-size: 0.9rem;
-}
-
-.webfpv-card-facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin: 0;
-    padding-top: 14px;
-    border-top: 1px solid rgba(124, 198, 238, 0.14);
-}
-
-.webfpv-card-facts dt {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 0.62rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: #e8a8b8;
-    margin-bottom: 2px;
-}
-
-.webfpv-card-facts dd {
-    margin: 0;
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.98rem;
-}
-
-/* One column: the card goes first, so a phone sees the track before the words. */
 @media (max-width: 900px) {
     .webfpv-grid {
         grid-template-columns: minmax(0, 1fr);
     }
-
-    .webfpv-card {
-        order: -1;
-    }
 }
 
 @media (max-width: 460px) {
-    .webfpv-lockup img:first-child {
-        height: 40px;
-    }
-
-    .webfpv-lockup img:last-child {
-        height: 30px;
-    }
-
-    .webfpv-card-facts {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .webfpv-card-best {
+        text-align: left;
     }
 
     .webfpv-cta .btn {
@@ -1455,209 +1002,44 @@ body.champs-in-view .back-to-top {
 }
 
 /* =====================================================================
-   Championship detail band
+   "Fly the sim" in the nav: WebFPV's badge and sakura, on every screen
    ===================================================================== */
 
-.champs-detail {
-    background: linear-gradient(180deg, #f2f4f7 0%, #ffffff 100%);
-    padding: clamp(56px, 9vh, 104px) 0;
-    position: relative;
-}
-
-.champs-detail::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2329a7df' fill-opacity='0.045'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-}
-
-.champs-detail-grid {
-    display: grid;
-    gap: clamp(28px, 5vw, 64px);
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-}
-
-@media (min-width: 900px) {
-    .champs-detail-grid {
-        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    }
-}
-
-.champs-detail-kicker {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: #17739f;
-    margin-bottom: 10px;
-}
-
-.champs-detail-lead h2 {
-    text-align: left;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    margin-bottom: 22px;
-    padding-bottom: 16px;
-}
-
-.champs-detail-lead h2::after {
-    left: 0;
-    transform: none;
-}
-
-.champs-detail-lead p {
-    margin-bottom: 18px;
-    max-width: 62ch;
-}
-
-/*
-   The prize money again: a sentence with two figures in it. Set apart with a
-   rule and a little air so it carries weight, but never rendered as a table.
-*/
-.champs-detail-purse {
-    border-left: 3px solid var(--primary-color);
-    padding: 4px 0 4px 20px;
-    font-size: 1.02rem;
-    line-height: 1.75;
-    color: var(--secondary-color);
-}
-
-.champs-detail-purse {
-    font-variant-numeric: tabular-nums;
-}
-
-.champs-detail-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 28px;
-}
-
-.btn-outline {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-}
-
-.btn-outline:hover {
-    color: #fff;
-}
-
-/* --- facts card -------------------------------------------------------- */
-
-.champs-detail-facts {
-    background: #fff;
-    border: 1px solid rgba(41, 167, 223, 0.16);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    overflow: hidden;
-}
-
-.champs-countdown {
-    background: linear-gradient(135deg, #0d2137 0%, #133a5f 100%);
-    color: #fff;
-    padding: clamp(18px, 3vh, 28px) 24px;
-    text-align: center;
-}
-
-.champs-countdown-label {
-    margin: 0 0 12px;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: rgba(226, 240, 250, 0.78);
-}
-
-.champs-countdown-clock {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(4px, 1.4vw, 12px);
-}
-
-.champs-countdown-clock span {
-    display: block;
-}
-
-.champs-countdown-clock b {
-    display: block;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+.nav-links a.nav-sim {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 14px 4px 4px;
+    border-radius: 999px;
+    background: #e8a8b8;
+    color: #0b1620;
     font-weight: 700;
-    font-size: clamp(1.6rem, 5.4vw, 2.4rem);
-    line-height: 1.05;
-    color: #7cc6ee;
-    font-variant-numeric: tabular-nums;
-    /* Fixed advance so the digits do not jitter as the seconds tick over. */
-    font-feature-settings: 'tnum' 1;
 }
 
-.champs-countdown-clock i {
-    display: block;
-    margin-top: 4px;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-style: normal;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(226, 240, 250, 0.6);
+.nav-links a.nav-sim:hover {
+    background: #f3ead4;
 }
 
-.champs-countdown-state {
-    margin: 0;
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    color: #7cc6ee;
+.nav-links a.nav-sim::after {
+    display: none;
 }
 
-.champs-facts {
-    margin: 0;
-    padding: 0;
+.nav-links a.nav-sim img {
+    width: 28px;
+    height: 28px;
 }
 
-.champs-facts>div {
-    display: grid;
-    grid-template-columns: 88px minmax(0, 1fr);
-    gap: 16px;
-    padding: 16px 24px;
-    border-top: 1px solid rgba(93, 107, 119, 0.12);
+/* Anchor jumps must clear the fixed header; the hero sits under it on purpose. */
+section[id] {
+    scroll-margin-top: calc(var(--header-height) + 14px);
 }
 
-.champs-facts>div:first-child {
-    border-top: 0;
-}
-
-.champs-facts dt {
-    font-family: 'Rajdhani', 'Montserrat', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--primary-dark);
-    padding-top: 3px;
-}
-
-.champs-facts dd {
-    margin: 0;
-    font-size: 0.94rem;
-    line-height: 1.6;
-    color: var(--secondary-color);
-}
-
-@media (max-width: 420px) {
-    .champs-facts>div {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 4px;
-        padding: 14px 18px;
-    }
+#hero {
+    scroll-margin-top: 0;
 }
 
 /* =====================================================================
-   Club intro — the club's own line, handed back after the event's pitch
+   Club intro — the club's own line, after the State Champs and the sim
    ===================================================================== */
 
 /*

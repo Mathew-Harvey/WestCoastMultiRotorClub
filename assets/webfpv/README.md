@@ -1,15 +1,36 @@
 # WebFPV assets
 
-For the WebFPV partnership: the State Champs track flythrough in the hero, and
-the partnership band under the event details.
+For the WebFPV partnership: WebFPV is the club's official simulator, and the
+`#webfpv` section on the home page carries "this week's track".
 
-## Files
+## Changing this week's track
+
+The track is one WebFPV id, `trk-...`, the part after `?track=` in a Tracks and
+Times link. In `index.html`, in the `#webfpv` section, change it in four places:
+`data-track-id` on the section, the two `?track=` links and the card picture's
+`/board/api/tracks/<id>/card` address. A search and replace of the old id does it.
+
+`hero.js` reads `data-track-id` and fills in the track's name, gates, field size
+and best lap live from WebFPV's public board, so nothing else needs editing. If
+the board is down, the card keeps the name and facts written in the markup, so
+update those too when you change the id.
+
+## Files in use
+
+    webfpv-badge.png          the round WEBFPV badge, 240x240, transparent. The nav's
+                              "Fly the sim" pill and the #webfpv section.
+    webfpv-wordmark.png       the WEBFPV wordmark, transparent. The partners tile.
+
+The rest of this folder is from the State Champs track announcement, when the
+flythrough played in the hero. The page no longer uses it; it is kept so the
+announcement can be rebuilt.
+
+## Files from the State Champs announcement
 
     champs-track.mp4          the flythrough. H.264, 1024x1024, 25 fps, a 24 s loop, no audio.
     champs-track.webm         the same in VP9, for browsers without H.264.
     champs-track-poster.jpg   the frame at 20 s. The video's poster, and the whole
                               picture under prefers-reduced-motion or with no JS.
-    webfpv-wordmark.png       the WEBFPV wordmark, transparent. Reads on dark and light.
     champs-track-card.jpg     the track's share card from Tracks and Times, 1200x630.
 
 ## Where they came from

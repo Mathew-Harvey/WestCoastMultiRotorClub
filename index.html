@@ -8,11 +8,19 @@
   <title>West Coast Multirotor Club | Drone Racing Club</title>
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="stylesheet" href="./style.css" />
+  <!--
+    Rajdhani, the display face of the hero, the replays, the sim band and the club kit.
+    Loaded here because the @import in style.css comes after other rules, and a browser
+    ignores an @import that is not at the top of its sheet.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&amp;display=swap" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Basic Open Graph tags -->
   <meta property="og:title" content="West Coast Multirotor Club | Drone Racing Club" />
   <meta property="og:description"
-    content="Western Australia's premier drone racing club, and host of the 2026 FlyIQ WA State Drone Racing Championships — 17 &amp; 18 October, Thomas Kelly Pavilion, Kwinana." />
+    content="Western Australia's premier drone racing club. Replays and photos from the 2026 FlyIQ WA State Drone Racing Championships, fortnightly racing at Thomas Kelly Pavilion, Kwinana, and this week's track to fly on WebFPV." />
   <meta property="og:url" content="https://westcoastmultirotors.com.au/" />
   <meta property="og:type" content="website" />
 
@@ -52,7 +60,6 @@
         </a>
         <ul class="nav-links">
           <li><a href="#hero">Home</a></li>
-          <li><a href="#champs-detail" class="nav-champs">State Champs</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#events">Events</a></li>
           <li><a href="#membership">Pilots</a></li>
@@ -60,6 +67,8 @@
           <li><a href="#sponsors">Sponsors</a></li>
           <li><a href="#resources">Resources</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><a href="#webfpv" class="nav-sim"><img src="./assets/webfpv/webfpv-badge.png" width="240" height="240"
+                alt="" />Fly the sim</a></li>
         </ul>
         <div class="hamburger">
           <i class="fas fa-bars"></i>
@@ -69,264 +78,262 @@
   </header>
 
   <!--
-    Hero: the 2026 State Championships flyer, one viewport tall. It is always
-    .is-static: there is no scroll stage left, so nothing pins and nothing flies in.
-    The State Champs track, flown on WebFPV, has the slot the layout reserves for it.
+    Hero: the 2026 State Championships wrap-up. The group shot runs full width with
+    nothing laid over the faces; the words sit on race navy beneath it, and that navy
+    carries straight on into the replays.
   -->
-  <section id="hero" class="champs is-static" aria-labelledby="champsTitle">
-    <div class="champs-pin">
-      <div class="champs-sky" aria-hidden="true">
-        <span class="champs-bloom"></span>
-        <span class="champs-streaks"></span>
-      </div>
-      <span class="champs-numeral" aria-hidden="true">26</span>
+  <section id="hero" class="wrap-hero" aria-labelledby="wrapTitle">
+    <figure class="wrap-hero-photo">
+      <picture>
+        <source media="(max-width: 700px)" srcset="./assets/champs-2026/hero-group-900.jpg" />
+        <img src="./assets/champs-2026/hero-group.jpg" width="1600" height="1067" fetchpriority="high"
+          decoding="async"
+          alt="Pilots, crew and volunteers of the 2026 WA State Championships under the DIWA Group gate at Kwinana" />
+      </picture>
+    </figure>
 
-      <div class="champs-layout">
-        <p class="champs-eyebrow">Western Australia <i aria-hidden="true"></i> FPV Drone Racing</p>
-
-        <div class="champs-plaques">
-          <div class="champs-plaque">
-            <span class="champs-plaque-label">Presented by</span>
-            <img src="./assets/sponsors/champs/on-light/wcmrc-club-logo.png" width="600" height="220"
-              alt="West Coast Multirotor Club" />
-          </div>
-          <a class="champs-plaque" href="https://www.diwauav.com.au/" target="_blank" rel="noopener">
-            <span class="champs-plaque-label">Gold sponsor</span>
-            <img src="./assets/sponsors/champs/on-light/diwa-group.png" width="600" height="220"
-              alt="DIWA Group — Drone Inspections WA and FlyIQ Drone Training" />
-          </a>
-        </div>
-
-        <!--
-          The State Champs track, flown on WebFPV, where the quad used to land. The
-          video has no autoplay attribute on purpose: champs-hero.js starts it, so
-          with no JS, or under reduced motion, the poster frame is the whole picture.
-          The big link is for the pointer; the button is the one a keyboard and a
-          screen reader meet.
-        -->
-        <figure class="champs-track">
-          <div class="champs-track-frame">
-            <a class="champs-track-media" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
-              target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-              <video class="champs-track-video" muted loop playsinline preload="metadata"
-                poster="./assets/webfpv/champs-track-poster.jpg" width="1024" height="1024">
-                <source src="./assets/webfpv/champs-track.mp4" type='video/mp4; codecs="avc1.640020"' />
-                <source src="./assets/webfpv/champs-track.webm" type='video/webm; codecs="vp9"' />
-              </video>
-            </a>
-            <figcaption class="champs-track-tag">
-              <span class="champs-track-new">New on</span>
-              <img src="./assets/webfpv/webfpv-wordmark.png" width="929" height="218" alt="WebFPV" />
-              <span class="champs-track-title">Fly the State Champs track</span>
-            </figcaption>
-            <a class="btn btn-fly champs-track-go" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
-              target="_blank" rel="noopener">Fly it now <i class="fas fa-arrow-up-right-from-square"
-                aria-hidden="true"></i><span class="visually-hidden">: the WA State Champs 2026 track on WebFPV,
-                opens in a new tab</span></a>
-          </div>
-        </figure>
-
-        <div class="champs-copy">
-          <h1 id="champsTitle" class="champs-title">
-            <span class="champs-year">2026</span>
-            <span class="champs-kicker">FlyIQ WA State</span>
-            <span class="champs-headline">Drone Racing</span>
-            <span class="champs-headline champs-headline--alt">Championships</span>
-          </h1>
-
-          <div class="champs-meta">
-            <p class="champs-when">
-              <span>17 &amp; 18 October</span>
-              <span>Thomas Kelly Pavilion, Kwinana</span>
-              <span>Pilots &amp; spectators welcome</span>
-            </p>
-            <p class="champs-lede">Western Australia's fastest FPV pilots race for the State Title.</p>
-            <p class="champs-purse">Over $10,000 in prize money, paid down to tenth place.</p>
-          </div>
-
-          <div class="champs-cta">
-            <a href="#champs-detail" class="btn">Event details</a>
-            <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" rel="noopener"
-              class="btn btn-ghost">Race entries</a>
-          </div>
+    <div class="container wrap-hero-body">
+      <div class="wrap-hero-copy">
+        <p class="wrap-kicker">2026 FlyIQ WA State Drone Racing Championships</p>
+        <h1 id="wrapTitle" class="wrap-title">That&rsquo;s a wrap.</h1>
+        <p class="wrap-lede">Two days of racing at Thomas Kelly Pavilion, Kwinana. Thank you to every pilot, volunteer,
+          sponsor and spectator who made the 2026 State Champs.</p>
+        <div class="wrap-cta">
+          <a href="#replays" class="btn btn-play"><i class="fas fa-play" aria-hidden="true"></i> Watch the replays</a>
+          <a href="#champs-photos" class="btn btn-ghost">See the photos</a>
         </div>
       </div>
 
-      <!--
-        The flyer finishes on a light supporter band. Borrowing it here does double duty:
-        it is the event's sponsor row, and it is the hand-off from the dark hero into the
-        light page below.
-      -->
-      <div class="champs-support">
-        <p class="champs-support-label">Supported by</p>
-        <div class="champs-marquee">
-          <div class="champs-marquee-track">
-            <ul class="champs-marquee-set">
-              <li><img src="./assets/sponsors/champs/row-light/diwa-group.png" width="600" height="220"
-                  alt="DIWA Group" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/bms-racing.png" width="600" height="220"
-                  alt="BMS Racing" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/mantis-fpv.png" width="600" height="220"
-                  alt="Mantis FPV" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/energy-matrix-group.png" width="600" height="220"
-                  alt="Energy Matrix Group" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/tm-ceilings.png" width="600" height="220"
-                  alt="T.M Ceilings" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/bigfella.png" width="600" height="220"
-                  alt="Bigfella Industry Gear" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/mandurah-drone-services.png" width="600" height="220"
-                  alt="Mandurah Drone Services" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/rox-rotorcross.png" width="600" height="220"
-                  alt="ROX Rotorcross" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/t-motor.png" width="600" height="220" alt="T-Motor"
-                  /></li>
-              <li><img src="./assets/sponsors/champs/row-light/betafpv.png" width="600" height="220" alt="BetaFPV"
-                  /></li>
-              <li><img src="./assets/sponsors/champs/row-light/gemfan.png" width="600" height="220" alt="Gemfan"
-                  /></li>
-              <li><img src="./assets/sponsors/champs/row-light/ovonic.png" width="600" height="220" alt="Ovonic"
-                  /></li>
-              <li><img src="./assets/sponsors/champs/row-light/radiomaster.png" width="600" height="220"
-                  alt="RadioMaster" /></li>
-              <li><img src="./assets/sponsors/champs/row-light/vci.png" width="600" height="220"
-                  alt="VCI Vision Systems" /></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Championship detail band: what the hero deliberately does not spell out. -->
-  <section id="champs-detail" class="champs-detail">
-    <div class="container">
-      <div class="champs-detail-grid">
-        <div class="champs-detail-lead fade-in">
-          <p class="champs-detail-kicker">2026 WA State Championships</p>
-          <h2>Event details</h2>
-          <p>The FlyIQ WA State Drone Racing Championships are the last event of the 2026 season, run at the club's
-            home field in Kwinana. Open Racing runs across both days.</p>
-          <p class="champs-detail-purse">There is over $10,000 in prize money across the weekend, paid down to tenth
-            place in Open Racing. Entry fees, classes and the full prize schedule go out with the race bulletin.</p>
-          <div class="champs-detail-cta">
-            <a href="https://www.facebook.com/groups/westcoastmultirotorclub/events" target="_blank" rel="noopener"
-              class="btn">Race entries &amp; bulletin</a>
-            <a href="#contact" class="btn btn-outline">Sponsor the champs</a>
-          </div>
-        </div>
-
-        <div class="champs-detail-facts fade-in">
-          <div class="champs-countdown" id="champsCountdown" data-event-start="2026-10-17T08:00:00+08:00"
-            data-event-end="2026-10-18T18:00:00+08:00">
-            <p class="champs-countdown-label">To the state champs</p>
-            <div class="champs-countdown-clock" role="timer">
-              <span><b data-unit="days">--</b><i>Days</i></span>
-              <span><b data-unit="hours">--</b><i>Hrs</i></span>
-              <span><b data-unit="minutes">--</b><i>Min</i></span>
-              <span><b data-unit="seconds">--</b><i>Sec</i></span>
-            </div>
-            <p class="champs-countdown-state" hidden></p>
-          </div>
-          <dl class="champs-facts">
-            <div>
-              <dt>When</dt>
-              <dd>Saturday 17 &amp; Sunday 18 October 2026<br />Gates open 8:00 am</dd>
-            </div>
-            <div>
-              <dt>Where</dt>
-              <dd>Thomas Kelly Pavilion<br />Kwinana, Western Australia</dd>
-            </div>
-            <div>
-              <dt>Who</dt>
-              <dd>Open Racing for MAAA pilots.<br />Free entry for spectators.</dd>
-            </div>
-            <div>
-              <dt>On site</dt>
-              <dd>Shaded pits, LiPo charging, canteen, licensed bar and ground-station screens.</dd>
-            </div>
-          </dl>
-        </div>
+      <div class="wrap-side">
+        <a class="wrap-plaque" href="https://www.diwauav.com.au/" target="_blank" rel="noopener">
+          <span class="wrap-plaque-label">Gold sponsor</span>
+          <img src="./assets/sponsors/champs/on-dark/diwa-group.png" width="440" height="77" alt="DIWA Group" />
+        </a>
+        <!-- hero.js swaps in whichever race is next on the calendar; this is the fallback. -->
+        <a class="wrap-next" href="#events" id="wrapNext">
+          <span class="wrap-next-label">Next race</span>
+          <span class="wrap-next-title" data-next="title">FlyIQ Summer Series Round 1</span>
+          <span class="wrap-next-date" data-next="date">Sunday 15 November, 8:00 am</span>
+        </a>
       </div>
     </div>
   </section>
 
   <!--
-    WebFPV partnership. Race navy, so the page gets a dark beat between the light
-    event details and the club intro, and the WEBFPV wordmark sits on a ground it
-    reads on. Every link to WebFPV carries utm_source=wcmrc, which WebFPV's board
-    counts as the club's on its partner dashboard.
+    The three State Champs streams. Each tile is a plain YouTube link, so it works
+    with no JS; hero.js opens it in the site's own player instead when it can.
   -->
-  <section id="webfpv" class="webfpv" aria-labelledby="webfpvHeading">
+  <section id="replays" class="replays" aria-labelledby="replaysHeading">
     <div class="container">
-      <div class="webfpv-grid">
-        <div class="webfpv-copy fade-in">
-          <p class="webfpv-kicker">Official club partner</p>
-          <div class="webfpv-lockup">
-            <img src="./assets/sponsors/champs/on-dark/wcmrc-club-logo.png" width="600" height="220"
-              alt="West Coast Multirotor Club" />
-            <span class="webfpv-x" aria-hidden="true">&times;</span>
-            <img src="./assets/webfpv/webfpv-wordmark.png" width="929" height="218" alt="WebFPV" />
-          </div>
-          <h2 id="webfpvHeading">Fly the State Champs track before race day</h2>
-          <p class="webfpv-lede">WCMRC is the official club partner of WebFPV, the free FPV drone racing simulator
-            that runs in your browser. The 2026 FlyIQ WA State Championships track is on it now, so you can learn
-            the lines before 17 October.</p>
-          <ol class="webfpv-steps">
-            <li><b aria-hidden="true">01</b>
-              <p><strong>Open the track.</strong> It opens on Tracks and Times, WebFPV's board of tracks and lap
-                times.</p>
-            </li>
-            <li><b aria-hidden="true">02</b>
-              <p><strong>Press Fly this track.</strong> Plug in a radio or a game controller. No install, no
-                account.</p>
-            </li>
-            <li><b aria-hidden="true">03</b>
-              <p><strong>Post a lap.</strong> Your time goes on the board under your name.</p>
-            </li>
-          </ol>
-          <div class="webfpv-cta">
-            <a class="btn btn-fly" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
-              target="_blank" rel="noopener">Fly the champs track <i class="fas fa-arrow-up-right-from-square"
-                aria-hidden="true"></i><span class="visually-hidden"> on WebFPV, opens in a new tab</span></a>
-            <a class="btn btn-outline-light" href="https://webfpv.org/?utm_source=wcmrc" target="_blank"
-              rel="noopener">About WebFPV<span class="visually-hidden">, opens in a new tab</span></a>
-          </div>
+      <div class="band-head">
+        <div>
+          <p class="band-kicker">The full broadcast</p>
+          <h2 id="replaysHeading">State Champs replays</h2>
         </div>
+        <a class="band-link" href="https://www.youtube.com/@westcoastmultirotorsclub" target="_blank"
+          rel="noopener">All videos on YouTube <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
 
-        <figure class="webfpv-card fade-in">
-          <a class="webfpv-card-media" href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
-            target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img src="./assets/webfpv/champs-track-card.jpg" width="1200" height="630" loading="lazy"
-              decoding="async" alt="" />
+      <ul class="replays-grid">
+        <li>
+          <a class="replay-tile" href="https://www.youtube.com/watch?v=VVTw7f4SkzM" target="_blank" rel="noopener"
+            data-video-modal="VVTw7f4SkzM">
+            <span class="replay-tile-media">
+              <img src="./assets/champs-2026/replay-qualifiers.jpg" width="960" height="540" loading="lazy"
+                decoding="async" alt="" />
+              <span class="replay-tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>
+            </span>
+            <span class="replay-tile-day">Day 1 &middot; Saturday 17 October</span>
+            <span class="replay-tile-title">Qualifiers</span>
           </a>
-          <figcaption>
-            <p class="webfpv-card-title">WA State Champs 2026</p>
-            <p class="webfpv-card-by">Built by club pilot DukeGod (Terry)</p>
-            <dl class="webfpv-card-facts">
-              <div>
-                <dt>Gates</dt>
-                <dd>38</dd>
-              </div>
-              <div>
-                <dt>Field</dt>
-                <dd>70 &times; 50 m</dd>
-              </div>
-              <div>
-                <dt>Flown on</dt>
-                <dd>Five inch</dd>
-              </div>
-              <div>
-                <dt>Cost</dt>
-                <dd>Free</dd>
-              </div>
-            </dl>
-          </figcaption>
-        </figure>
+        </li>
+        <li>
+          <a class="replay-tile" href="https://www.youtube.com/watch?v=8qChGK3KE2E" target="_blank" rel="noopener"
+            data-video-modal="8qChGK3KE2E">
+            <span class="replay-tile-media">
+              <img src="./assets/champs-2026/replay-whoops.jpg" width="960" height="540" loading="lazy"
+                decoding="async" alt="" />
+              <span class="replay-tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>
+            </span>
+            <span class="replay-tile-day">Day 1 &middot; Saturday 17 October</span>
+            <span class="replay-tile-title">Whoops racing</span>
+          </a>
+        </li>
+        <li>
+          <a class="replay-tile" href="https://www.youtube.com/watch?v=gV03Q2zDAzE" target="_blank" rel="noopener"
+            data-video-modal="gV03Q2zDAzE">
+            <span class="replay-tile-media">
+              <img src="./assets/champs-2026/replay-open.jpg" width="960" height="540" loading="lazy"
+                decoding="async" alt="" />
+              <span class="replay-tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>
+            </span>
+            <span class="replay-tile-day">Day 2 &middot; Sunday 18 October</span>
+            <span class="replay-tile-title">Open Class, live racing</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="replays-thanks">
+        <p class="replays-thanks-label">Thank you to the sponsors of the 2026 State Champs</p>
+        <ul class="replays-thanks-logos">
+          <li><img src="./assets/sponsors/champs/row-dark/diwa-group.png" width="600" height="220" loading="lazy"
+              alt="DIWA Group" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/bms-racing.png" width="600" height="220" loading="lazy"
+              alt="BMS Racing" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/mantis-fpv.png" width="600" height="220" loading="lazy"
+              alt="Mantis FPV" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/energy-matrix-group.png" width="600" height="220"
+              loading="lazy" alt="Energy Matrix Group" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/tm-ceilings.png" width="600" height="220" loading="lazy"
+              alt="T.M Ceilings" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/bigfella.png" width="600" height="220" loading="lazy"
+              alt="Bigfella Industry Gear" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/mandurah-drone-services.png" width="600" height="220"
+              loading="lazy" alt="Mandurah Drone Services" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/rox-rotorcross.png" width="600" height="220" loading="lazy"
+              alt="ROX Rotorcross" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/t-motor.png" width="600" height="220" loading="lazy"
+              alt="T-Motor" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/betafpv.png" width="600" height="220" loading="lazy"
+              alt="BetaFPV" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/gemfan.png" width="600" height="220" loading="lazy"
+              alt="Gemfan" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/ovonic.png" width="600" height="220" loading="lazy"
+              alt="Ovonic" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/radiomaster.png" width="600" height="220" loading="lazy"
+              alt="RadioMaster" /></li>
+          <li><img src="./assets/sponsors/champs/row-dark/vci.png" width="600" height="220" loading="lazy"
+              alt="VCI Vision Systems" /></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- The club's own line, handed back the moment the event has had its say. -->
+  <!--
+    A first look at the State Champs album. Each tile links to its full-size photo,
+    which is what a visitor with no JS gets; hero.js opens it in the gallery's own
+    viewer instead, inside the album, so the arrows carry on through the weekend.
+  -->
+  <section id="champs-photos" class="champs-photos" aria-labelledby="champsPhotosHeading">
+    <div class="container">
+      <div class="band-head">
+        <div>
+          <p class="band-kicker">Gallery &middot; new album</p>
+          <h2 id="champsPhotosHeading">From the pits</h2>
+        </div>
+        <a class="btn btn-dark" href="#gallery" data-gallery-album="state-champs-2026">Open the State Champs album
+          (137)</a>
+      </div>
+
+      <ul class="pits-grid">
+        <li class="pits-tile pits-tile--big">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2048.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2048.jpg">
+            <img src="./assets/gallery/state-champs-2026/full/DSCF2048.jpg" width="1600" height="1067" loading="lazy"
+              decoding="async" alt="Pilots racing in their goggles along the pavilion verandah" />
+          </a>
+        </li>
+        <li class="pits-tile">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2094.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2094.jpg">
+            <img src="./assets/gallery/state-champs-2026/thumbs/DSCF2094.jpg" width="800" height="534" loading="lazy"
+              decoding="async" alt="Race control under the West Coast Multirotor Club banner" />
+          </a>
+        </li>
+        <li class="pits-tile pits-tile--tall">
+          <a href="./assets/gallery/state-champs-2026/full/IMG_2047.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="IMG_2047.jpg">
+            <img src="./assets/gallery/state-champs-2026/thumbs/IMG_2047.jpg" width="450" height="800" loading="lazy"
+              decoding="async" alt="The State Championship trophy being presented" />
+          </a>
+        </li>
+        <li class="pits-tile">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2195.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2195.jpg">
+            <img src="./assets/gallery/state-champs-2026/thumbs/DSCF2195.jpg" width="800" height="534" loading="lazy"
+              decoding="async" alt="A pilot and their dog in the pits" />
+          </a>
+        </li>
+        <li class="pits-tile">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2152.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2152.jpg">
+            <img src="./assets/gallery/state-champs-2026/thumbs/DSCF2152.jpg" width="800" height="534" loading="lazy"
+              decoding="async" alt="Pilots at the launch table on the field" />
+          </a>
+        </li>
+        <li class="pits-tile">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2173.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2173.jpg">
+            <img src="./assets/gallery/state-champs-2026/thumbs/DSCF2173.jpg" width="800" height="534" loading="lazy"
+              decoding="async" alt="Pilots in goggles mid-heat" />
+          </a>
+        </li>
+        <li class="pits-tile pits-tile--wide">
+          <a href="./assets/gallery/state-champs-2026/full/DSCF2171.jpg" data-gallery-album="state-champs-2026"
+            data-gallery-photo="DSCF2171.jpg">
+            <img src="./assets/gallery/state-champs-2026/full/DSCF2171.jpg" width="1600" height="1067" loading="lazy"
+              decoding="async" alt="The race field, with the DIWA Group gates and sponsor banners" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!--
+    WebFPV, the club's official simulator. "This week's track" is one WebFPV track
+    id: data-track-id on the section, and the trk-... in this section's links and card
+    picture. hero.js reads data-track-id and fills in the live name, gates and best
+    lap from WebFPV's public board, so changing the track is changing that id (see
+    assets/webfpv/README.md). Every link carries utm_source=wcmrc, which WebFPV
+    counts as the club's on its partner dashboard.
+  -->
+  <section id="webfpv" class="webfpv" data-track-id="trk-d16e93ac" aria-labelledby="webfpvHeading">
+    <div class="container webfpv-grid">
+      <div class="webfpv-copy">
+        <div class="webfpv-partner">
+          <img class="webfpv-badge" src="./assets/webfpv/webfpv-badge.png" width="240" height="240" alt="WebFPV" />
+          <div>
+            <p class="webfpv-kicker">Official simulator partner</p>
+            <p class="webfpv-pair">West Coast Multirotor Club &times; WebFPV</p>
+          </div>
+        </div>
+        <h2 id="webfpvHeading">Fly this week&rsquo;s track</h2>
+        <p class="webfpv-lede">WebFPV is the club&rsquo;s official simulator: a free FPV sim that runs in your browser on
+          real Betaflight. Before each race day the club&rsquo;s track goes up on it, so you can plug in a radio or a
+          game controller, learn the lines and post a lap to the board. No install, no account.</p>
+        <div class="webfpv-cta">
+          <a class="btn btn-sim" data-track-link href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
+            target="_blank" rel="noopener">Fly it in your browser <i class="fas fa-arrow-up-right-from-square"
+              aria-hidden="true"></i><span class="visually-hidden">, opens WebFPV in a new tab</span></a>
+          <a class="btn btn-outline-cream" href="https://webfpv.org/?utm_source=wcmrc" target="_blank"
+            rel="noopener">What is WebFPV?<span class="visually-hidden"> Opens in a new tab.</span></a>
+        </div>
+      </div>
+
+      <figure class="webfpv-card">
+        <a class="webfpv-card-media" data-track-link
+          href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc" target="_blank" rel="noopener"
+          tabindex="-1" aria-hidden="true">
+          <img data-track-card src="https://webfpv.org/board/api/tracks/trk-d16e93ac/card" width="1200" height="630"
+            loading="lazy" decoding="async" alt="" />
+        </a>
+        <figcaption class="webfpv-card-body">
+          <div class="webfpv-card-track">
+            <p class="webfpv-card-label">This week&rsquo;s track</p>
+            <p class="webfpv-card-name" data-track="name">WA State Champs 2026</p>
+            <p class="webfpv-card-facts" data-track="facts">37 gates &middot; 70 &times; 50 m &middot; five inch</p>
+          </div>
+          <div class="webfpv-card-best" data-track="best" hidden>
+            <p class="webfpv-card-label">Best lap, live</p>
+            <p class="webfpv-card-time" data-track="time"></p>
+            <p class="webfpv-card-pilot" data-track="pilot"></p>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- The club's own line, after the State Champs wrap-up and the sim. -->
   <section id="club-intro" class="club-intro">
     <div class="container club-intro-inner">
       <div class="club-intro-mark fade-in">
@@ -391,15 +398,15 @@
   <section id="live-streams">
     <div class="container">
       <h2>Latest Live Stream</h2>
-      <p class="text-center mb-5">Highlights from the 2026 Winter Series Grand Final — the season decider!</p>
+      <p class="text-center mb-5">Day 2 of the 2026 FlyIQ WA State Championships: Open Class, live racing.</p>
       <div class="live-stream-main fade-in">
-        <iframe src="https://www.youtube.com/embed/56Au2xq02PQ"
-          title="Global Drone Solutions 2026 Winter Grand Final Highlights" frameborder="0"
+        <iframe src="https://www.youtube.com/embed/gV03Q2zDAzE"
+          title="FlyIQ 2026 WA State Championship Open Class" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
         </iframe>
         <button type="button" class="video-share-btn live-stream-share" id="featuredVideoShare"
-          data-share-video-id="56Au2xq02PQ" aria-label="Share this video" title="Share this video">
+          data-share-video-id="gV03Q2zDAzE" aria-label="Share this video" title="Share this video">
           <i class="fas fa-share-nodes" aria-hidden="true"></i><span>Share</span>
         </button>
       </div>
@@ -2603,7 +2610,8 @@
           <h3>Quick Links</h3>
           <ul class="footer-links">
             <li><a href="#hero">Home</a></li>
-            <li><a href="#champs-detail">State Champs</a></li>
+            <li><a href="#replays">State Champs replays</a></li>
+            <li><a href="#webfpv">Fly the sim</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#events">Events</a></li>
             <li><a href="#membership">Pilots</a></li>
@@ -2632,7 +2640,7 @@
   </footer>
 
   <script src="./script.js"></script>
-  <script src="./champs-hero.js"></script>
+  <script src="./hero.js"></script>
   <!-- Audio elements for card sounds -->
   <audio id="dukegod-flip-sound" preload="auto">
     <source src="./assets/audio/come_get_some.wav" type="audio/wav">
