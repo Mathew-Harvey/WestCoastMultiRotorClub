@@ -338,10 +338,15 @@ header {
     color: #dbe7f0;
 }
 
+/*
+   Never taller than 62vw: the photo is 3:2, so past that the sides would go and
+   take the people at either end with them. On a wide screen the height comes from
+   the viewport instead, and the crop takes sky rather than people.
+*/
 .wrap-hero-photo {
     position: relative;
     margin: 0;
-    height: clamp(320px, 64vh, 760px);
+    height: clamp(320px, min(66vh, 62vw), 800px);
     overflow: hidden;
     background: #0d2137;
 }
@@ -350,8 +355,8 @@ header {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Low enough to keep the whole group and the DIWA gate's lower banner. */
-    object-position: 50% 82%;
+    /* From the DIWA gate's lower banner down to the grass under the front row. */
+    object-position: 50% 85%;
 }
 
 /* A little shade under the header, and the grass fading into the navy below. */
@@ -360,7 +365,7 @@ header {
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, rgba(11, 22, 32, 0.3) 0%, rgba(11, 22, 32, 0) 20%,
-            rgba(11, 22, 32, 0) 84%, #0b1620 100%);
+            rgba(11, 22, 32, 0) 90%, #0b1620 100%);
     pointer-events: none;
 }
 
@@ -369,6 +374,10 @@ header {
     grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
     gap: clamp(28px, 5vw, 64px);
     align-items: end;
+}
+
+/* Two classes deep, so the phone rules that reset .container's padding leave this alone. */
+.wrap-hero .wrap-hero-body {
     padding-top: clamp(16px, 3vh, 36px);
     padding-bottom: clamp(48px, 8vh, 88px);
 }
@@ -1027,6 +1036,43 @@ header {
 .nav-links a.nav-sim img {
     width: 28px;
     height: 28px;
+}
+
+/*
+   Keyboard focus. The site's base .btn rule sets outline: none, so the buttons and
+   tiles above would otherwise give a keyboard no sign of where it is.
+*/
+.wrap-cta .btn:focus-visible,
+.webfpv-cta .btn:focus-visible,
+.champs-photos .btn-dark:focus-visible,
+.wrap-plaque:focus-visible,
+.wrap-next:focus-visible,
+.band-link:focus-visible,
+.nav-links a.nav-sim:focus-visible {
+    outline: 3px solid #7cc6ee;
+    outline-offset: 3px;
+}
+
+.champs-photos .btn-dark:focus-visible {
+    outline-color: #1a7fb0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .wrap-hero img,
+    .replays img,
+    .champs-photos img,
+    .webfpv img {
+        transition: none;
+    }
+
+    .replay-tile:hover .replay-tile-media img,
+    .replay-tile:focus-visible .replay-tile-media img,
+    .pits-tile a:hover img,
+    .pits-tile a:focus-visible img,
+    .webfpv-card-media:hover img {
+        transform: none;
+    }
 }
 
 /* Anchor jumps must clear the fixed header; the hero sits under it on purpose. */
