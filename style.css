@@ -1280,10 +1280,15 @@ section[id] {
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
-    height: 450px;
-    /* Cropped to the members. The 75% keeps the whole group in frame when the box is
-       a short wide strip (tablets); on the desktop box there is no height to spare. */
-    background: url('./assets/club-group.jpg') center 75% / cover no-repeat;
+    /*
+       The State Champs group shot, the same file as the hero, so it is already cached.
+       The group runs edge to edge, so the box takes the photo's own 3:2 shape rather
+       than a fixed height that would crop the people at either end. Tablets keep their
+       short wide strip (below), where the crop takes sky; 90% holds the group and the
+       DIWA gate's lower banner in it.
+    */
+    aspect-ratio: 3 / 2;
+    background: url('./assets/champs-2026/hero-group.jpg') center 90% / cover no-repeat;
     position: relative;
     transform: perspective(1000px) rotateY(-5deg);
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1300,7 +1305,11 @@ section[id] {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(41, 167, 223, 0.5) 0%, rgba(41, 167, 223, 0) 50%);
+    /* The old blue corner tint read as haze over this photo's overcast sky. Now: a
+       shade across the top, so the white sky does not melt into the page and the box
+       keeps its edge, and a little at the foot to seat the group in the frame. */
+    background: linear-gradient(180deg, rgba(11, 22, 32, 0.34) 0%, rgba(11, 22, 32, 0.1) 26%,
+            rgba(11, 22, 32, 0) 45%, rgba(11, 22, 32, 0) 75%, rgba(11, 22, 32, 0.22) 100%);
 }
 
 .about-text h3 {
@@ -5187,9 +5196,11 @@ body.gallery-lightbox-open {
             gap: 40px;
         }
     
+        /* Tablets: a full-width strip, cropping sky rather than people. */
         .about-img {
             order: -1;
             height: 400px;
+            aspect-ratio: auto;
         }
     
         .stats-grid {
@@ -5297,6 +5308,12 @@ body.gallery-lightbox-open {
         .event-img,
         .about-img {
             height: 300px;
+        }
+
+        /* Narrower than the photo's own shape, a fixed height would crop the group. */
+        .about-img {
+            height: auto;
+            aspect-ratio: 3 / 2;
         }
     
         .events-layout {
