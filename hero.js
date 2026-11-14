@@ -1,15 +1,15 @@
 /*
- * hero.js: the top of the page, after the 2026 State Championships.
+ * hero.js: the top of the page, for the FlyIQ Summer Series.
  *
  * Five jobs:
  *   1. Keep the fixed header legible while it sits over the hero.
- *   2. Point the hero's "Next race" at whatever is next on the events calendar.
+ *   2. Mark the next round on the hero's series calendar, from the events calendar.
  *   3. Open the replay tiles in the site's own video player.
  *   4. Open the photo tiles in the gallery's own viewer, inside their album.
- *   5. Fill this week's WebFPV track with live numbers from WebFPV's board.
+ *   5. Fill this round's WebFPV track with live numbers from WebFPV's board.
  *
  * Every job degrades on its own. With no JS the replays are YouTube links, the
- * photos are links to the full-size files, the next race is the one written in
+ * photos are links to the full-size files, the next round is the one marked in
  * the markup, and the track card shows its name and facts without a best lap.
  */
 (function () {
@@ -60,28 +60,42 @@
     };
 
     ready(function () {
-        /* ------------------------------------------------------------ next race */
+        /* ----------------------------------------------------------- next round */
 
-        (function nextRace() {
-            const link = document.getElementById('wrapNext');
+        /*
+         * The rounds strip is written with Round 1 marked next. Each round is found
+         * on the events calendar by its exact title ("FlyIQ Summer Series Round 2"); a round
+         * counts as next until the end of its race day, so it stays marked while the
+         * racing is on. Rounds already raced are dimmed, and once the last one is
+         * done nothing is marked.
+         */
+        (function nextRound() {
+            const strip = document.getElementById('summerRounds');
             const calendar = window.WCMRCEvents;
-            if (!link || !calendar || !Array.isArray(calendar.events)) return;
+            if (!strip || !calendar || !Array.isArray(calendar.events)) return;
 
+            const DAY_LENGTH = 14 * 60 * 60 * 1000; /* 8:00 am start, so done by 10 pm */
             const now = Date.now();
-            const next = calendar.events
-                .filter((event) => event.date instanceof Date && event.date.getTime() > now)
-                .sort((a, b) => a.date - b.date)[0];
+            const rounds = Array.from(strip.querySelectorAll('li[data-round]'));
+            let nextMarked = false;
 
-            if (!next) {
-                link.hidden = true;
-                return;
-            }
+            rounds.forEach((item) => {
+                const n = item.dataset.round;
+                /* By full title: past seasons' calendars use "Summer Series Round n" too. */
+                const event = calendar.events.find((e) =>
+                    e.date instanceof Date && e.title === `FlyIQ Summer Series Round ${n}`);
+                if (!event) return;
 
-            const day = next.date.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })
-                .replace(',', '');
-            const time = next.date.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
-            link.querySelector('[data-next="title"]').textContent = next.title;
-            link.querySelector('[data-next="date"]').textContent = `${day}, ${time}`;
+                const tag = item.querySelector('.wrap-round-tag');
+                const time = event.date.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+                const done = event.date.getTime() + DAY_LENGTH < now;
+                const isNext = !done && !nextMarked;
+
+                item.classList.toggle('is-done', done);
+                item.classList.toggle('is-next', isNext);
+                if (isNext) nextMarked = true;
+                if (tag) tag.textContent = isNext ? `Next round · ${time}` : 'Kwinana';
+            });
         })();
 
         /* ------------------------------------------------------------- replays */
@@ -119,7 +133,7 @@
             });
         });
 
-        /* ---------------------------------------------------- this week's track */
+        /* --------------------------------------------------- this round's track */
 
         (function webfpvTrack() {
             const section = document.getElementById('webfpv');
@@ -143,7 +157,9 @@
                 .then((track) => {
                     if (!track || track.id !== id) return;
 
-                    if (track.name) field('name').textContent = track.name;
+                    /* A name set on the section wins over the track's name on the board. */
+                    const name = section.dataset.trackName || track.name;
+                    if (name) field('name').textContent = name;
 
                     const facts = [];
                     if (track.gates) facts.push(`${track.gates} gates`);

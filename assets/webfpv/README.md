@@ -1,19 +1,23 @@
 # WebFPV assets
 
 For the WebFPV partnership: WebFPV is the club's official simulator, and the
-`#webfpv` section on the home page carries "this week's track".
+`#webfpv` section on the home page carries "this round's track", with a tile
+for it in the hero.
 
-## Changing this week's track
+## Changing this round's track
 
 The track is one WebFPV id, `trk-...`, the part after `?track=` in a Tracks and
-Times link. In `index.html`, in the `#webfpv` section, change it in four places:
-`data-track-id` on the section, the two `?track=` links and the card picture's
-`/board/api/tracks/<id>/card` address. A search and replace of the old id does it.
+Times link. In `index.html` it appears in five places: `data-track-id` on the
+`#webfpv` section, the section's two `?track=` links, the card picture's
+`/board/api/tracks/<id>/card` address and the hero tile's `/thumb` address. A
+search and replace of the old id does it.
 
-`hero.js` reads `data-track-id` and fills in the track's name, gates, field size
-and best lap live from WebFPV's public board, so nothing else needs editing. If
-the board is down, the card keeps the name and facts written in the markup, so
-update those too when you change the id.
+`hero.js` reads `data-track-id` and fills in the track's gates, field size and
+best lap live from WebFPV's public board. The name shown is `data-track-name` on
+the section when it is set, and the track's name on the board when it is not, so
+set or clear `data-track-name` too. If the board is down, the card keeps the name
+and facts written in the markup, and the hero tile keeps its gates and field size,
+so update those as well when you change the id.
 
 ## Files in use
 

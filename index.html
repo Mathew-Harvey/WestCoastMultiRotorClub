@@ -20,7 +20,7 @@
   <!-- Basic Open Graph tags -->
   <meta property="og:title" content="West Coast Multirotor Club | Drone Racing Club" />
   <meta property="og:description"
-    content="Western Australia's premier drone racing club. Replays and photos from the 2026 FlyIQ WA State Drone Racing Championships, fortnightly racing at Thomas Kelly Pavilion, Kwinana, and this week's track to fly on WebFPV." />
+    content="Western Australia's premier drone racing club. The FlyIQ Summer Series races at Thomas Kelly Pavilion, Kwinana, from November to January, and every round's track is on WebFPV to fly first." />
   <meta property="og:url" content="https://westcoastmultirotors.com.au/" />
   <meta property="og:type" content="website" />
 
@@ -78,44 +78,119 @@
   </header>
 
   <!--
-    Hero: the 2026 State Championships wrap-up. The group shot runs full width with
-    nothing laid over the faces; the words sit on race navy beneath it, and that navy
-    carries straight on into the replays.
+    Hero: the FlyIQ Summer Series. The track-walk photo runs full width with nothing
+    laid over the people; the words sit on race navy beneath it, and that navy carries
+    straight on into the sim band. Nothing here names a day: the rounds strip is the
+    series calendar, and hero.js marks whichever round is next (Round 1 in the markup).
   -->
   <section id="hero" class="wrap-hero" aria-labelledby="wrapTitle">
     <figure class="wrap-hero-photo">
       <picture>
-        <source media="(max-width: 700px)" srcset="./assets/champs-2026/hero-group-900.jpg" />
-        <img src="./assets/champs-2026/hero-group.jpg" width="1600" height="1067" fetchpriority="high"
-          decoding="async"
-          alt="Pilots, crew and volunteers of the 2026 WA State Championships under the DIWA Group gate at Kwinana" />
+        <source media="(max-width: 700px)" srcset="./assets/summer-2026/hero-trackwalk-900.jpg" />
+        <img src="./assets/summer-2026/hero-trackwalk.jpg" width="1600" height="1067" fetchpriority="high"
+          decoding="async" alt="Pilots walking the track on the oval at Thomas Kelly Pavilion, Kwinana" />
       </picture>
     </figure>
 
     <div class="container wrap-hero-body">
       <div class="wrap-hero-copy">
-        <p class="wrap-kicker">2026 FlyIQ WA State Drone Racing Championships</p>
-        <h1 id="wrapTitle" class="wrap-title">That&rsquo;s a wrap.</h1>
-        <p class="wrap-lede">Two days of racing at Thomas Kelly Pavilion, Kwinana. Thank you to every pilot, volunteer,
-          sponsor and spectator who made the 2026 State Champs.</p>
+        <p class="wrap-kicker">FlyIQ Summer Series 2026/27</p>
+        <h1 id="wrapTitle" class="wrap-title">Summer racing <em>is back.</em></h1>
+        <p class="wrap-lede">Four rounds at Thomas Kelly Pavilion, Kwinana, from November to January. Walk each
+          round&rsquo;s track on WebFPV first, then walk it for real on race day.</p>
         <div class="wrap-cta">
-          <a href="#replays" class="btn btn-play"><i class="fas fa-play" aria-hidden="true"></i> Watch the replays</a>
-          <a href="#champs-photos" class="btn btn-ghost">See the photos</a>
+          <a href="#webfpv" class="btn btn-play"><i class="fas fa-vr-cardboard" aria-hidden="true"></i> Fly this
+            round&rsquo;s track</a>
+          <a href="#events" class="btn btn-ghost">Race calendar</a>
         </div>
       </div>
 
       <div class="wrap-side">
         <a class="wrap-plaque" href="https://www.diwauav.com.au/" target="_blank" rel="noopener">
-          <span class="wrap-plaque-label">Gold sponsor</span>
-          <img src="./assets/sponsors/champs/on-dark/diwa-group.png" width="440" height="77" alt="DIWA Group" />
+          <span class="wrap-plaque-label">Presented by</span>
+          <img src="./assets/sponsors/champs/on-dark/diwa-group.png" width="440" height="77"
+            alt="DIWA Group: Drone Inspections WA and FlyIQ Drone Training" />
         </a>
-        <!-- hero.js swaps in whichever race is next on the calendar; this is the fallback. -->
-        <a class="wrap-next" href="#events" id="wrapNext">
-          <span class="wrap-next-label">Next race</span>
-          <span class="wrap-next-title" data-next="title">FlyIQ Summer Series Round 1</span>
-          <span class="wrap-next-date" data-next="date">Sunday 15 November, 8:00 am</span>
+        <a class="wrap-track" href="#webfpv">
+          <img data-track-thumb src="https://webfpv.org/board/api/tracks/trk-e9486d86/thumb" width="960" height="540"
+            decoding="async" alt="" />
+          <span>
+            <span class="wrap-next-label">This round&rsquo;s track</span>
+            <span class="wrap-track-facts">27 gates &middot; 60 &times; 40 m</span>
+            <span class="wrap-track-cta">Fly it on WebFPV</span>
+          </span>
         </a>
       </div>
+    </div>
+
+    <!-- The series calendar. hero.js moves is-next along after each race day. -->
+    <div class="container wrap-rounds-wrap">
+      <ol class="wrap-rounds" id="summerRounds" aria-label="FlyIQ Summer Series rounds">
+        <li class="is-next" data-round="1"><span class="wrap-round-no">Round 1</span><span
+            class="wrap-round-date">Sun 15 Nov</span><span class="wrap-round-tag">Next round &middot; 8:00 am</span></li>
+        <li data-round="2"><span class="wrap-round-no">Round 2</span><span class="wrap-round-date">Sun 29
+            Nov</span><span class="wrap-round-tag">Kwinana</span></li>
+        <li data-round="3"><span class="wrap-round-no">Round 3</span><span class="wrap-round-date">Sun 13
+            Dec</span><span class="wrap-round-tag">Kwinana</span></li>
+        <li data-round="4"><span class="wrap-round-no">Round 4</span><span class="wrap-round-date">Sun 17
+            Jan</span><span class="wrap-round-tag">Kwinana</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!--
+    WebFPV, the club's official simulator. "This round's track" is one WebFPV track
+    id: data-track-id on the section, the trk-... in this section's links and card
+    picture, and the hero's track tile. hero.js reads data-track-id and fills in the
+    gates and best lap live from WebFPV's public board, so changing the track is
+    changing that id (see assets/webfpv/README.md). data-track-name, when set, is the
+    name shown, in place of the name the track has on the board. Every link carries utm_source=wcmrc, which WebFPV
+    counts as the club's on its partner dashboard.
+  -->
+  <section id="webfpv" class="webfpv" data-track-id="trk-e9486d86"
+    data-track-name="WCMRC Summer Round 1 2026" aria-labelledby="webfpvHeading">
+    <div class="container webfpv-grid">
+      <div class="webfpv-copy">
+        <div class="webfpv-partner">
+          <img class="webfpv-badge" src="./assets/webfpv/webfpv-badge.png" width="240" height="240" alt="WebFPV" />
+          <div>
+            <p class="webfpv-kicker">Official simulator partner</p>
+            <p class="webfpv-pair">West Coast Multirotor Club &times; WebFPV</p>
+          </div>
+        </div>
+        <h2 id="webfpvHeading">Fly this round&rsquo;s track</h2>
+        <p class="webfpv-lede">WebFPV is the club&rsquo;s official simulator: a free FPV sim that runs in your browser on
+          real Betaflight. Before each race day the club&rsquo;s track goes up on it, so you can plug in a radio or a
+          game controller, learn the lines and post a lap to the board. No install, no account.</p>
+        <div class="webfpv-cta">
+          <a class="btn btn-sim" data-track-link href="https://webfpv.org/board/?track=trk-e9486d86&amp;utm_source=wcmrc"
+            target="_blank" rel="noopener">Fly it in your browser <i class="fas fa-arrow-up-right-from-square"
+              aria-hidden="true"></i><span class="visually-hidden">, opens WebFPV in a new tab</span></a>
+          <a class="btn btn-outline-cream" href="https://webfpv.org/?utm_source=wcmrc" target="_blank"
+            rel="noopener">What is WebFPV?<span class="visually-hidden"> Opens in a new tab.</span></a>
+        </div>
+      </div>
+
+      <figure class="webfpv-card">
+        <a class="webfpv-card-media" data-track-link
+          href="https://webfpv.org/board/?track=trk-e9486d86&amp;utm_source=wcmrc" target="_blank" rel="noopener"
+          tabindex="-1" aria-hidden="true">
+          <img data-track-card src="https://webfpv.org/board/api/tracks/trk-e9486d86/card" width="1200" height="630"
+            loading="lazy" decoding="async" alt="" />
+        </a>
+        <figcaption class="webfpv-card-body">
+          <div class="webfpv-card-track">
+            <p class="webfpv-card-label">This round&rsquo;s track</p>
+            <p class="webfpv-card-name" data-track="name">WCMRC Summer Round 1 2026</p>
+            <p class="webfpv-card-facts" data-track="facts">27 gates &middot; 60 &times; 40 m &middot; five inch</p>
+          </div>
+          <div class="webfpv-card-best" data-track="best" hidden>
+            <p class="webfpv-card-label">Best lap, live</p>
+            <p class="webfpv-card-time" data-track="time"></p>
+            <p class="webfpv-card-pilot" data-track="pilot"></p>
+          </div>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
@@ -127,7 +202,7 @@
     <div class="container">
       <div class="band-head">
         <div>
-          <p class="band-kicker">The full broadcast</p>
+          <p class="band-kicker">Last season &middot; the full broadcast</p>
           <h2 id="replaysHeading">State Champs replays</h2>
         </div>
         <a class="band-link" href="https://www.youtube.com/@westcoastmultirotorsclub" target="_blank"
@@ -218,7 +293,7 @@
     <div class="container">
       <div class="band-head">
         <div>
-          <p class="band-kicker">Gallery &middot; new album</p>
+          <p class="band-kicker">Gallery &middot; State Champs 2026</p>
           <h2 id="champsPhotosHeading">From the pits</h2>
         </div>
         <a class="btn btn-dark" href="#gallery" data-gallery-album="state-champs-2026">Open the State Champs album
@@ -279,61 +354,7 @@
     </div>
   </section>
 
-  <!--
-    WebFPV, the club's official simulator. "This week's track" is one WebFPV track
-    id: data-track-id on the section, and the trk-... in this section's links and card
-    picture. hero.js reads data-track-id and fills in the live name, gates and best
-    lap from WebFPV's public board, so changing the track is changing that id (see
-    assets/webfpv/README.md). Every link carries utm_source=wcmrc, which WebFPV
-    counts as the club's on its partner dashboard.
-  -->
-  <section id="webfpv" class="webfpv" data-track-id="trk-d16e93ac" aria-labelledby="webfpvHeading">
-    <div class="container webfpv-grid">
-      <div class="webfpv-copy">
-        <div class="webfpv-partner">
-          <img class="webfpv-badge" src="./assets/webfpv/webfpv-badge.png" width="240" height="240" alt="WebFPV" />
-          <div>
-            <p class="webfpv-kicker">Official simulator partner</p>
-            <p class="webfpv-pair">West Coast Multirotor Club &times; WebFPV</p>
-          </div>
-        </div>
-        <h2 id="webfpvHeading">Fly this week&rsquo;s track</h2>
-        <p class="webfpv-lede">WebFPV is the club&rsquo;s official simulator: a free FPV sim that runs in your browser on
-          real Betaflight. Before each race day the club&rsquo;s track goes up on it, so you can plug in a radio or a
-          game controller, learn the lines and post a lap to the board. No install, no account.</p>
-        <div class="webfpv-cta">
-          <a class="btn btn-sim" data-track-link href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc"
-            target="_blank" rel="noopener">Fly it in your browser <i class="fas fa-arrow-up-right-from-square"
-              aria-hidden="true"></i><span class="visually-hidden">, opens WebFPV in a new tab</span></a>
-          <a class="btn btn-outline-cream" href="https://webfpv.org/?utm_source=wcmrc" target="_blank"
-            rel="noopener">What is WebFPV?<span class="visually-hidden"> Opens in a new tab.</span></a>
-        </div>
-      </div>
-
-      <figure class="webfpv-card">
-        <a class="webfpv-card-media" data-track-link
-          href="https://webfpv.org/board/?track=trk-d16e93ac&amp;utm_source=wcmrc" target="_blank" rel="noopener"
-          tabindex="-1" aria-hidden="true">
-          <img data-track-card src="https://webfpv.org/board/api/tracks/trk-d16e93ac/card" width="1200" height="630"
-            loading="lazy" decoding="async" alt="" />
-        </a>
-        <figcaption class="webfpv-card-body">
-          <div class="webfpv-card-track">
-            <p class="webfpv-card-label">This week&rsquo;s track</p>
-            <p class="webfpv-card-name" data-track="name">WA State Champs 2026</p>
-            <p class="webfpv-card-facts" data-track="facts">37 gates &middot; 70 &times; 50 m &middot; five inch</p>
-          </div>
-          <div class="webfpv-card-best" data-track="best" hidden>
-            <p class="webfpv-card-label">Best lap, live</p>
-            <p class="webfpv-card-time" data-track="time"></p>
-            <p class="webfpv-card-pilot" data-track="pilot"></p>
-          </div>
-        </figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- The club's own line, after the State Champs wrap-up and the sim. -->
+  <!-- The club's own line, after the hero, the sim and last season's State Champs. -->
   <section id="club-intro" class="club-intro">
     <div class="container club-intro-inner">
       <div class="club-intro-mark fade-in">
@@ -2612,8 +2633,8 @@
           <h3>Quick Links</h3>
           <ul class="footer-links">
             <li><a href="#hero">Home</a></li>
-            <li><a href="#replays">State Champs replays</a></li>
             <li><a href="#webfpv">Fly the sim</a></li>
+            <li><a href="#replays">State Champs replays</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#events">Events</a></li>
             <li><a href="#membership">Pilots</a></li>
