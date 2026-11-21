@@ -2053,6 +2053,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // All others will be historic videos
     // ============================================================================
     const SERIES_LABELS = {
+        '2026-27-summer': '2026/27 Summer Series',
         'state-champs-2026': 'WA State Championships 2026',
         '2026-winter': '2026 Winter Series',
         '2026-summer': '2026 Summer Series',
@@ -2063,6 +2064,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const SERIES_FILTER_LABELS = {
+        '2026-27-summer': '2026/27 Summer',
         'state-champs-2026': 'State Champs 2026',
         '2026-winter': '2026 Winter',
         '2026-summer': '2026 Summer',
@@ -2073,6 +2075,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const SERIES_ORDER = [
+        '2026-27-summer',
         'state-champs-2026',
         '2026-winter',
         '2026-summer',
@@ -2083,6 +2086,13 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     const videoDatabase = [
+        {
+            id: 'UxgdenxD8OM',
+            title: 'FlyIQ Summer 2026/27 Heat 1',
+            date: 'November 15, 2026',
+            description: 'Round 1 of the FlyIQ Summer Series 2026/27: the season opener, live racing.',
+            series: '2026-27-summer'
+        },
         {
             id: 'gV03Q2zDAzE',
             title: 'FlyIQ 2026 WA State Championship Open Class',
